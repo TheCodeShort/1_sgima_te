@@ -1,0 +1,12 @@
+.view-page[data-view="panel_del_t_cnico"] .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.view-page[data-view="panel_del_t_cnico"] .no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.view-page[data-view="panel_del_t_cnico"] .h-row-height-dense {
+  height: 40px;
+}

@@ -1,0 +1,17 @@
+.view-page[data-view="panel_del_auditor"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.view-page[data-view="panel_del_auditor"] ::-webkit-scrollbar-track {
+  background: #131b2e;
+}
+
+.view-page[data-view="panel_del_auditor"] ::-webkit-scrollbar-thumb {
+  background: #434655;
+  border-radius: 4px;
+}
+
+.view-page[data-view="panel_del_auditor"] ::-webkit-scrollbar-thumb:hover {
+  background: #8d90a0;
+}

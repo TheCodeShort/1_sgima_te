@@ -1,0 +1,12 @@
+.view-page[data-view="iniciar_sesi_n"] {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.view-page[data-view="iniciar_sesi_n"] .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

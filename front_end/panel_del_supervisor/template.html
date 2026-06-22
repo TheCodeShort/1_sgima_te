@@ -1,0 +1,185 @@
+<div class="view-page" data-view="panel_del_supervisor">
+<main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop w-full max-w-[1400px] mx-auto">
+<!-- Page Header Section -->
+<div class="mb-8">
+<h2 class="text-display-id font-display-id text-on-surface mb-1">Auditoría Operativa</h2>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+                    Revise y valide las órdenes de mantenimiento completadas por los técnicos de campo. Asegúrese de que los protocolos de cumplimiento se hayan seguido rigurosamente.
+                </p>
+</div>
+<!-- Bento Grid: Key Metrics -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<!-- Status Card 1: Pending Approvals (Warning focus) -->
+<div class="bg-surface-card border border-outline-variant border-l-4 border-l-warning rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-warning">pending_actions</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px] text-warning">error</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Pendientes</h3>
+</div>
+<div>
+<span class="text-display-id font-display-id text-on-surface text-[32px]">12</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Casos Críticos</span>
+</div>
+</div>
+<!-- Status Card 2: Equipment under review -->
+<div class="bg-surface-card border border-outline-variant border-l-4 border-l-primary rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-primary">precision_manufacturing</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px] text-primary">search</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Equipos en Revisión</h3>
+</div>
+<div>
+<span class="text-display-id font-display-id text-on-surface text-[32px]">05</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Sistemas Activos</span>
+</div>
+</div>
+<!-- Status Card 3: Compliance -->
+<div class="bg-surface-card border border-outline-variant border-l-4 border-l-success rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-success">verified_user</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px] text-success">trending_up</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Índice Cumplimiento</h3>
+</div>
+<div>
+<span class="text-display-id font-display-id text-on-surface text-[32px]">94.2<span class="text-[20px]">%</span></span>
+<span class="text-status-micro font-status-micro text-success ml-2">+1.2% este mes</span>
+</div>
+</div>
+<!-- Status Card 4: Audits Completed -->
+<div class="bg-surface-card border border-outline-variant border-l-4 border-l-outline rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-outline">task</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px] text-outline">history</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Auditados Hoy</h3>
+</div>
+<div>
+<span class="text-display-id font-display-id text-on-surface text-[32px]">28</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Registros procesados</span>
+</div>
+</div>
+</div>
+<!-- Content Area: Data Table for Validations -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+<!-- Table Toolbar -->
+<div class="px-4 py-3 border-b border-outline-variant flex items-center justify-between bg-surface-container">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">list_alt</span>
+                        Mantenimientos Recientes para Validación
+                    </h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-highest sticky top-0 z-10 shadow-[0_1px_0_theme(colors.outline-variant)]">
+<tr>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">ID Orden</th>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Equipo / Sistema</th>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Técnico Asignado</th>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Nivel de Riesgo</th>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Estado Auditoría</th>
+<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="font-data-table text-data-table text-on-surface divide-y divide-outline-variant/30">
+<!-- Row 1 (Warning/High Priority) -->
+<tr class="h-row-height-dense hover:bg-surface-container transition-colors group cursor-pointer bg-warning/5">
+<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-primary">ORD-9921</td>
+<td class="px-4 whitespace-nowrap flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+                                    Turbina Compresor Principal A-1
+                                </td>
+<td class="px-4 whitespace-nowrap text-on-surface-variant">J. Ramírez</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-error font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-error/10 border border-error/20">
+<span class="material-symbols-outlined text-[10px]">warning</span> ALTO
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="text-warning font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Pendiente
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap text-right">
+<button class="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 rounded-DEFAULT text-body-sm font-semibold transition-colors">
+                                        Revisar
+                                    </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-row-height-dense hover:bg-surface-container transition-colors group cursor-pointer">
+<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-primary">ORD-9918</td>
+<td class="px-4 whitespace-nowrap flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-warning"></div>
+                                    Bomba Hidráulica Sec. 04
+                                </td>
+<td class="px-4 whitespace-nowrap text-on-surface-variant">M. Soto</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-warning font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-warning/10 border border-warning/20">
+                                        MEDIO
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="text-warning font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Pendiente
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap text-right">
+<button class="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 rounded-DEFAULT text-body-sm font-semibold transition-colors">
+                                        Revisar
+                                    </button>
+</td>
+</tr>
+<!-- Row 3 (Success/Approved recently) -->
+<tr class="h-row-height-dense bg-surface-container-lowest hover:bg-surface-container transition-colors group">
+<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-on-surface-variant">ORD-9884</td>
+<td class="px-4 whitespace-nowrap flex items-center gap-2 opacity-70">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+                                    Tablero Control PLC-02
+                                </td>
+<td class="px-4 whitespace-nowrap text-on-surface-variant opacity-70">L. Gómez</td>
+<td class="px-4 whitespace-nowrap opacity-70">
+<span class="inline-flex items-center gap-1 text-on-surface-variant font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-surface-container border border-outline-variant">
+                                        BAJO
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="text-success font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span> Aprobado
+                                    </span>
+</td>
+<td class="px-4 whitespace-nowrap text-right">
+<button class="text-on-surface-variant hover:text-on-surface px-2 py-1 rounded-DEFAULT transition-colors">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer/Pagination -->
+<div class="px-4 py-2 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-status-micro font-status-micro text-on-surface-variant">
+<span>Mostrando 1-3 de 12 pendientes</span>
+<div class="flex gap-1">
+<button class="p-1 hover:text-primary disabled:opacity-50" disabled=""><span class="material-symbols-outlined text-[16px]">chevron_left</span></button>
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-[16px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+</div>

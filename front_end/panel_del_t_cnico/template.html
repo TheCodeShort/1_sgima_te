@@ -1,0 +1,156 @@
+<div class="view-page" data-view="panel_del_t_cnico">
+<main class="flex-1 p-gutter md:p-margin-desktop overflow-auto bg-background">
+<div class="mb-6">
+<h2 class="text-headline-lg font-headline-lg text-on-background mb-1">Resumen Operativo</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Vista general de tareas pendientes y estado de equipos de planta.</p>
+</div>
+<!-- Bento Grid - Status Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<!-- Card: Mantenimientos Pendientes -->
+<div class="bg-surface-card rounded border border-outline-variant p-4 border-l-4 border-l-warning flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-warning">build_circle</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Mantenimientos</span>
+</div>
+<span class="text-status-micro font-status-micro text-warning bg-warning/10 px-2 py-0.5 rounded">ALTA PRIO</span>
+</div>
+<div>
+<div class="text-display-id font-display-id text-on-surface">12</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">Órdenes programadas hoy</div>
+</div>
+</div>
+<!-- Card: Fallas Reportadas -->
+<div class="bg-surface-card rounded border border-outline-variant p-4 border-l-4 border-l-error flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error">warning</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Fallas Reportadas</span>
+</div>
+<span class="text-status-micro font-status-micro text-error bg-error/10 px-2 py-0.5 rounded">CRÍTICO</span>
+</div>
+<div>
+<div class="text-display-id font-display-id text-on-surface">3</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">Requieren atención inmediata</div>
+</div>
+</div>
+<!-- Card: Equipos Operativos -->
+<div class="bg-surface-card rounded border border-outline-variant p-4 border-l-4 border-l-success flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-success">check_circle</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Estado Planta</span>
+</div>
+<span class="text-status-micro font-status-micro text-success bg-success/10 px-2 py-0.5 rounded">ÓPTIMO</span>
+</div>
+<div>
+<div class="text-display-id font-display-id text-on-surface">94%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">Disponibilidad de maquinaria</div>
+</div>
+</div>
+</div>
+<!-- Dense Data Table: Equipos Recientes -->
+<div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden">
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container">
+<h3 class="text-headline-md font-headline-md text-on-surface">Intervenciones Recientes</h3>
+<button class="text-body-sm font-body-sm text-primary hover:text-primary-fixed transition-colors flex items-center gap-1">
+                        Ver todo
+                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-highest sticky top-0 z-10">
+<tr>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">ID Equipo</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Descripción</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Estado</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Última Act.</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="text-data-table font-data-table text-on-surface">
+<!-- Row 1 -->
+<tr class="h-row-height-dense border-b border-outline-variant/50 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 font-mono text-primary-fixed-dim">EQ-2045</td>
+<td class="px-4 py-1">Bomba Centrífuga Principal</td>
+<td class="px-4 py-1">
+<span class="inline-flex items-center gap-1 text-error text-status-micro font-status-micro uppercase bg-error/10 px-1.5 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Falla
+                                    </span>
+</td>
+<td class="px-4 py-1 text-on-surface-variant text-body-sm font-body-sm">Hace 15 min</td>
+<td class="px-4 py-1 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Ver detalle" data-action="detalle-equipo">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Cargar evidencia">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-row-height-dense border-b border-outline-variant/50 hover:bg-surface-container transition-colors bg-surface-container-lowest/30">
+<td class="px-4 py-1 font-mono text-primary-fixed-dim">TR-8812</td>
+<td class="px-4 py-1">Transportadora Línea A</td>
+<td class="px-4 py-1">
+<span class="inline-flex items-center gap-1 text-warning text-status-micro font-status-micro uppercase bg-warning/10 px-1.5 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-warning"></span> Preventivo
+                                    </span>
+</td>
+<td class="px-4 py-1 text-on-surface-variant text-body-sm font-body-sm">Hace 2 horas</td>
+<td class="px-4 py-1 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Ver detalle" data-action="detalle-equipo">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Cargar evidencia">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-row-height-dense border-b border-outline-variant/50 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 font-mono text-primary-fixed-dim">CL-1090</td>
+<td class="px-4 py-1">Caldera Auxiliar Norte</td>
+<td class="px-4 py-1">
+<span class="inline-flex items-center gap-1 text-success text-status-micro font-status-micro uppercase bg-success/10 px-1.5 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span> Operativo
+                                    </span>
+</td>
+<td class="px-4 py-1 text-on-surface-variant text-body-sm font-body-sm">Ayer, 14:30</td>
+<td class="px-4 py-1 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Ver detalle" data-action="detalle-equipo">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-row-height-dense border-b border-outline-variant/50 hover:bg-surface-container transition-colors bg-surface-container-lowest/30">
+<td class="px-4 py-1 font-mono text-primary-fixed-dim">CP-5002</td>
+<td class="px-4 py-1">Compresor de Aire #2</td>
+<td class="px-4 py-1">
+<span class="inline-flex items-center gap-1 text-sync-pending text-status-micro font-status-micro uppercase bg-sync-pending/10 px-1.5 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-sync-pending"></span> En espera
+                                    </span>
+</td>
+<td class="px-4 py-1 text-on-surface-variant text-body-sm font-body-sm">Ayer, 09:15</td>
+<td class="px-4 py-1 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="text-primary hover:text-primary-fixed p-1 rounded hover:bg-surface-container-highest transition-colors" title="Ver detalle" data-action="detalle-equipo">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>

@@ -1,0 +1,170 @@
+<div class="view-page flex flex-col min-h-screen" data-view="cargar_evidencia">
+<!-- Task-Focused Header (Navigation Shell Suppressed) -->
+<header class="bg-surface border-b border-outline-variant h-topbar-height sticky top-0 z-50 flex items-center px-gutter flex-shrink-0 w-full shadow-sm">
+<button aria-label="Volver" class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 -ml-2 rounded-DEFAULT hover:bg-surface-container-highest" type="button" data-action="volver"><span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="ml-4 flex-1">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Cargar Evidencia</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-success text-[18px]">cloud_done</span>
+<span class="font-status-micro text-status-micro text-on-surface-variant uppercase">Sincronizado</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-3xl mx-auto p-gutter md:p-margin-desktop flex flex-col gap-6">
+<!-- Context Card (Association) -->
+<section class="bg-surface-container border-l-4 border-l-primary border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-sm">
+<div class="bg-surface-container-highest p-3 rounded-DEFAULT flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-[28px]">precision_manufacturing</span>
+</div>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">Contexto de Mantenimiento</p>
+<h2 class="font-headline-md text-headline-md text-on-surface">Bomba Centrífuga P-101</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Orden de Trabajo: #WO-2049 • Fase: Inspección Inicial</p>
+</div>
+</section>
+<!-- Upload Zone -->
+<section class="relative group">
+<input accept="image/*,video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" id="file-upload" multiple="" type="file"/>
+<div class="border-2 border-dashed border-outline-variant group-hover:border-primary group-hover:bg-surface-container-high transition-all duration-200 bg-surface-container-low rounded-xl p-8 md:p-12 flex flex-col items-center justify-center text-center gap-4">
+<div class="w-16 h-16 rounded-full bg-surface-variant flex items-center justify-center group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[32px] icon-fill">cloud_upload</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Arrastra archivos aquí o haz clic</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">
+                        Soporta imágenes (JPG, PNG) y videos cortos (MP4). Máximo 50MB por archivo.
+                    </p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-4 mt-4 relative z-20">
+<button class="bg-surface-container-highest border border-outline-variant hover:bg-surface-bright text-on-surface px-4 py-2 rounded-lg font-data-table text-data-table flex items-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+                        Usar Cámara
+                    </button>
+<button class="bg-surface-container-highest border border-outline-variant hover:bg-surface-bright text-on-surface px-4 py-2 rounded-lg font-data-table text-data-table flex items-center gap-2 transition-colors pointer-events-none" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_open</span>
+                        Explorar Galería
+                    </button>
+</div>
+</div>
+</section>
+<!-- Active Upload Progress -->
+<section class="bg-surface-container border border-outline-variant rounded-lg p-4 flex flex-col gap-3 hidden">
+<!-- Simulated hidden state, structurally present for guidance -->
+</section>
+<!-- Uploaded Files List -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">Archivos Preparados</h3>
+<span class="font-status-micro text-status-micro text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded-DEFAULT">2 ELEMENTOS</span>
+</div>
+<!-- List Container -->
+<div class="flex flex-col gap-4">
+<!-- File Item 1 -->
+<article class="bg-surface-container rounded-lg border border-outline-variant p-4 flex flex-col sm:flex-row gap-4 relative overflow-hidden group">
+<!-- Status Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-success"></div>
+<!-- Thumbnail -->
+<div class="w-full sm:w-32 h-32 sm:h-auto rounded-DEFAULT overflow-hidden flex-shrink-0 bg-surface-base border border-outline-variant">
+<img alt="Evidencia fotográfica" class="w-full h-full object-cover" data-alt="A close-up, high-contrast photograph of an industrial metallic component, possibly a pump housing, showing signs of wear and fluid leakage. The lighting is harsh and directional, typical of a flash photograph taken in a dark engine room. The color palette is dominated by deep industrial greys, oily blacks, and subtle rust tones, perfectly matching a dark-mode, utilitarian aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjptyRSbXBS72jvmynhFnlr972tMhE_BaxxKugznnlBCKoEeU8vGD8UYeL2BqYKiSURVtUULoEmldN5_bP4GJModMICR7hRTc3d5bgcL0XOY2asn5peGFWPEZGfyCqiHUXcTrb5sex_dyY1y-CdzMAEU0JUQOzOBRrCk8SrfmPMkU_4jE1bbhLd8q3Lg9CD_xDxBanqNEh9ClteiyTelch9iab-IICGZXp1-icsNQOUup1ziSRwDKa9GJa0LPQd5u9V2MmWJWvFLyH"/>
+</div>
+<!-- Details & Form -->
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-data-table text-data-table text-on-surface font-semibold truncate pr-4">IMG_20231024_0915.jpg</p>
+<p class="font-status-micro text-status-micro text-success mt-1">2.4 MB • Completado</p>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-DEFAULT hover:bg-surface-container-highest" title="Eliminar">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
+<!-- Select Type -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="type-1">Tipo de Evidencia</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-card border border-outline text-on-surface font-body-sm text-body-sm rounded-DEFAULT px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="type-1">
+<option value="antes">Antes del mantenimiento</option>
+<option selected="" value="falla">Falla encontrada</option>
+<option value="reparacion">Proceso de reparación</option>
+<option value="despues">Después del mantenimiento</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+<!-- Input Description -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="desc-1">Descripción Breve</label>
+<input class="w-full bg-surface-card border border-outline text-on-surface font-body-sm text-body-sm rounded-DEFAULT px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50" id="desc-1" placeholder="Ej: Lectura de manómetro" type="text" value="Fuga detectada en sello mecánico"/>
+</div>
+</div>
+</div>
+</article>
+<!-- File Item 2 (Uploading State Simulation) -->
+<article class="bg-surface-container rounded-lg border border-outline-variant p-4 flex flex-col sm:flex-row gap-4 relative overflow-hidden">
+<!-- Status Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-warning"></div>
+<!-- Thumbnail (Placeholder for video) -->
+<div class="w-full sm:w-32 h-32 sm:h-auto rounded-DEFAULT flex-shrink-0 bg-surface-base border border-outline-variant flex items-center justify-center relative">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant">movie</span>
+<div class="absolute inset-0 bg-surface-base/60 flex items-center justify-center">
+<span class="font-status-micro text-status-micro text-on-surface">65%</span>
+</div>
+</div>
+<!-- Details & Form -->
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="w-full">
+<p class="font-data-table text-data-table text-on-surface font-semibold truncate pr-4">VID_ruido_rodamiento.mp4</p>
+<div class="flex items-center gap-2 mt-2">
+<div class="h-1.5 flex-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-warning rounded-full" style="width: 65%;"></div>
+</div>
+<span class="font-status-micro text-status-micro text-warning whitespace-nowrap">Subiendo...</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 ml-4 rounded-DEFAULT hover:bg-surface-container-highest shrink-0" title="Cancelar">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto opacity-50 pointer-events-none">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Tipo de Evidencia</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-card border border-outline text-on-surface font-body-sm text-body-sm rounded-DEFAULT px-3 py-2">
+<option>Seleccionar...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant">arrow_drop_down</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Descripción Breve</label>
+<input class="w-full bg-surface-card border border-outline text-on-surface font-body-sm text-body-sm rounded-DEFAULT px-3 py-2" disabled="" placeholder="Completar al finalizar carga" type="text"/>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Sticky Footer Actions -->
+<footer class="bg-surface border-t border-outline-variant p-gutter sticky bottom-0 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] mt-auto">
+<div class="max-w-3xl mx-auto w-full flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4">
+<button class="w-full sm:w-auto font-data-table text-data-table text-on-surface hover:bg-surface-container-highest px-6 py-2.5 rounded-lg transition-colors border border-transparent hover:border-outline-variant" type="button">
+                Descartar
+            </button>
+<button class="w-full sm:w-auto font-data-table text-data-table bg-surface-container-highest text-on-surface px-6 py-2.5 rounded-lg border border-outline-variant flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                Cargar más archivos
+            </button>
+<button class="w-full sm:w-auto font-data-table text-data-table bg-primary text-on-primary hover:bg-primary-fixed transition-colors px-8 py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                Finalizar Asociación
+            </button>
+</div>
+</footer>
+</div>
