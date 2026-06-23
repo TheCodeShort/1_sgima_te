@@ -2,67 +2,97 @@
  * Router SPA nativo — SIGMA-TE
  */
 const ROUTES = {
-  iniciar_sesi_n: {
-    path: 'iniciar_sesi_n',
+  'iniciar-sesion': {
+    path: 'src/views/iniciar-sesion',
     title: 'Iniciar Sesión',
     fullscreen: true,
     group: 'auth',
+    js: 'login.js',
+    css: 'login.css',
   },
-  panel_del_administrador: {
-    path: 'panel_del_administrador',
+  'panel-administrador': {
+    path: 'src/views/panel-administrador',
     title: 'Panel Administrador',
     group: 'panels',
+    js: 'administrador.js',
+    css: 'administrador.css',
   },
-  panel_del_auditor: {
-    path: 'panel_del_auditor',
+  'panel-auditor': {
+    path: 'src/views/panel-auditor',
     title: 'Panel Auditor',
     group: 'panels',
+    js: 'auditor.js',
+    css: 'auditor.css',
   },
-  panel_del_operario: {
-    path: 'panel_del_operario',
+  'panel-operario': {
+    path: 'src/views/panel-operario',
     title: 'Panel Operario',
     group: 'panels',
+    js: 'operario.js',
+    css: 'operario.css',
   },
-  panel_del_supervisor: {
-    path: 'panel_del_supervisor',
+  'panel-supervisor': {
+    path: 'src/views/panel-supervisor',
     title: 'Panel Supervisor',
     group: 'panels',
+    js: 'supervisor.js',
+    css: 'supervisor.css',
   },
-  panel_del_t_cnico: {
-    path: 'panel_del_t_cnico',
+  'panel-tecnico': {
+    path: 'src/views/panel-tecnico',
     title: 'Panel Técnico',
     group: 'panels',
+    js: 'tecnico.js',
+    css: 'tecnico.css',
   },
-  equipos: { path: 'equipos', title: 'Equipos', group: 'operations' },
-  detalle_del_equipo: {
-    path: 'detalle_del_equipo',
+  equipos: {
+    path: 'src/views/equipos',
+    title: 'Equipos',
+    group: 'operations',
+    js: 'equipos.js',
+    css: 'equipos.css',
+  },
+  'detalle-equipo': {
+    path: 'src/views/detalle-equipo',
     title: 'Detalle del Equipo',
     group: 'operations',
+    js: 'detalle.js',
+    css: 'detalle.css',
   },
-  registrar_falla: {
-    path: 'registrar_falla',
+  'registrar-falla': {
+    path: 'src/views/registrar-falla',
     title: 'Registrar Falla',
     group: 'operations',
+    js: 'registrar-falla.js',
+    css: 'registrar-falla.css',
   },
-  registrar_mantenimiento: {
-    path: 'registrar_mantenimiento',
+  'registrar-mantenimiento': {
+    path: 'src/views/registrar-mantenimiento',
     title: 'Registrar Mantenimiento',
     group: 'operations',
+    js: 'mantenimiento.js',
+    css: 'mantenimiento.css',
   },
-  cargar_evidencia: {
-    path: 'cargar_evidencia',
+  'cargar-evidencia': {
+    path: 'src/views/cargar-evidencia',
     title: 'Cargar Evidencia',
     group: 'operations',
+    js: 'evidencia.js',
+    css: 'evidencia.css',
   },
-  gesti_n_de_usuarios_y_roles: {
-    path: 'gesti_n_de_usuarios_y_roles',
+  'gestion-usuarios-roles': {
+    path: 'src/views/gestion-usuarios-roles',
     title: 'Usuarios y Roles',
     group: 'admin',
+    js: 'gestion.js',
+    css: 'gestion.css',
   },
-  estado_de_sincronizaci_n: {
-    path: 'estado_de_sincronizaci_n',
+  'estado-sincronizacion': {
+    path: 'src/views/estado-sincronizacion',
     title: 'Estado de Sincronización',
     group: 'admin',
+    js: 'sincronizacion.js',
+    css: 'sincronizacion.css',
   },
 };
 
@@ -118,8 +148,8 @@ const Router = {
   },
 
   handleHash() {
-    const hash = window.location.hash.replace(/^#\/?/, '') || 'iniciar_sesi_n';
-    const routeKey = ROUTES[hash] ? hash : 'iniciar_sesi_n';
+    const hash = window.location.hash.replace(/^#\/?/, '') || 'iniciar-sesion';
+    const routeKey = ROUTES[hash] ? hash : 'iniciar-sesion';
     this.loadView(routeKey);
   },
 
@@ -177,14 +207,14 @@ const Router = {
     this.removeViewAssets();
 
     try {
-      const templateRes = await fetch(`${route.path}/template.html`);
-      if (!templateRes.ok) throw new Error(`No se pudo cargar ${route.path}/template.html`);
+      const templateRes = await fetch(`${route.path}/index.html`);
+      if (!templateRes.ok) throw new Error(`No se pudo cargar ${route.path}/index.html`);
       const html = await templateRes.text();
       root.innerHTML = html;
 
       const styleLink = document.createElement('link');
       styleLink.rel = 'stylesheet';
-      styleLink.href = `${route.path}/style.css?v=${Date.now()}`;
+      styleLink.href = `${route.path}/${route.css}?v=${Date.now()}`;
       styleLink.id = 'view-stylesheet';
       styleLink.dataset.route = routeKey;
       document.head.appendChild(styleLink);
@@ -192,11 +222,11 @@ const Router = {
 
       await new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = `${route.path}/script.js?v=${Date.now()}`;
+        script.src = `${route.path}/${route.js}?v=${Date.now()}`;
         script.id = 'view-script';
         script.dataset.route = routeKey;
         script.onload = resolve;
-        script.onerror = () => reject(new Error(`Error cargando ${route.path}/script.js`));
+        script.onerror = () => reject(new Error(`Error cargando ${route.path}/${route.js}`));
         document.body.appendChild(script);
         this.currentScript = script;
       });

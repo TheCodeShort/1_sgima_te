@@ -1,0 +1,12 @@
+.view-page[data-view="panel-tecnico"] .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.view-page[data-view="panel-tecnico"] .no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.view-page[data-view="panel-tecnico"] .h-row-height-dense {
+  height: 40px;
+}

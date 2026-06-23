@@ -1,0 +1,45 @@
+<div class="view-page" data-view="iniciar-sesion">
+<div class="absolute inset-0 z-0 bg-surface-base">
+<div class="absolute inset-0 opacity-20 bg-cover bg-center" data-alt="A softly blurred, highly technical background depicting a modern industrial facility or control room at night. The scene is immersed in a dark, utilitarian aesthetic dominated by deep navy blues, subtle steel greys, and absolute blacks, reflecting a professional maintenance environment. Faint, out-of-focus specular highlights suggest complex machinery, precise engineering tools, and digital monitoring screens. The overall mood is serious, authoritative, and focused, maintaining a clean, high-contrast corporate style specifically engineered to complement a dark-mode user interface without causing visual distraction." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgUT8CbaY0AAGfgfrvlJstJqTqPYLmZz9xk6tb9TqM360WsHaOCmU4IVhc25SQngxWCWhEAPNz5up_PUV2rWc0J9bByn_wLqTzQpSaG9bLRmuD1aaOtPCNwYj1fH0EKPwe2Twfcg5n83ruLIQ2me3ETKeJNyxoQmASyOJ79NJWt3-zofdyzamH9KWBq3JUMb-nD9oxZsbtGHgYx-nvuOgsCJ5XKSHIPfVDYKdpF7Vh4W4MYQPP2GLT4upl-Usa7i8RXjReVxrO_E7b');"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background"></div>
+</div>
+<button aria-label="Toggle theme" class="absolute top-6 right-6 z-20 p-2 rounded-full bg-surface-container hover:bg-surface-container-highest border border-outline-variant text-on-surface transition-colors flex items-center justify-center" id="themeToggle">
+<span class="material-symbols-outlined" id="themeIcon">light_mode</span>
+</button>
+<main class="relative z-10 w-full max-w-[420px] mx-4 p-8 bg-surface-container-low rounded-xl border border-outline-variant shadow-2xl flex flex-col gap-8">
+<header class="flex flex-col items-center justify-center text-center gap-2">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant mb-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">engineering</span>
+</div>
+<h1 class="font-display-id text-display-id text-primary tracking-tight">SIGMA-TE</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Sistema de Gestión de Mantenimiento</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/70 mt-1">Demo: admin, auditor, supervisor, tecnico, operario</p>
+</header>
+<form class="flex flex-col gap-5" onsubmit="event.preventDefault();" id="login-form">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface" for="username">Usuario</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">person</span>
+<input class="w-full bg-surface-card border border-outline-variant text-on-surface font-body-md text-body-md rounded py-2.5 pl-10 pr-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" id="username" name="username" placeholder="Ingrese su usuario" required="" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface" for="password">Contraseña</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">lock</span>
+<input class="w-full bg-surface-card border border-outline-variant text-on-surface font-body-md text-body-md rounded py-2.5 pl-10 pr-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between mt-1">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 rounded-sm border-outline-variant bg-surface-card text-primary focus:ring-primary focus:ring-offset-background focus:ring-offset-2 transition-colors cursor-pointer" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Recordar sesión</span>
+</label>
+</div>
+<button class="w-full mt-2 bg-primary text-on-primary font-headline-md text-headline-md py-3 px-4 rounded-lg hover:bg-primary-fixed transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background flex justify-center items-center gap-2" type="submit" id="login-submit">
+                Iniciar sesión
+                <span class="material-symbols-outlined text-sm">login</span>
+</button>
+</form>
+</main>
+</div>

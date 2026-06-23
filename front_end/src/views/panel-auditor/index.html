@@ -1,0 +1,212 @@
+<div class="view-page" data-view="panel-auditor">
+<main class="flex-1 ml-0 h-screen overflow-y-auto flex flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-gutter h-topbar-height w-full bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant p-2 rounded-lg hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex items-center gap-2">
+<span class="material-symbols-outlined text-success text-[18px]">cloud_done</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant">Sincronizado</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full" title="Sync">
+<span class="material-symbols-outlined">sync</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full" title="Theme">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full relative" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-px h-6 bg-outline-variant mx-2"></div>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional headshot of a male auditor in a dark suit, sharply focused against a dark, tech-inspired background. The lighting is crisp and cool, reflecting an authoritative and analytical presence suitable for a high-end dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH1bplId8eN-MvsnvgIzqjYLObDaJRMlkFcQWq6RH_rjVAuY-mt8axWQTceLDJezI_cEaUMx8SGHn3sysPE6rUlU560h4g2meSTmAYUrdngCVsoxmKclxIfxCqwI2-nep9jX4Z3kL05K9jplQeCPAqmj7mhvIIawCeghtbSOlLNa9SG14mVkgPbf4kNhbuJgnuypLy2C6Mr_xm65axw55123FxnoP4krVOA8L9ioEuEwF648N9rpfSqY_eyZGumf5wOVCqVxGsDQKB"/>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-margin-mobile md:p-margin-desktop flex flex-col gap-6 max-w-[1600px] mx-auto w-full">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-display-id font-display-id text-on-background mb-1">Trazabilidad de Sistema</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Consulta de eventos, registros de acceso y logs de operación (Solo Lectura).</p>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Search & Filters (Span 12) -->
+<div class="lg:col-span-12 bg-surface-card border border-outline-variant rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center">
+<div class="relative w-full md:w-96 flex-shrink-0">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface text-body-md font-body-md rounded-lg pl-10 pr-4 py-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="ID de Evento, Usuario o Equipo..." type="text"/>
+</div>
+<div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+<span class="bg-surface-container border border-outline-variant text-on-surface-variant text-label-caps font-label-caps px-3 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error"></span> CRÍTICO
+                        </span>
+<span class="bg-surface-container border border-outline-variant text-on-surface-variant text-label-caps font-label-caps px-3 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-warning"></span> MODIFICACIÓN
+                        </span>
+<span class="bg-primary-container/20 border border-primary/30 text-primary text-label-caps font-label-caps px-3 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">filter_list</span> FILTROS AVANZADOS
+                        </span>
+</div>
+<div class="ml-auto text-status-micro font-status-micro text-on-surface-variant flex items-center gap-1 bg-surface-container px-2 py-1 rounded-DEFAULT border border-outline-variant">
+<span class="material-symbols-outlined text-[12px]">calendar_today</span> 24h Últimas
+                    </div>
+</div>
+<!-- Global Timeline (Span 8) -->
+<div class="lg:col-span-8 bg-surface-card border border-outline-variant rounded-xl p-6 flex flex-col">
+<h3 class="text-headline-md font-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span> Línea de Tiempo Global
+                    </h3>
+<div class="relative pl-6 flex-1 border-l border-outline-variant/30 space-y-8">
+<!-- Event Item -->
+<div class="relative">
+<span class="absolute -left-[31px] bg-surface-card border-2 border-warning w-4 h-4 rounded-full mt-1"></span>
+<div class="flex flex-col sm:flex-row sm:justify-between items-start mb-2">
+<span class="text-label-caps font-label-caps text-warning mb-1 sm:mb-0">MODIFICACIÓN PARÁMETRO</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant font-mono">14:32:05 CST</span>
+</div>
+<div class="bg-surface-container border border-outline-variant rounded-lg p-3">
+<p class="text-body-md font-body-md text-on-surface mb-2">El usuario <span class="text-primary">ADMIN-04</span> modificó el límite de presión operativa del equipo <span class="font-mono bg-surface-container-lowest px-1 py-0.5 rounded-DEFAULT border border-outline-variant/50">EQ-VALV-882</span>.</p>
+<div class="grid grid-cols-2 gap-2 mt-2 bg-surface-container-lowest p-2 rounded-DEFAULT border border-outline-variant/30">
+<div>
+<p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Valor Anterior</p>
+<p class="text-body-sm font-body-sm text-on-surface font-mono text-error line-through">450 PSI</p>
+</div>
+<div>
+<p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Nuevo Valor</p>
+<p class="text-body-sm font-body-sm text-on-surface font-mono text-success">480 PSI</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Event Item -->
+<div class="relative">
+<span class="absolute -left-[31px] bg-surface-card border-2 border-primary w-4 h-4 rounded-full mt-1"></span>
+<div class="flex flex-col sm:flex-row sm:justify-between items-start mb-2">
+<span class="text-label-caps font-label-caps text-primary mb-1 sm:mb-0">ACCESO AL SISTEMA</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant font-mono">13:15:22 CST</span>
+</div>
+<div class="bg-surface-container border border-outline-variant rounded-lg p-3">
+<p class="text-body-md font-body-md text-on-surface">Inicio de sesión exitoso desde terminal remota (IP: 192.168.10.45). Rol: Técnico de Campo.</p>
+</div>
+</div>
+<!-- Event Item -->
+<div class="relative">
+<span class="absolute -left-[31px] bg-surface-card border-2 border-error w-4 h-4 rounded-full mt-1"></span>
+<div class="flex flex-col sm:flex-row sm:justify-between items-start mb-2">
+<span class="text-label-caps font-label-caps text-error mb-1 sm:mb-0">INTENTO FALLIDO - OVERRIDE</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant font-mono">11:05:40 CST</span>
+</div>
+<div class="bg-surface-container border border-outline-variant rounded-lg p-3">
+<p class="text-body-md font-body-md text-on-surface">Intento no autorizado de forzar apertura de <span class="font-mono bg-surface-container-lowest px-1 py-0.5 rounded-DEFAULT border border-outline-variant/50">COMP-02</span>. Credenciales insuficientes.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Span 4) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Stats Card -->
+<div class="bg-surface-card border border-outline-variant rounded-xl p-5 relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-0"></div>
+<h3 class="text-label-caps font-label-caps text-on-surface-variant mb-4 flex items-center gap-2 relative z-10">
+<span class="material-symbols-outlined text-[16px]">monitoring</span> RESUMEN DE ACTIVIDAD
+                        </h3>
+<div class="grid grid-cols-2 gap-4 relative z-10">
+<div>
+<p class="text-display-id font-display-id text-on-surface">1,402</p>
+<p class="text-status-micro font-status-micro text-on-surface-variant mt-1">Eventos Totales</p>
+</div>
+<div>
+<p class="text-display-id font-display-id text-error">12</p>
+<p class="text-status-micro font-status-micro text-on-surface-variant mt-1">Alertas Críticas</p>
+</div>
+</div>
+</div>
+<!-- Compliance Reports -->
+<div class="bg-surface-card border border-outline-variant rounded-xl flex-1 flex flex-col">
+<div class="p-4 border-b border-outline-variant">
+<h3 class="text-headline-md font-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">summarize</span> Reportes de Cumplimiento
+                            </h3>
+</div>
+<div class="p-2 flex flex-col gap-1">
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container cursor-pointer group transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">picture_as_pdf</span>
+<div>
+<p class="text-body-sm font-body-sm text-on-surface">ISO-9001 Trazabilidad Q3</p>
+<p class="text-status-micro font-status-micro text-on-surface-variant">Generado: Ayer, 18:00</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container cursor-pointer group transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">description</span>
+<div>
+<p class="text-body-sm font-body-sm text-on-surface">Auditoría Interna - Accesos</p>
+<p class="text-status-micro font-status-micro text-on-surface-variant">Generado: 12 Oct 2023</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
+</div>
+</div>
+</div>
+</div>
+<!-- System Logs Data Table (Span 12) -->
+<div class="lg:col-span-12 bg-surface-card border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-headline-md font-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span> Logs del Sistema Raw
+                        </h3>
+<span class="text-status-micro font-status-micro text-on-surface-variant font-mono">Mostrando últimos 50 registros</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant">
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant w-32">TIMESTAMP</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant w-32">NIVEL</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant w-40">FUENTE</th>
+<th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant">MENSAJE (RAW)</th>
+</tr>
+</thead>
+<tbody class="text-data-table font-data-table font-mono text-on-surface">
+<tr class="h-[row-height-dense] border-b border-outline-variant/30 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 text-on-surface-variant text-[11px]">2023-10-24 14:32:05</td>
+<td class="px-4 py-1"><span class="text-warning">WARN</span></td>
+<td class="px-4 py-1 text-[12px]">ParamManager</td>
+<td class="px-4 py-1 text-[11px] opacity-80">{"action":"update","entity":"EQ-VALV-882","field":"pressure_limit","old":450,"new":480,"user":"U-9921"}</td>
+</tr>
+<tr class="h-[row-height-dense] border-b border-outline-variant/30 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 text-on-surface-variant text-[11px]">2023-10-24 14:30:12</td>
+<td class="px-4 py-1"><span class="text-success">INFO</span></td>
+<td class="px-4 py-1 text-[12px]">SyncService</td>
+<td class="px-4 py-1 text-[11px] opacity-80">Batch synchronization completed. 14 records processed. Latency: 45ms.</td>
+</tr>
+<tr class="h-[row-height-dense] border-b border-outline-variant/30 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 text-on-surface-variant text-[11px]">2023-10-24 13:15:22</td>
+<td class="px-4 py-1"><span class="text-success">INFO</span></td>
+<td class="px-4 py-1 text-[12px]">AuthModule</td>
+<td class="px-4 py-1 text-[11px] opacity-80">Session created for U-4412 via JWT. IP: 192.168.10.45. Device: Mobile_Terminal_B.</td>
+</tr>
+<tr class="h-[row-height-dense] border-b border-outline-variant/30 hover:bg-surface-container transition-colors">
+<td class="px-4 py-1 text-on-surface-variant text-[11px]">2023-10-24 11:05:40</td>
+<td class="px-4 py-1"><span class="text-error font-bold">ERROR</span></td>
+<td class="px-4 py-1 text-[12px]">AccessControl</td>
+<td class="px-4 py-1 text-[11px] opacity-80 text-error/80">Permission denied. Action OVERRIDE requires ROLE_ADMIN. User U-7721 requested on COMP-02.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>

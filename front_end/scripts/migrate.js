@@ -1,26 +1,58 @@
 /**
- * Script de migración: separa code.html en template.html, style.css y script.js
+ * Script de migración: separa code.html en index.html, <view>.css y <view>.js
  */
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '../src/views');
 
 const FOLDERS = [
-  'cargar_evidencia',
-  'detalle_del_equipo',
+  'cargar-evidencia',
+  'detalle-equipo',
   'equipos',
-  'estado_de_sincronizaci_n',
-  'gesti_n_de_usuarios_y_roles',
-  'iniciar_sesi_n',
-  'panel_del_administrador',
-  'panel_del_auditor',
-  'panel_del_operario',
-  'panel_del_supervisor',
-  'panel_del_t_cnico',
-  'registrar_falla',
-  'registrar_mantenimiento',
+  'estado-sincronizacion',
+  'gestion-usuarios-roles',
+  'iniciar-sesion',
+  'panel-administrador',
+  'panel-auditor',
+  'panel-operario',
+  'panel-supervisor',
+  'panel-tecnico',
+  'registrar-falla',
+  'registrar-mantenimiento',
 ];
+
+const SCRIPT_NAMES = {
+  'cargar-evidencia': 'evidencia.js',
+  'detalle-equipo': 'detalle.js',
+  'equipos': 'equipos.js',
+  'estado-sincronizacion': 'sincronizacion.js',
+  'gestion-usuarios-roles': 'gestion.js',
+  'iniciar-sesion': 'login.js',
+  'panel-administrador': 'administrador.js',
+  'panel-auditor': 'auditor.js',
+  'panel-operario': 'operario.js',
+  'panel-supervisor': 'supervisor.js',
+  'panel-tecnico': 'tecnico.js',
+  'registrar-falla': 'registrar-falla.js',
+  'registrar-mantenimiento': 'mantenimiento.js'
+};
+
+const CSS_NAMES = {
+  'cargar-evidencia': 'evidencia.css',
+  'detalle-equipo': 'detalle.css',
+  'equipos': 'equipos.css',
+  'estado-sincronizacion': 'sincronizacion.css',
+  'gestion-usuarios-roles': 'gestion.css',
+  'iniciar-sesion': 'login.css',
+  'panel-administrador': 'administrador.css',
+  'panel-auditor': 'auditor.css',
+  'panel-operario': 'operario.css',
+  'panel-supervisor': 'supervisor.css',
+  'panel-tecnico': 'tecnico.css',
+  'registrar-falla': 'registrar-falla.css',
+  'registrar-mantenimiento': 'mantenimiento.css'
+};
 
 function extractStyles(html) {
   const styles = [];
@@ -56,7 +88,7 @@ function stripEmbeddedNav(body) {
 }
 
 function unwrapMainContent(body, folder) {
-  const fullscreenViews = ['iniciar_sesi_n', 'registrar_falla', 'cargar_evidencia'];
+  const fullscreenViews = ['iniciar-sesion', 'registrar-falla', 'cargar-evidencia'];
   if (fullscreenViews.includes(folder)) {
     return body;
   }
@@ -99,28 +131,28 @@ function bindNavigation(root, ctx) {
   root.querySelectorAll('[data-action="registrar-falla"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      ctx.navigate('registrar_falla');
+      ctx.navigate('registrar-falla');
     });
   });
 
   root.querySelectorAll('[data-action="registrar-mantenimiento"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      ctx.navigate('registrar_mantenimiento');
+      ctx.navigate('registrar-mantenimiento');
     });
   });
 
   root.querySelectorAll('[data-action="cargar-evidencia"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      ctx.navigate('cargar_evidencia');
+      ctx.navigate('cargar-evidencia');
     });
   });
 
   root.querySelectorAll('[data-action="detalle-equipo"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      ctx.navigate('detalle_del_equipo');
+      ctx.navigate('detalle-equipo');
     });
   });
 
@@ -176,7 +208,7 @@ function enhanceTemplate(html, folder) {
     '<button$1 data-action="volver"><span class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform">arrow_back</span>'
   );
 
-  if (folder === 'iniciar_sesi_n') {
+  if (folder === 'iniciar-sesion') {
     result = result.replace(
       /<form([^>]*)>/i,
       '<form$1 id="login-form">'
@@ -227,7 +259,7 @@ window.initView = initView;
 
 function registrarFallaScript() {
   return `function initView(ctx) {
-  const root = document.querySelector('[data-view="registrar_falla"]') || document.getElementById('app-root');
+  const root = document.querySelector('[data-view="registrar-falla"]') || document.getElementById('app-root');
   bindNavigation(root, ctx);
 
   const now = new Date();
@@ -244,7 +276,7 @@ function registrarFallaScript() {
   root.querySelector('button[type="submit"], .bg-primary.text-on-primary')?.addEventListener('click', (e) => {
     if (e.target.closest('form') || e.target.textContent.includes('Registrar')) {
       e.preventDefault();
-      ctx.navigate('cargar_evidencia');
+      ctx.navigate('cargar-evidencia');
     }
   });
 
@@ -282,12 +314,15 @@ function migrateFolder(folder) {
   body = unwrapMainContent(body, folder);
   body = enhanceTemplate(body, folder);
 
+  const cssName = CSS_NAMES[folder] || 'style.css';
+  const jsName = SCRIPT_NAMES[folder] || 'script.js';
+
   const viewCss = css || `/* Estilos específicos: ${folder} */\n.view-page[data-view="${folder}"] { min-height: 100%; }\n`;
 
   let viewJs = extractedJs;
-  if (folder === 'iniciar_sesi_n') {
+  if (folder === 'iniciar-sesion') {
     viewJs = loginScript();
-  } else if (folder === 'registrar_falla') {
+  } else if (folder === 'registrar-falla') {
     viewJs = registrarFallaScript();
   } else if (!viewJs.trim()) {
     viewJs = defaultScript(folder);
@@ -295,9 +330,9 @@ function migrateFolder(folder) {
     viewJs = defaultScript(folder).replace('function initView', `/* Script original */\n${viewJs}\n\nfunction initView`);
   }
 
-  fs.writeFileSync(path.join(ROOT, folder, 'template.html'), body, 'utf8');
-  fs.writeFileSync(path.join(ROOT, folder, 'style.css'), viewCss, 'utf8');
-  fs.writeFileSync(path.join(ROOT, folder, 'script.js'), viewJs, 'utf8');
+  fs.writeFileSync(path.join(ROOT, folder, 'index.html'), body, 'utf8');
+  fs.writeFileSync(path.join(ROOT, folder, cssName), viewCss, 'utf8');
+  fs.writeFileSync(path.join(ROOT, folder, jsName), viewJs, 'utf8');
   fs.unlinkSync(codePath);
 
   const screenPath = path.join(ROOT, folder, 'screen.png');

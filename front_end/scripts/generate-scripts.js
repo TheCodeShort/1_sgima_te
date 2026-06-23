@@ -1,13 +1,29 @@
 /**
- * Genera script.js mejorado para cada vista
+ * Genera script.js mejorado para cada vista (Estructura src/views/)
  */
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const VIEWS_DIR = path.resolve(__dirname, '../src/views');
+
+const SCRIPT_NAMES = {
+  'cargar-evidencia': 'evidencia.js',
+  'detalle-equipo': 'detalle.js',
+  'equipos': 'equipos.js',
+  'estado-sincronizacion': 'sincronizacion.js',
+  'gestion-usuarios-roles': 'gestion.js',
+  'iniciar-sesion': 'login.js',
+  'panel-administrador': 'administrador.js',
+  'panel-auditor': 'auditor.js',
+  'panel-operario': 'operario.js',
+  'panel-supervisor': 'supervisor.js',
+  'panel-tecnico': 'tecnico.js',
+  'registrar-falla': 'registrar-falla.js',
+  'registrar-mantenimiento': 'mantenimiento.js'
+};
 
 const VIEW_SCRIPTS = {
-  iniciar_sesi_n: `function initView(ctx) {
+  'iniciar-sesion': `function initView(ctx) {
   const form = document.getElementById('login-form');
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');
@@ -38,8 +54,8 @@ function detectRole(username) {
 
 window.initView = initView;`,
 
-  registrar_falla: `function initView(ctx) {
-  const root = document.querySelector('[data-view="registrar_falla"]') || document.getElementById('app-root');
+  'registrar-falla': `function initView(ctx) {
+  const root = document.querySelector('[data-view="registrar-falla"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 
   const now = new Date();
@@ -51,7 +67,7 @@ window.initView = initView;`,
   root.querySelector('button.bg-primary, button[type="submit"]')?.addEventListener('click', (e) => {
     if (e.target.closest('form') || e.target.textContent.includes('Registrar')) {
       e.preventDefault();
-      ctx.navigate('cargar_evidencia');
+      ctx.navigate('cargar-evidencia');
     }
   });
 
@@ -64,8 +80,8 @@ window.initView = initView;`,
 
 window.initView = initView;`,
 
-  cargar_evidencia: `function initView(ctx) {
-  const root = document.querySelector('[data-view="cargar_evidencia"]') || document.getElementById('app-root');
+  'cargar-evidencia': `function initView(ctx) {
+  const root = document.querySelector('[data-view="cargar-evidencia"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 
   const fileInput = root.querySelector('#file-upload');
@@ -82,25 +98,25 @@ window.initView = initView;`,
       btn.addEventListener('click', () => ctx.navigate(AppState.getPanelRoute()));
     }
     if (btn.textContent.includes('Descartar')) {
-      btn.addEventListener('click', () => ctx.navigate('registrar_mantenimiento'));
+      btn.addEventListener('click', () => ctx.navigate('registrar-mantenimiento'));
     }
   });
 }
 
 window.initView = initView;`,
 
-  registrar_mantenimiento: `function initView(ctx) {
-  const root = document.querySelector('[data-view="registrar_mantenimiento"]') || document.getElementById('app-root');
+  'registrar-mantenimiento': `function initView(ctx) {
+  const root = document.querySelector('[data-view="registrar-mantenimiento"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 
   root.querySelectorAll('button').forEach((btn) => {
     if (btn.textContent.includes('Guardar')) {
-      btn.addEventListener('click', () => ctx.navigate('cargar_evidencia'));
+      btn.addEventListener('click', () => ctx.navigate('cargar-evidencia'));
     }
     if (btn.textContent.includes('Volver')) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        ctx.navigate('detalle_del_equipo');
+        ctx.navigate('detalle-equipo');
       });
     }
   });
@@ -108,8 +124,8 @@ window.initView = initView;`,
 
 window.initView = initView;`,
 
-  detalle_del_equipo: `function initView(ctx) {
-  const root = document.querySelector('[data-view="detalle_del_equipo"]') || document.getElementById('app-root');
+  'detalle-equipo': `function initView(ctx) {
+  const root = document.querySelector('[data-view="detalle-equipo"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 
   root.querySelectorAll('button').forEach((btn) => {
@@ -123,8 +139,8 @@ window.initView = initView;`,
 
 window.initView = initView;`,
 
-  estado_de_sincronizaci_n: `function initView(ctx) {
-  const root = document.querySelector('[data-view="estado_de_sincronizaci_n"]') || document.getElementById('app-root');
+  'estado-sincronizacion': `function initView(ctx) {
+  const root = document.querySelector('[data-view="estado-sincronizacion"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 
   root.querySelectorAll('button').forEach((btn) => {
@@ -140,8 +156,8 @@ window.initView = initView;`,
 
 window.initView = initView;`,
 
-  gesti_n_de_usuarios_y_roles: `function initView(ctx) {
-  const root = document.querySelector('[data-view="gesti_n_de_usuarios_y_roles"]') || document.getElementById('app-root');
+  'gestion-usuarios-roles': `function initView(ctx) {
+  const root = document.querySelector('[data-view="gestion-usuarios-roles"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
 }
 
@@ -156,7 +172,7 @@ const DEFAULT = (folder) => `function initView(ctx) {
     const text = el.textContent.trim();
     if (/^Equipos$/i.test(text)) el.setAttribute('data-nav', 'equipos');
     if (/Nueva Falla/i.test(text)) el.setAttribute('data-action', 'registrar-falla');
-    if (/Usuarios/i.test(text)) el.setAttribute('data-nav', 'gesti_n_de_usuarios_y_roles');
+    if (/Usuarios/i.test(text)) el.setAttribute('data-nav', 'gestion-usuarios-roles');
     if (/Sincron/i.test(text) && el.tagName === 'BUTTON') el.setAttribute('data-action', 'sync');
     if (/Cerrar Sesión/i.test(text)) el.setAttribute('data-action', 'logout');
   });
@@ -166,12 +182,13 @@ const DEFAULT = (folder) => `function initView(ctx) {
 
 window.initView = initView;`;
 
-const folders = fs.readdirSync(ROOT).filter((f) => fs.existsSync(path.join(ROOT, f, 'template.html')));
+const folders = fs.readdirSync(VIEWS_DIR).filter((f) => fs.existsSync(path.join(VIEWS_DIR, f, 'index.html')));
 
 folders.forEach((folder) => {
+  const scriptName = SCRIPT_NAMES[folder] || 'script.js';
   const content = VIEW_SCRIPTS[folder] || DEFAULT(folder);
-  fs.writeFileSync(path.join(ROOT, folder, 'script.js'), content, 'utf8');
-  console.log(`Script: ${folder}`);
+  fs.writeFileSync(path.join(VIEWS_DIR, folder, scriptName), content, 'utf8');
+  console.log(`Script: ${folder}/${scriptName}`);
 });
 
 console.log('Scripts actualizados.');

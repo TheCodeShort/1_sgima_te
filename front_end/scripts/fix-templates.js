@@ -1,31 +1,31 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const VIEWS_DIR = path.resolve(__dirname, '../src/views');
 
-const FOLDERS = fs.readdirSync(ROOT).filter((f) => {
-  const p = path.join(ROOT, f, 'template.html');
-  return fs.existsSync(p) && fs.statSync(path.join(ROOT, f)).isDirectory();
+const FOLDERS = fs.readdirSync(VIEWS_DIR).filter((f) => {
+  const p = path.join(VIEWS_DIR, f, 'index.html');
+  return fs.existsSync(p) && fs.statSync(path.join(VIEWS_DIR, f)).isDirectory();
 });
 
 function fixTemplate(folder) {
-  const file = path.join(ROOT, folder, 'template.html');
+  const file = path.join(VIEWS_DIR, folder, 'index.html');
   let html = fs.readFileSync(file, 'utf8');
 
   html = html.replace(/\smd:ml-\[260px\]/g, '');
   html = html.replace(/\smd:ml-sidebar-width/g, '');
   html = html.replace(/\sml-0 md:ml-\[260px\]/g, '');
 
-  if (folder === 'iniciar_sesi_n' && !html.includes('data-view="iniciar_sesi_n"')) {
-    html = `<div class="view-page" data-view="iniciar_sesi_n">\n${html}\n</div>`;
+  if (folder === 'iniciar-sesion' && !html.includes('data-view="iniciar-sesion"')) {
+    html = `<div class="view-page" data-view="iniciar-sesion">\n${html}\n</div>`;
   }
 
-  if (folder === 'registrar_falla' && !html.includes('data-view="registrar_falla"')) {
-    html = `<div class="view-page" data-view="registrar_falla">\n${html}\n</div>`;
+  if (folder === 'registrar-falla' && !html.includes('data-view="registrar-falla"')) {
+    html = `<div class="view-page" data-view="registrar-falla">\n${html}\n</div>`;
   }
 
-  if (folder === 'cargar_evidencia' && !html.includes('data-view="cargar_evidencia"')) {
-    html = `<div class="view-page flex flex-col min-h-screen" data-view="cargar_evidencia">\n${html}\n</div>`;
+  if (folder === 'cargar-evidencia' && !html.includes('data-view="cargar-evidencia"')) {
+    html = `<div class="view-page flex flex-col min-h-screen" data-view="cargar-evidencia">\n${html}\n</div>`;
   }
 
   html = html.replace(
@@ -42,7 +42,7 @@ function fixTemplate(folder) {
     'Guardar Registro'
   );
 
-  if (folder.includes('panel_del_')) {
+  if (folder.includes('panel-')) {
     html = html.replace(
       /(<a[^>]*>\s*<span class="material-symbols-outlined[^"]*">settings_suggest<\/span>\s*<span[^>]*>Equipos<\/span>\s*<\/a>)/gi,
       '<a href="#" data-nav="equipos" class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 rounded-lg"><span class="material-symbols-outlined">settings_suggest</span><span class="text-body-sm font-body-sm">Equipos</span></a>'

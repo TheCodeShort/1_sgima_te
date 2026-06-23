@@ -1,0 +1,203 @@
+<div class="view-page" data-view="registrar-mantenimiento">
+<main class="flex-1 flex flex-col min-h-screen">
+<!-- Desktop Topbar (Sync status context) -->
+<div class="hidden md:flex sticky top-0 z-30 h-topbar-height bg-surface/90 backdrop-blur-sm border-b border-outline-variant px-margin-desktop items-center justify-between">
+<div class="flex items-center gap-2">
+<!-- Sync Indicator (Design System requirement) -->
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-highest">
+<span class="material-symbols-outlined text-success text-[14px]" data-icon="cloud_sync" data-weight="fill">cloud_sync</span>
+<span class="text-status-micro font-status-micro text-on-surface-variant uppercase tracking-wider">Sincronizado</span>
+</div>
+</div>
+<!-- Breadcrumbs / Context -->
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span>Ordenes</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface">Registrar Mantenimiento</span>
+</div>
+</div>
+<!-- Canvas -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop">
+<!-- Page Header -->
+<div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-display-id font-display-id text-on-surface mb-1">Registrar Mantenimiento</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Complete los detalles de la intervención técnica realizada.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-container-highest text-on-surface hover:bg-surface-bright transition-colors rounded text-body-md font-headline-md flex items-center gap-2 border border-outline-variant" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+                        Volver
+                    </button>
+<!-- Main Save Button - Primary Action -->
+<button class="px-4 py-2 bg-primary-container text-on-primary-container hover:bg-primary-container/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-colors rounded text-body-md font-headline-md flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="save">save</span>
+                        Guardar Registro
+                    </button>
+</div>
+</div>
+<!-- Form Grid Layout (Bento-style approach for forms) -->
+<form class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Main Details Panel -->
+<div class="lg:col-span-8 space-y-6">
+<!-- Card: Basic Info -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-5 relative overflow-hidden">
+<!-- Accent Border for structure -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="info">info</span>
+                            Información General
+                        </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Field: Equipo -->
+<div class="space-y-1.5 md:col-span-2">
+<label class="block text-label-caps font-label-caps text-on-surface-variant" for="equipo">EQUIPO INTERVENIDO <span class="text-error">*</span></label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="build_circle">build_circle</span>
+</div>
+<select class="w-full pl-10 pr-3 py-2.5 rounded text-body-md font-body-md appearance-none" id="equipo" name="equipo">
+<option disabled="" selected="" value="">Seleccione un equipo...</option>
+<option value="eq-001">EQ-001 - Compresor Principal A</option>
+<option value="eq-002">EQ-002 - Cinta Transportadora L2</option>
+<option value="eq-003">EQ-003 - Motor Extractor Sur</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Field: Tipo de Mantenimiento -->
+<div class="space-y-1.5 md:col-span-2">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">TIPO DE MANTENIMIENTO <span class="text-error">*</span></label>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<label class="relative flex items-center cursor-pointer">
+<input class="peer sr-only" name="tipo_mantenimiento" type="radio" value="preventivo"/>
+<div class="w-full p-3 rounded border border-outline-variant bg-surface-card peer-checked:border-primary peer-checked:bg-primary/10 transition-all flex items-center gap-3">
+<div class="w-4 h-4 rounded-full border border-outline-variant peer-checked:border-primary flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary text-[20px]" data-icon="calendar_month">calendar_month</span>
+<span class="text-body-md font-body-md text-on-surface">Preventivo</span>
+</div>
+</label>
+<label class="relative flex items-center cursor-pointer">
+<input class="peer sr-only" name="tipo_mantenimiento" type="radio" value="correctivo"/>
+<div class="w-full p-3 rounded border border-outline-variant bg-surface-card peer-checked:border-error peer-checked:bg-error/10 transition-all flex items-center gap-3">
+<div class="w-4 h-4 rounded-full border border-outline-variant peer-checked:border-error flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-error opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-error text-[20px]" data-icon="warning">warning</span>
+<span class="text-body-md font-body-md text-on-surface">Correctivo</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Card: Execution Details -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-5 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary-container"></div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="engineering">engineering</span>
+                            Ejecución
+                        </h3>
+<div class="space-y-5">
+<!-- Field: Actividades Realizadas -->
+<div class="space-y-1.5">
+<label class="block text-label-caps font-label-caps text-on-surface-variant" for="actividades">ACTIVIDADES REALIZADAS <span class="text-error">*</span></label>
+<textarea class="w-full p-3 rounded text-body-md font-body-md resize-y" id="actividades" name="actividades" placeholder="Describa detalladamente las tareas ejecutadas durante la intervención..." rows="4"></textarea>
+</div>
+<!-- Field: Repuestos Utilizados -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between mb-1">
+<label class="block text-label-caps font-label-caps text-on-surface-variant" for="repuestos">REPUESTOS UTILIZADOS</label>
+<button class="text-primary hover:text-primary-fixed transition-colors text-status-micro font-status-micro uppercase flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="qr_code_scanner">qr_code_scanner</span>
+                                        Escanear Parte
+                                    </button>
+</div>
+<textarea class="w-full p-3 rounded text-body-md font-body-md resize-y" id="repuestos" name="repuestos" placeholder="Ej: 2x Filtro Aceite (SKU-1029), 1x Correa Transmisión..." rows="2"></textarea>
+<p class="text-status-micro font-status-micro text-on-surface-variant mt-1">Deje en blanco si no se utilizaron materiales adicionales.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Panel (Status & Metadata) -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Card: Outcome -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-5 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant"></div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="task_alt">task_alt</span>
+                            Resolución
+                        </h3>
+<!-- Field: Resultado -->
+<div class="space-y-1.5 mb-5">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">RESULTADO FINAL <span class="text-error">*</span></label>
+<div class="space-y-2">
+<label class="relative flex items-center cursor-pointer group">
+<input checked="" class="peer sr-only" name="resultado" type="radio" value="exitoso"/>
+<div class="w-full p-3 rounded border border-outline-variant bg-surface-card peer-checked:border-success peer-checked:bg-success/10 transition-all flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-success text-[20px]" data-icon="check_circle">check_circle</span>
+<span class="text-body-md font-body-md text-on-surface">Exitoso</span>
+</div>
+<div class="w-4 h-4 rounded-full border border-outline-variant peer-checked:border-success flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-success opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</label>
+<label class="relative flex items-center cursor-pointer group">
+<input class="peer sr-only" name="resultado" type="radio" value="pendiente"/>
+<div class="w-full p-3 rounded border border-outline-variant bg-surface-card peer-checked:border-warning peer-checked:bg-warning/10 transition-all flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-warning text-[20px]" data-icon="schedule">schedule</span>
+<span class="text-body-md font-body-md text-on-surface">Pendiente</span>
+</div>
+<div class="w-4 h-4 rounded-full border border-outline-variant peer-checked:border-warning flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-warning opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Field: Observaciones -->
+<div class="space-y-1.5">
+<label class="block text-label-caps font-label-caps text-on-surface-variant" for="observaciones">OBSERVACIONES INTERNAS</label>
+<textarea class="w-full p-3 rounded text-body-md font-body-md resize-y" id="observaciones" name="observaciones" placeholder="Notas para el auditor o próximos técnicos..." rows="3"></textarea>
+</div>
+</div>
+<!-- Meta Data Card (Visual filler for professional density) -->
+<div class="bg-surface-container-lowest border border-surface-container-highest rounded-lg p-4">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center border-b border-surface-container-highest pb-2">
+<span class="text-status-micro font-status-micro text-on-surface-variant uppercase">Técnico Asignado</span>
+<span class="text-body-sm font-body-sm text-on-surface">J. Rodríguez (ID: 4021)</span>
+</div>
+<div class="flex justify-between items-center border-b border-surface-container-highest pb-2">
+<span class="text-status-micro font-status-micro text-on-surface-variant uppercase">Fecha Inicio</span>
+<span class="text-body-sm font-body-sm text-on-surface font-mono text-[12px]">2023-10-27 08:30</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-status-micro font-status-micro text-on-surface-variant uppercase">ID Registro (Autogenerado)</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant font-mono text-[12px]">-- PENDIENTE --</span>
+</div>
+</div>
+</div>
+</div>
+</form>
+<!-- Mobile Sticky Footer Actions (Only visible on small screens) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-low border-t border-outline-variant p-4 z-40 flex gap-3 shadow-lg">
+<button class="flex-1 px-4 py-3 bg-surface-container-highest text-on-surface hover:bg-surface-bright transition-colors rounded text-body-md font-headline-md flex items-center justify-center gap-2 border border-outline-variant" type="button">
+                    Volver
+                </button>
+<button class="flex-1 px-4 py-3 bg-primary-container text-on-primary-container hover:bg-primary-container/90 transition-colors rounded text-body-md font-headline-md flex items-center justify-center gap-2" type="button">
+                    Guardar
+                </button>
+</div>
+<!-- Spacer for mobile sticky footer -->
+<div class="h-20 md:hidden"></div>
+</div>
+</main>
+</div>

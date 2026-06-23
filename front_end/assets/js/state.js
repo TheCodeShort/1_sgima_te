@@ -30,15 +30,15 @@ const AppState = {
 
   getPanelRoute() {
     const panels = {
-      admin: 'panel_del_administrador',
-      administrador: 'panel_del_administrador',
-      auditor: 'panel_del_auditor',
-      operario: 'panel_del_operario',
-      supervisor: 'panel_del_supervisor',
-      tecnico: 'panel_del_t_cnico',
-      técnico: 'panel_del_t_cnico',
+      admin: 'panel-administrador',
+      administrador: 'panel-administrador',
+      auditor: 'panel-auditor',
+      operario: 'panel-operario',
+      supervisor: 'panel-supervisor',
+      tecnico: 'panel-tecnico',
+      técnico: 'panel-tecnico',
     };
-    return panels[this.role?.toLowerCase()] || 'panel_del_operario';
+    return panels[this.role?.toLowerCase()] || 'panel-operario';
   },
 };
 

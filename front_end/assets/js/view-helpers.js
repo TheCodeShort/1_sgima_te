@@ -13,13 +13,13 @@ function bindViewNavigation(root, ctx) {
   });
 
   const actions = {
-    'registrar-falla': 'registrar_falla',
-    'registrar-mantenimiento': 'registrar_mantenimiento',
-    'cargar-evidencia': 'cargar_evidencia',
-    'detalle-equipo': 'detalle_del_equipo',
+    'registrar-falla': 'registrar-falla',
+    'registrar-mantenimiento': 'registrar-mantenimiento',
+    'cargar-evidencia': 'cargar-evidencia',
+    'detalle-equipo': 'detalle-equipo',
     equipos: 'equipos',
-    usuarios: 'gesti_n_de_usuarios_y_roles',
-    sincronizacion: 'estado_de_sincronizaci_n',
+    usuarios: 'gestion-usuarios-roles',
+    sincronizacion: 'estado-sincronizacion',
   };
 
   Object.entries(actions).forEach(([action, route]) => {
@@ -53,7 +53,7 @@ function bindViewNavigation(root, ctx) {
   root.querySelectorAll('[data-action="sync"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      ctx.navigate('estado_de_sincronizaci_n');
+      ctx.navigate('estado-sincronizacion');
     });
   });
 }
