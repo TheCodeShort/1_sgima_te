@@ -1,5 +1,5 @@
 /**
- * Router SPA nativo — SIGMA-TE
+ * Enrutador SPA nativo — SIGMA-TE
  */
 const ROUTES = {
   'iniciar-sesion': {
@@ -7,6 +7,7 @@ const ROUTES = {
     title: 'Iniciar Sesión',
     fullscreen: true,
     group: 'auth',
+    public: true,
     js: 'login.js',
     css: 'login.css',
   },
@@ -102,11 +103,27 @@ const Router = {
   viewStyleEl: null,
 
   init() {
+    this.initTheme();
     window.addEventListener('hashchange', () => this.handleHash());
     document.addEventListener('click', (e) => this.handleNavClick(e));
     this.initSidebar();
     this.initThemeToggle();
+    this.initLogout();
     this.handleHash();
+  },
+
+  initTheme() {
+    const saved = localStorage.getItem('sigma_theme');
+    const prefersDark = saved ? saved === 'dark' : true;
+    document.documentElement.classList.toggle('dark', prefersDark);
+    this.syncThemeIcons(prefersDark);
+  },
+
+  syncThemeIcons(isDark) {
+    const iconName = isDark ? 'light_mode' : 'dark_mode';
+    document.querySelectorAll('#global-theme-icon, #themeIcon').forEach((icon) => {
+      icon.textContent = iconName;
+    });
   },
 
   initSidebar() {
@@ -127,14 +144,31 @@ const Router = {
 
   initThemeToggle() {
     const btn = document.getElementById('global-theme-toggle');
-    const icon = document.getElementById('global-theme-icon');
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      const isDark = document.documentElement.classList.contains('dark');
-      if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+      const isDark = !document.documentElement.classList.contains('dark');
+      document.documentElement.classList.toggle('dark', isDark);
+      localStorage.setItem('sigma_theme', isDark ? 'dark' : 'light');
+      this.syncThemeIcons(isDark);
     });
+  },
+
+  initLogout() {
+    document.getElementById('btn-logout')?.addEventListener('click', () => {
+      this.logout();
+    });
+  },
+
+  logout() {
+    const result = typeof AuthService !== 'undefined'
+      ? AuthService.logout()
+      : { message: 'Sesión cerrada.' };
+    AppState.clear();
+    if (typeof showToast === 'function') {
+      showToast(result.message, 'info');
+    }
+    this.navigate('iniciar-sesion');
   },
 
   handleNavClick(e) {
@@ -150,18 +184,42 @@ const Router = {
   handleHash() {
     const hash = window.location.hash.replace(/^#\/?/, '') || 'iniciar-sesion';
     const routeKey = ROUTES[hash] ? hash : 'iniciar-sesion';
-    this.loadView(routeKey);
+    const resolved = this.resolveRoute(routeKey);
+    if (resolved !== routeKey) {
+      window.location.replace(`#/${resolved}`);
+      return;
+    }
+    this.loadView(resolved);
+  },
+
+  resolveRoute(routeKey) {
+    const route = ROUTES[routeKey];
+    if (!route) return 'iniciar-sesion';
+
+    if (routeKey === 'iniciar-sesion' && AppState.isAuthenticated()) {
+      return AppState.getPanelRoute();
+    }
+
+    if (!route.public && !AppState.isAuthenticated()) {
+      if (typeof showToast === 'function') {
+        showToast('Debe iniciar sesión para acceder a esta sección.', 'warning');
+      }
+      return 'iniciar-sesion';
+    }
+
+    return routeKey;
   },
 
   navigate(routeKey, pushHash = true) {
-    if (!ROUTES[routeKey]) {
+    const resolved = this.resolveRoute(routeKey);
+    if (!ROUTES[resolved]) {
       console.warn(`Ruta desconocida: ${routeKey}`);
       return;
     }
     if (pushHash) {
-      window.location.hash = `#/${routeKey}`;
+      window.location.hash = `#/${resolved}`;
     } else {
-      this.loadView(routeKey);
+      this.loadView(resolved);
     }
   },
 
@@ -171,12 +229,26 @@ const Router = {
     });
   },
 
+  updateSidebarUser() {
+    const label = document.getElementById('sidebar-user-label');
+    if (!label) return;
+
+    if (AppState.isAuthenticated()) {
+      label.textContent = `${AppState.displayName || AppState.user} · ${AppState.getRoleLabel(AppState.role)}`;
+      label.hidden = false;
+    } else {
+      label.hidden = true;
+      label.textContent = '';
+    }
+  },
+
   setLayout(routeKey) {
     const shell = document.getElementById('app-shell');
     const route = ROUTES[routeKey];
     if (shell) {
       shell.classList.toggle('layout-fullscreen', Boolean(route?.fullscreen));
     }
+    this.updateSidebarUser();
   },
 
   removeViewAssets() {
@@ -188,6 +260,7 @@ const Router = {
       this.currentScript.remove();
       this.currentScript = null;
     }
+    window.initView = undefined;
   },
 
   async loadView(routeKey) {
@@ -202,13 +275,18 @@ const Router = {
     const root = document.getElementById('app-root');
     if (!root) return;
 
-    root.innerHTML = '<div class="view-loading"><span class="material-symbols-outlined animate-spin">progress_activity</span></div>';
+    root.innerHTML = `
+      <div class="view-loading" role="status" aria-live="polite">
+        <span class="material-symbols-outlined animate-spin">progress_activity</span>
+        <span>Cargando vista…</span>
+      </div>
+    `;
 
     this.removeViewAssets();
 
     try {
       const templateRes = await fetch(`${route.path}/index.html`);
-      if (!templateRes.ok) throw new Error(`No se pudo cargar ${route.path}/index.html`);
+      if (!templateRes.ok) throw new Error(`No se pudo cargar la plantilla de ${route.title}`);
       const html = await templateRes.text();
       root.innerHTML = html;
 
@@ -226,7 +304,7 @@ const Router = {
         script.id = 'view-script';
         script.dataset.route = routeKey;
         script.onload = resolve;
-        script.onerror = () => reject(new Error(`Error cargando ${route.path}/${route.js}`));
+        script.onerror = () => reject(new Error(`No se pudo cargar el script de ${route.title}`));
         document.body.appendChild(script);
         this.currentScript = script;
       });
@@ -236,7 +314,17 @@ const Router = {
       }
     } catch (err) {
       console.error(err);
-      root.innerHTML = `<div class="view-loading"><p>Error al cargar la vista: ${err.message}</p></div>`;
+      root.innerHTML = `
+        <div class="view-loading view-loading--error" role="alert">
+          <span class="material-symbols-outlined">error</span>
+          <p>No se pudo cargar la vista.</p>
+          <p class="view-loading__detail">${err.message}</p>
+          <button type="button" class="view-loading__retry" data-route="iniciar-sesion">Volver al inicio</button>
+        </div>
+      `;
+      root.querySelector('.view-loading__retry')?.addEventListener('click', () => {
+        this.navigate('iniciar-sesion');
+      });
     }
   },
 };

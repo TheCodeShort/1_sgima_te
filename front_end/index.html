@@ -36,6 +36,8 @@
         </div>
       </div>
 
+      <p id="sidebar-user-label" class="sidebar-user" hidden></p>
+
       <nav class="sidebar-nav">
         <span class="nav-section-label">Acceso</span>
         <button type="button" class="nav-link" data-route="iniciar-sesion">
@@ -114,13 +116,11 @@
     <div id="app-root" role="main"></div>
   </div>
 
+  <div id="sigma-toast-container" aria-live="polite" aria-atomic="true"></div>
+
   <script src="assets/js/state.js"></script>
+  <script src="src/services/authService.js"></script>
   <script src="assets/js/view-helpers.js"></script>
   <script src="assets/js/app.js"></script>
-  <script>
-    document.getElementById('btn-logout')?.addEventListener('click', () => {
-      AppState.clear();
-    });
-  </script>
 </body>
 </html>

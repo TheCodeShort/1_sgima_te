@@ -1,185 +1,265 @@
 <div class="view-page" data-view="panel-supervisor">
-<main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop w-full max-w-[1400px] mx-auto">
-<!-- Page Header Section -->
-<div class="mb-8">
-<h2 class="text-display-id font-display-id text-on-surface mb-1">Auditoría Operativa</h2>
-<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
-                    Revise y valide las órdenes de mantenimiento completadas por los técnicos de campo. Asegúrese de que los protocolos de cumplimiento se hayan seguido rigurosamente.
-                </p>
-</div>
-<!-- Bento Grid: Key Metrics -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-<!-- Status Card 1: Pending Approvals (Warning focus) -->
-<div class="bg-surface-card border border-outline-variant border-l-4 border-l-warning rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-[64px] text-warning">pending_actions</span>
-</div>
-<div class="flex items-center gap-2 mb-2">
-<span class="material-symbols-outlined text-[18px] text-warning">error</span>
-<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Pendientes</h3>
-</div>
-<div>
-<span class="text-display-id font-display-id text-on-surface text-[32px]">12</span>
-<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Casos Críticos</span>
-</div>
-</div>
-<!-- Status Card 2: Equipment under review -->
-<div class="bg-surface-card border border-outline-variant border-l-4 border-l-primary rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-[64px] text-primary">precision_manufacturing</span>
-</div>
-<div class="flex items-center gap-2 mb-2">
-<span class="material-symbols-outlined text-[18px] text-primary">search</span>
-<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Equipos en Revisión</h3>
-</div>
-<div>
-<span class="text-display-id font-display-id text-on-surface text-[32px]">05</span>
-<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Sistemas Activos</span>
-</div>
-</div>
-<!-- Status Card 3: Compliance -->
-<div class="bg-surface-card border border-outline-variant border-l-4 border-l-success rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-[64px] text-success">verified_user</span>
-</div>
-<div class="flex items-center gap-2 mb-2">
-<span class="material-symbols-outlined text-[18px] text-success">trending_up</span>
-<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Índice Cumplimiento</h3>
-</div>
-<div>
-<span class="text-display-id font-display-id text-on-surface text-[32px]">94.2<span class="text-[20px]">%</span></span>
-<span class="text-status-micro font-status-micro text-success ml-2">+1.2% este mes</span>
-</div>
-</div>
-<!-- Status Card 4: Audits Completed -->
-<div class="bg-surface-card border border-outline-variant border-l-4 border-l-outline rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-[64px] text-outline">task</span>
-</div>
-<div class="flex items-center gap-2 mb-2">
-<span class="material-symbols-outlined text-[18px] text-outline">history</span>
-<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Auditados Hoy</h3>
-</div>
-<div>
-<span class="text-display-id font-display-id text-on-surface text-[32px]">28</span>
-<span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Registros procesados</span>
-</div>
-</div>
-</div>
-<!-- Content Area: Data Table for Validations -->
-<div class="bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden flex flex-col">
-<!-- Table Toolbar -->
-<div class="px-4 py-3 border-b border-outline-variant flex items-center justify-between bg-surface-container">
-<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-<span class="material-symbols-outlined text-[20px] text-primary">list_alt</span>
-                        Mantenimientos Recientes para Validación
-                    </h3>
-<div class="flex items-center gap-2">
-<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
-<span class="material-symbols-outlined text-[18px]">filter_list</span>
-</button>
-<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
-<span class="material-symbols-outlined text-[18px]">more_vert</span>
-</button>
-</div>
-</div>
-<!-- Table Container -->
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead class="bg-surface-container-highest sticky top-0 z-10 shadow-[0_1px_0_theme(colors.outline-variant)]">
-<tr>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">ID Orden</th>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Equipo / Sistema</th>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Técnico Asignado</th>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Nivel de Riesgo</th>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Estado Auditoría</th>
-<th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap text-right">Acción</th>
-</tr>
-</thead>
-<tbody class="font-data-table text-data-table text-on-surface divide-y divide-outline-variant/30">
-<!-- Row 1 (Warning/High Priority) -->
-<tr class="h-row-height-dense hover:bg-surface-container transition-colors group cursor-pointer bg-warning/5">
-<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-primary">ORD-9921</td>
-<td class="px-4 whitespace-nowrap flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-error"></div>
-                                    Turbina Compresor Principal A-1
-                                </td>
-<td class="px-4 whitespace-nowrap text-on-surface-variant">J. Ramírez</td>
-<td class="px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1 text-error font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-error/10 border border-error/20">
-<span class="material-symbols-outlined text-[10px]">warning</span> ALTO
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap">
-<span class="text-warning font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Pendiente
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap text-right">
-<button class="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 rounded-DEFAULT text-body-sm font-semibold transition-colors">
-                                        Revisar
-                                    </button>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr class="h-row-height-dense hover:bg-surface-container transition-colors group cursor-pointer">
-<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-primary">ORD-9918</td>
-<td class="px-4 whitespace-nowrap flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-warning"></div>
-                                    Bomba Hidráulica Sec. 04
-                                </td>
-<td class="px-4 whitespace-nowrap text-on-surface-variant">M. Soto</td>
-<td class="px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1 text-warning font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-warning/10 border border-warning/20">
-                                        MEDIO
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap">
-<span class="text-warning font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">hourglass_empty</span> Pendiente
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap text-right">
-<button class="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 rounded-DEFAULT text-body-sm font-semibold transition-colors">
-                                        Revisar
-                                    </button>
-</td>
-</tr>
-<!-- Row 3 (Success/Approved recently) -->
-<tr class="h-row-height-dense bg-surface-container-lowest hover:bg-surface-container transition-colors group">
-<td class="px-4 whitespace-nowrap font-display-id text-[14px] text-on-surface-variant">ORD-9884</td>
-<td class="px-4 whitespace-nowrap flex items-center gap-2 opacity-70">
-<div class="w-2 h-2 rounded-full bg-success"></div>
-                                    Tablero Control PLC-02
-                                </td>
-<td class="px-4 whitespace-nowrap text-on-surface-variant opacity-70">L. Gómez</td>
-<td class="px-4 whitespace-nowrap opacity-70">
-<span class="inline-flex items-center gap-1 text-on-surface-variant font-status-micro text-status-micro px-2 py-0.5 rounded-full bg-surface-container border border-outline-variant">
-                                        BAJO
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap">
-<span class="text-success font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span> Aprobado
-                                    </span>
-</td>
-<td class="px-4 whitespace-nowrap text-right">
-<button class="text-on-surface-variant hover:text-on-surface px-2 py-1 rounded-DEFAULT transition-colors">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Table Footer/Pagination -->
-<div class="px-4 py-2 border-t border-outline-variant bg-surface-container-low flex justify-between items-center text-status-micro font-status-micro text-on-surface-variant">
-<span>Mostrando 1-3 de 12 pendientes</span>
-<div class="flex gap-1">
-<button class="p-1 hover:text-primary disabled:opacity-50" disabled=""><span class="material-symbols-outlined text-[16px]">chevron_left</span></button>
-<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-[16px]">chevron_right</span></button>
-</div>
-</div>
-</div>
-</main>
+  <main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop w-full max-w-[1400px] mx-auto space-y-6">
+    <!-- Page Header Section -->
+    <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <p class="text-label-caps font-label-caps text-primary mb-1" id="supervisor-saludo">Bienvenido</p>
+        <h2 class="text-headline-lg font-headline-lg text-on-surface mb-1">Auditoría Operativa</h2>
+        <p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+          Revise y valide las órdenes de mantenimiento completadas por los técnicos de campo. Asegúrese de que los protocolos de cumplimiento se hayan seguido rigurosamente.
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button class="supervisor-sync-badge hidden md:flex items-center gap-2 bg-surface-container w-fit px-3 py-1.5 rounded-full border border-outline-variant/50 hover:border-primary/40 transition-colors" id="btn-header-sync" type="button" title="Sincronizar datos con servidor">
+          <span class="material-symbols-outlined text-success text-sm fill">check_circle</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Sincronizado</span>
+        </button>
+        <div class="flex md:hidden items-center gap-2 bg-surface-container w-fit px-3 py-1.5 rounded-full border border-outline-variant/50">
+          <span class="material-symbols-outlined text-success text-sm fill">check_circle</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Sincronizado</span>
+        </div>
+        <span class="supervisor-turno-badge text-status-micro font-status-micro text-on-surface-variant bg-surface-container-high px-2.5 py-1 rounded-full border border-outline-variant/40" id="supervisor-turno">Turno: Tarde</span>
+      </div>
+    </section>
+
+    <!-- Bento Grid: Key Metrics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Status Card 1: Pending Approvals -->
+      <button class="bg-surface-card border border-outline-variant border-l-4 border-l-warning rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group text-left cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-pendientes" type="button" aria-label="Órdenes pendientes de validación">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-[64px] text-warning">pending_actions</span>
+        </div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-[18px] text-warning">error</span>
+          <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Pendientes Validar</h3>
+        </div>
+        <div>
+          <span class="text-display-id font-display-id text-on-surface text-[32px]" id="stat-pendientes">0</span>
+          <span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Por aprobar</span>
+        </div>
+      </button>
+
+      <!-- Status Card 2: Equipment under review -->
+      <button class="bg-surface-card border border-outline-variant border-l-4 border-l-primary rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group text-left cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-en-proceso" type="button" aria-label="Órdenes en ejecución">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-[64px] text-primary">precision_manufacturing</span>
+        </div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-[18px] text-primary">engineering</span>
+          <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">En Proceso</h3>
+        </div>
+        <div>
+          <span class="text-display-id font-display-id text-on-surface text-[32px]" id="stat-en-proceso">0</span>
+          <span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Tareas activas</span>
+        </div>
+      </button>
+
+      <!-- Status Card 3: Compliance -->
+      <div class="bg-surface-card border border-outline-variant border-l-4 border-l-success rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-[64px] text-success">verified_user</span>
+        </div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-[18px] text-success">trending_up</span>
+          <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Cumplimiento</h3>
+        </div>
+        <div>
+          <span class="text-display-id font-display-id text-on-surface text-[32px]">96.8%</span>
+          <span class="text-status-micro font-status-micro text-success ml-2">+2.1% este mes</span>
+        </div>
+      </div>
+
+      <!-- Status Card 4: Audits Completed -->
+      <button class="bg-surface-card border border-outline-variant border-l-4 border-l-outline rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group text-left cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-aprobados" type="button" aria-label="Órdenes aprobadas">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-[64px] text-outline">task</span>
+        </div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-[18px] text-outline">history</span>
+          <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Validados</h3>
+        </div>
+        <div>
+          <span class="text-display-id font-display-id text-on-surface text-[32px]" id="stat-aprobados">0</span>
+          <span class="text-status-micro font-status-micro text-on-surface-variant ml-2">Aprobadas</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Content Area: Data Table for Validations -->
+    <div class="bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden flex flex-col">
+      <!-- Table Toolbar -->
+      <div class="px-4 py-3 border-b border-outline-variant flex flex-col lg:flex-row lg:items-center lg:justify-between bg-surface-container gap-4">
+        <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-[20px] text-primary">list_alt</span>
+          Órdenes de Trabajo para Validación
+        </h3>
+        
+        <!-- Filtros avanzados y Buscador -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <!-- Buscador -->
+          <div class="relative flex-1 sm:w-64">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
+            <input type="text" id="buscador-supervisor" placeholder="Buscar por OT, equipo o técnico..." class="w-full bg-surface-container-low border border-outline-variant rounded p-1.5 pl-9 text-on-surface text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+          </div>
+          <!-- Riesgo select -->
+          <select id="filtro-riesgo" class="bg-surface-container-low border border-outline-variant rounded p-1.5 text-on-surface text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+            <option value="">Riesgo (Todos)</option>
+            <option value="Crítica">Crítico</option>
+            <option value="Alta">Alto</option>
+            <option value="Media">Medio</option>
+            <option value="Baja">Bajo</option>
+          </select>
+          <!-- Restablecer -->
+          <button class="hidden text-body-sm font-body-sm text-primary hover:text-primary-fixed-dim transition-colors flex items-center gap-1 whitespace-nowrap self-center" id="btn-clear-filter" type="button">
+            <span class="material-symbols-outlined text-[16px]">filter_alt_off</span>
+            Restablecer Filtro
+          </button>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-surface-container-highest sticky top-0 z-10">
+            <tr>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">ID Orden</th>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Equipo / Sistema</th>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Técnico Asignado</th>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Riesgo / Prioridad</th>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap">Estado Auditoría</th>
+              <th class="h-row-height-dense px-4 font-label-caps text-label-caps text-on-surface-variant uppercase whitespace-nowrap text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody class="font-data-table text-data-table text-on-surface divide-y divide-outline-variant/30" id="supervisor-ordenes-lista">
+            <!-- Renderizado dinámico -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE AUDITORÍA -->
+  <div aria-hidden="true" aria-labelledby="auditoria-titulo" class="supervisor-modal" hidden id="supervisor-modal-auditoria" role="dialog">
+    <div class="supervisor-modal__backdrop" data-close-modal tabindex="-1"></div>
+    <div class="supervisor-modal__panel">
+      <header class="supervisor-modal__header">
+        <div>
+          <span class="text-status-micro font-status-micro text-primary uppercase" id="auditoria-ot-id">OT-XXXX</span>
+          <h3 class="text-headline-md font-headline-md text-on-surface" id="auditoria-titulo">Auditoría y Validación de Orden</h3>
+        </div>
+        <button aria-label="Cerrar modal" class="supervisor-modal__close" data-close-modal type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+      <div class="supervisor-modal__body space-y-4">
+        <!-- Detalles Básicos -->
+        <div class="grid grid-cols-2 gap-4 bg-surface-container/50 p-3 rounded-lg border border-outline-variant/20">
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Equipo</p>
+            <p class="text-body-md font-semibold text-on-surface mt-0.5" id="auditoria-equipo-nombre">Bomba Centrífuga</p>
+            <p class="text-status-micro font-mono text-primary-fixed-dim" id="auditoria-equipo-id">EQ-2045</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Tipo de Mantenimiento</p>
+            <p class="text-body-md font-semibold text-on-surface mt-0.5" id="auditoria-tipo">Correctivo</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Prioridad / Riesgo</p>
+            <span class="inline-block mt-0.5 text-status-micro font-status-micro uppercase px-2 py-0.5 rounded" id="auditoria-prioridad">Crítica</span>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Estado Operativo</p>
+            <span class="inline-block mt-0.5 text-status-micro font-status-micro uppercase px-2 py-0.5 rounded" id="auditoria-estado-orden">Pendiente</span>
+          </div>
+        </div>
+
+        <!-- Historial Reportado -->
+        <div class="space-y-2">
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Reportado por</p>
+            <p class="text-body-sm text-on-surface" id="auditoria-reportado">Carlos Mendoza (Operario) · Hoy, 09:15</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Técnico Responsable</p>
+            <p class="text-body-sm font-semibold text-on-surface" id="auditoria-tecnico">Sin Asignar</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Falla / Solicitud Inicial</p>
+            <p class="text-body-sm text-on-surface bg-surface-container-lowest/50 p-2.5 rounded border border-outline-variant/15 mt-1" id="auditoria-descripcion">
+              Pérdida de presión en el circuito.
+            </p>
+          </div>
+        </div>
+
+        <!-- Evidencia de Cierre del Técnico (Solo si la orden se completó) -->
+        <div id="auditoria-seccion-tecnico" class="hidden border-t border-outline-variant/30 pt-4 space-y-3">
+          <h4 class="text-status-micro font-status-micro text-warning uppercase">Reporte de Cierre Técnico</h4>
+          <div class="grid grid-cols-2 gap-4 bg-surface-container/30 p-3 rounded-lg border border-outline-variant/20">
+            <div>
+              <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Resultado Cierre</p>
+              <p class="text-body-sm font-semibold text-on-surface mt-0.5" id="auditoria-cierre-tipo">Exitoso</p>
+            </div>
+            <div>
+              <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Fecha de Cierre</p>
+              <p class="text-body-sm text-on-surface mt-0.5" id="auditoria-cierre-fecha">Hoy, 12:45</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Notas de Intervención</p>
+            <p class="text-body-sm text-on-surface bg-surface-container-lowest/50 p-2.5 rounded border border-outline-variant/15 mt-1" id="auditoria-cierre-notas">
+              Notas...
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-status-micro font-status-micro text-success bg-success/5 border border-success/20 p-2 rounded-lg" id="auditoria-cierre-evidencia-badge">
+            <span class="material-symbols-outlined text-[16px]">image</span>
+            <span>Evidencia fotográfica adjunta: cierre_evidencia_firmada.png</span>
+          </div>
+        </div>
+
+        <!-- Sección de Reasignación de Técnico (Si la orden está pendiente/en ejecución) -->
+        <div id="auditoria-seccion-reasignar" class="hidden border-t border-outline-variant/30 pt-4 space-y-2">
+          <label for="auditoria-cambiar-tecnico" class="block text-status-micro font-status-micro text-on-surface-variant uppercase">Reasignar Técnico Responsable</label>
+          <div class="flex gap-2">
+            <select id="auditoria-cambiar-tecnico" class="flex-1 bg-surface-container border border-outline-variant rounded p-1.5 text-on-surface text-body-sm outline-none">
+              <option value="Sin Asignar">Sin Asignar</option>
+              <option value="Técnico Demo">Técnico Demo</option>
+              <option value="Pedro Gomez">Pedro Gomez</option>
+              <option value="Juan Lopez">Juan Lopez</option>
+            </select>
+            <button id="btn-confirmar-reasignar" type="button" class="tecnico-quick-btn tecnico-quick-btn--primary">Confirmar</button>
+          </div>
+        </div>
+
+        <!-- Sección de Feedback del Auditor/Supervisor (Si ya fue evaluado o para ingresar comentarios) -->
+        <div id="auditoria-seccion-evaluacion" class="hidden border-t border-outline-variant/30 pt-4 space-y-2">
+          <h4 class="text-status-micro font-status-micro text-success uppercase" id="auditoria-evaluacion-label">Resultado de Auditoría</h4>
+          <div class="bg-surface-container/50 p-3 rounded-lg border border-outline-variant/20 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-status-micro font-status-micro text-on-surface-variant uppercase">Evaluador</span>
+              <span class="text-body-sm font-semibold text-on-surface" id="auditoria-evaluador">Supervisor</span>
+            </div>
+            <div>
+              <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Notas de Validación / Rechazo</p>
+              <p class="text-body-sm text-on-surface bg-surface-container-lowest/50 p-2 rounded border border-outline-variant/15 mt-1" id="auditoria-evaluacion-comentarios">
+                Comentarios de auditoría...
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para Rechazar / Comentarios (Solo visible al presionar Rechazar) -->
+        <div id="auditoria-seccion-comentarios-rechazo" class="hidden border-t border-outline-variant/30 pt-4 space-y-2">
+          <label for="auditoria-notas-rechazo" class="block text-status-micro font-status-micro text-error uppercase">Notas de Retroalimentación para el Técnico</label>
+          <textarea id="auditoria-notas-rechazo" placeholder="Escriba los motivos del rechazo o instrucciones adicionales para el técnico de campo..." rows="2.5" class="w-full bg-surface-container border border-error/40 rounded p-2 text-on-surface text-body-sm outline-none resize-none"></textarea>
+          <div class="flex justify-end gap-2 mt-2">
+            <button id="btn-cancelar-rechazo" type="button" class="tecnico-quick-btn">Cancelar</button>
+            <button id="btn-enviar-rechazo" type="button" class="tecnico-quick-btn bg-error border-error text-on-primary-container hover:bg-error/80">Confirmar Rechazo</button>
+          </div>
+        </div>
+      </div>
+      <footer class="supervisor-modal__footer gap-2" id="auditoria-acciones-footer">
+        <!-- Rendered dynamically -->
+      </footer>
+    </div>
+  </div>
 </div>
