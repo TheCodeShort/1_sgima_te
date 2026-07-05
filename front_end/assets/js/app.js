@@ -112,11 +112,20 @@ const Router = {
     this.handleHash();
   },
 
+  setTheme(themeInput) {
+    const newTheme = (themeInput === true || themeInput === 'dark') ? 'dark' : 'light';
+    const isDark = newTheme === 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.classList.toggle('dark', isDark);
+    document.body.classList.toggle('light-theme', !isDark);
+    localStorage.setItem('theme', newTheme);
+    this.syncThemeIcons(isDark);
+  },
+
   initTheme() {
-    const saved = localStorage.getItem('sigma_theme');
-    const prefersDark = saved ? saved === 'dark' : true;
-    document.documentElement.classList.toggle('dark', prefersDark);
-    this.syncThemeIcons(prefersDark);
+    const saved = localStorage.getItem('theme') || localStorage.getItem('sigma_theme');
+    const newTheme = saved ? saved : 'dark';
+    this.setTheme(newTheme);
   },
 
   syncThemeIcons(isDark) {
@@ -147,10 +156,9 @@ const Router = {
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-      const isDark = !document.documentElement.classList.contains('dark');
-      document.documentElement.classList.toggle('dark', isDark);
-      localStorage.setItem('sigma_theme', isDark ? 'dark' : 'light');
-      this.syncThemeIcons(isDark);
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      this.setTheme(newTheme);
     });
   },
 
@@ -168,6 +176,7 @@ const Router = {
     if (typeof showToast === 'function') {
       showToast(result.message, 'info');
     }
+    this.updateSidebarNavigation();
     this.navigate('iniciar-sesion');
   },
 
@@ -207,6 +216,30 @@ const Router = {
       return 'iniciar-sesion';
     }
 
+    // Control de acceso por rol
+    if (AppState.isAuthenticated()) {
+      const userRole = AppState.role ? AppState.role.toLowerCase() : '';
+      
+      // Enforzar que el usuario solo acceda a su panel asignado
+      if (route.group === 'panels') {
+        const allowedPanel = AppState.getPanelRoute();
+        if (routeKey !== allowedPanel) {
+          if (typeof showToast === 'function') {
+            showToast('No tiene permisos para acceder a esta sección.', 'error');
+          }
+          return allowedPanel;
+        }
+      }
+
+      // Restringir rutas de administración a administradores
+      if (route.group === 'admin' && userRole !== 'admin' && userRole !== 'administrador') {
+        if (typeof showToast === 'function') {
+          showToast('Solo el Administrador puede acceder a esta sección.', 'error');
+        }
+        return AppState.getPanelRoute();
+      }
+    }
+
     return routeKey;
   },
 
@@ -242,6 +275,75 @@ const Router = {
     }
   },
 
+  updateSidebarNavigation() {
+    const isAuth = AppState.isAuthenticated();
+    const userRole = AppState.role ? AppState.role.toLowerCase() : null;
+
+    // Toggle "Acceso" section and "Iniciar Sesión" button
+    const accesoLabel = document.getElementById('nav-section-acceso');
+    const loginBtn = document.getElementById('nav-btn-login');
+    if (accesoLabel) accesoLabel.style.display = isAuth ? 'none' : '';
+    if (loginBtn) loginBtn.style.display = isAuth ? 'none' : '';
+
+    // Toggle "Cerrar Sesión" button
+    const logoutBtn = document.getElementById('btn-logout');
+    if (logoutBtn) logoutBtn.style.display = isAuth ? '' : 'none';
+
+    // Show/Hide role panel buttons based on the user's role
+    const panelsSection = document.getElementById('nav-section-panels');
+    if (panelsSection) panelsSection.style.display = isAuth ? '' : 'none';
+
+    // Show/Hide admin section based on role
+    const isAdmin = userRole === 'admin' || userRole === 'administrador';
+    const adminSection = document.getElementById('nav-section-admin');
+    if (adminSection) adminSection.style.display = (isAuth && isAdmin) ? '' : 'none';
+
+    const adminButtons = document.querySelectorAll('.sidebar-nav button[data-route="gestion-usuarios-roles"], .sidebar-nav button[data-route="estado-sincronizacion"]');
+    adminButtons.forEach(btn => {
+      btn.style.display = (isAuth && isAdmin) ? '' : 'none';
+    });
+
+    // Show/Hide operations section label and buttons based on auth
+    const navLabels = document.querySelectorAll('.sidebar-nav .nav-section-label');
+    navLabels.forEach(label => {
+      const text = label.textContent.trim().toLowerCase();
+      if (text === 'operaciones') {
+        label.style.display = isAuth ? '' : 'none';
+      }
+    });
+
+    const operationsButtons = document.querySelectorAll('.sidebar-nav button[data-route="equipos"], .sidebar-nav button[data-route="detalle-equipo"], .sidebar-nav button[data-route="registrar-falla"], .sidebar-nav button[data-route="registrar-mantenimiento"], .sidebar-nav button[data-route="cargar-evidencia"]');
+    operationsButtons.forEach(btn => {
+      btn.style.display = isAuth ? '' : 'none';
+    });
+
+    const panelRoutes = {
+      'admin': 'panel-administrador',
+      'administrador': 'panel-administrador',
+      'auditor': 'panel-auditor',
+      'supervisor': 'panel-supervisor',
+      'tecnico': 'panel-tecnico',
+      'técnico': 'panel-tecnico',
+      'operario': 'panel-operario'
+    };
+
+    const allowedPanel = userRole ? panelRoutes[userRole] : null;
+
+    // Find and filter buttons
+    const navButtons = document.querySelectorAll('.sidebar-nav button[data-route]');
+    navButtons.forEach(btn => {
+      const route = btn.getAttribute('data-route');
+      // If it's one of the panel routes, only show it if it matches the allowed panel for the user's role
+      if (route.startsWith('panel-')) {
+        if (isAuth && route === allowedPanel) {
+          btn.style.display = '';
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+    });
+  },
+
   setLayout(routeKey) {
     const shell = document.getElementById('app-shell');
     const route = ROUTES[routeKey];
@@ -249,6 +351,7 @@ const Router = {
       shell.classList.toggle('layout-fullscreen', Boolean(route?.fullscreen));
     }
     this.updateSidebarUser();
+    this.updateSidebarNavigation();
   },
 
   removeViewAssets() {

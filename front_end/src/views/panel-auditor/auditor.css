@@ -4,14 +4,14 @@
 }
 
 .view-page[data-view="panel-auditor"] ::-webkit-scrollbar-track {
-  background: #131b2e;
+  background: var(--bg-sidebar);
 }
 
 .view-page[data-view="panel-auditor"] ::-webkit-scrollbar-thumb {
-  background: #434655;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 .view-page[data-view="panel-auditor"] ::-webkit-scrollbar-thumb:hover {
-  background: #8d90a0;
+  background: var(--text-secondary);
 }

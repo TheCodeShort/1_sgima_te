@@ -23,14 +23,14 @@
 
 .supervisor-stat-card:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, #b4c5ff 35%, #434655);
-  background: color-mix(in srgb, #2d3449 35%, #1e293b);
+  border-color: color-mix(in srgb, var(--sigma-primary-text) 35%, var(--border-color));
+  background: var(--sigma-surface-hover);
 }
 
 .supervisor-stat-card.active-filter {
-  border-color: #2563eb;
+  border-color: var(--sigma-primary);
   box-shadow: 0 0 12px rgba(37, 99, 235, 0.25);
-  background: color-mix(in srgb, #2563eb 10%, #1e293b);
+  background: color-mix(in srgb, var(--sigma-primary) 10%, var(--bg-sidebar));
 }
 
 /* Modales */
@@ -62,8 +62,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.75rem;
-  border: 1px solid #434655;
-  background: #131b2e;
+  border: 1px solid var(--border-color);
+  background: var(--bg-sidebar);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
   animation: supervisor-modal-in 0.2s ease;
 }
@@ -90,8 +90,8 @@
 }
 
 .supervisor-modal__close:hover {
-  background: #2d3449;
-  color: #dae2fd;
+  background: var(--sigma-surface-hover);
+  color: var(--text-primary);
 }
 
 .supervisor-modal__body {
@@ -122,41 +122,4 @@ body.supervisor-modal-open {
   }
 }
 
-/* Modos claros */
-html:not(.dark) .supervisor-quick-btn {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-
-html:not(.dark) .supervisor-quick-btn:hover {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-
-html:not(.dark) .supervisor-stat-card:hover {
-  background: #f8fafc;
-}
-
-html:not(.dark) .supervisor-stat-card.active-filter {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-
-html:not(.dark) .supervisor-modal__panel {
-  background: #ffffff;
-  border-color: #cbd5e1;
-}
-
-html:not(.dark) .supervisor-modal__header {
-  border-bottom-color: #cbd5e1;
-}
-
-html:not(.dark) .supervisor-modal__footer {
-  border-top-color: #cbd5e1;
-}
-
-html:not(.dark) .supervisor-modal__close:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
+/* Obsolete overrides removed — theme driven by CSS variables */

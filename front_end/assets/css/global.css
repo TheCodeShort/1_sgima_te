@@ -1,31 +1,61 @@
 /* Variables de tema — base compartida SIGMA-TE */
 :root {
-  --sigma-bg: #0b1326;
-  --sigma-surface: #131b2e;
-  --sigma-surface-high: #171f33;
-  --sigma-surface-hover: #2d3449;
-  --sigma-border: #434655;
-  --sigma-text: #dae2fd;
-  --sigma-text-muted: #c3c6d7;
-  --sigma-text-dim: #8d90a0;
-  --sigma-primary: #2563eb;
-  --sigma-primary-text: #b4c5ff;
-  --sigma-scrollbar-track: #0b1326;
-  --sigma-scrollbar-thumb: #2d3449;
-  --sigma-overlay: rgba(0, 0, 0, 0.5);
+  /* Por defecto: Modo Oscuro (El que ya se ve bien) */
+  --bg-app-base: #0b132b;       /* Fondo oscuro de toda la aplicación */
+  --bg-sidebar: #111a36;        /* Fondo oscuro de la barra lateral */
+  --bg-cards: #1c2541;          /* Fondo de tarjetas / Bento Grid */
+  --text-primary: #ffffff;      /* Texto principal blanco */
+  --text-secondary: #a0aec0;    /* Texto secundario grisáceo */
+  --border-color: #2d3748;      /* Bordes de separación */
+
+  /* Variables adicionales y de compatibilidad con --sigma */
+  --bg-surface-hover: color-mix(in srgb, var(--border-color) 45%, var(--bg-sidebar));
+  --color-primary: #2563eb;
+  --color-primary-text: #b4c5ff;
+  --color-on-primary: #002a78;
+  --color-primary-hover: #dbe1ff;
+
+  --sigma-bg: var(--bg-app-base);
+  --sigma-surface: var(--bg-sidebar);
+  --sigma-surface-high: var(--bg-cards);
+  --sigma-surface-hover: var(--bg-surface-hover);
+  --sigma-border: var(--border-color);
+  --sigma-text: var(--text-primary);
+  --sigma-text-muted: var(--text-secondary);
+  --sigma-text-dim: color-mix(in srgb, var(--text-secondary) 75%, transparent);
+  --sigma-primary: var(--color-primary);
+  --sigma-primary-text: var(--color-primary-text);
+  --sigma-scrollbar-track: var(--bg-app-base);
+  --sigma-scrollbar-thumb: var(--border-color);
+  --sigma-overlay: rgba(0, 0, 0, 0.55);
 }
 
-html:not(.dark) {
-  --sigma-bg: #eef2ff;
-  --sigma-surface: #ffffff;
-  --sigma-surface-high: #f8fafc;
-  --sigma-surface-hover: #e2e8f0;
-  --sigma-border: #cbd5e1;
-  --sigma-text: #0f172a;
-  --sigma-text-muted: #475569;
-  --sigma-text-dim: #64748b;
-  --sigma-primary: #2563eb;
-  --sigma-primary-text: #1d4ed8;
+html[data-theme="light"] {
+  /* Activación global: Modo Claro Coherente */
+  --bg-app-base: #f7fafc;       /* Gris muy claro limpio para el fondo general */
+  --bg-sidebar: #ffffff;        /* Blanco puro para el sidebar */
+  --bg-cards: #ffffff;          /* Blanco para las tarjetas para que resalten */
+  --text-primary: #1a202c;      /* Texto principal oscuro casi negro */
+  --text-secondary: #4a5568;    /* Texto secundario gris oscuro legible */
+  --border-color: #e2e8f0;      /* Bordes claros y sutiles */
+
+  /* Variables adicionales y de compatibilidad con --sigma en claro */
+  --bg-surface-hover: #e2e8f0;
+  --color-primary: #2563eb;
+  --color-primary-text: #1d4ed8;
+  --color-on-primary: #ffffff;
+  --color-primary-hover: #1e40af;
+
+  --sigma-bg: var(--bg-app-base);
+  --sigma-surface: var(--bg-sidebar);
+  --sigma-surface-high: var(--bg-cards);
+  --sigma-surface-hover: var(--bg-surface-hover);
+  --sigma-border: var(--border-color);
+  --sigma-text: var(--text-primary);
+  --sigma-text-muted: var(--text-secondary);
+  --sigma-text-dim: color-mix(in srgb, var(--text-secondary) 75%, transparent);
+  --sigma-primary: var(--color-primary);
+  --sigma-primary-text: var(--color-primary-text);
   --sigma-scrollbar-track: #f1f5f9;
   --sigma-scrollbar-thumb: #cbd5e1;
   --sigma-overlay: rgba(15, 23, 42, 0.35);

@@ -11,15 +11,15 @@
 .view-page[data-view="registrar-mantenimiento"] input[type="date"],
 .view-page[data-view="registrar-mantenimiento"] textarea,
 .view-page[data-view="registrar-mantenimiento"] select {
-  background-color: #1E293B;
-  border: 1px solid #434655;
-  color: #dae2fd;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 .view-page[data-view="registrar-mantenimiento"] input:focus,
 .view-page[data-view="registrar-mantenimiento"] textarea:focus,
 .view-page[data-view="registrar-mantenimiento"] select:focus {
-  border-color: #b4c5ff !important;
+  border-color: var(--sigma-primary-text) !important;
   box-shadow: none !important;
   outline: none;
 }

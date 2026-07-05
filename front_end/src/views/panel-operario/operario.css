@@ -24,9 +24,9 @@
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
   border-radius: 0.5rem;
-  border: 1px solid #434655;
-  background: #171f33;
-  color: #dae2fd;
+  border: 1px solid var(--border-color);
+  background: var(--bg-cards);
+  color: var(--text-primary);
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -34,8 +34,8 @@
 }
 
 .operario-quick-btn:hover {
-  background: #2d3449;
-  border-color: #b4c5ff;
+  background: var(--sigma-surface-hover);
+  border-color: var(--sigma-primary-text);
 }
 
 .operario-quick-btn--primary {
@@ -61,8 +61,8 @@
 
 .operario-stat-card:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, #b4c5ff 35%, #434655);
-  background: color-mix(in srgb, #2d3449 35%, #1e293b);
+  border-color: color-mix(in srgb, var(--sigma-primary-text) 35%, var(--border-color));
+  background: var(--sigma-surface-hover);
 }
 
 .operario-stat-card:focus-visible {
@@ -84,13 +84,13 @@
 }
 
 .operario-actividad-fila:hover {
-  background: #2d3449;
+  background: var(--sigma-surface-hover);
 }
 
 .operario-actividad-fila:focus-visible {
-  outline: 2px solid #b4c5ff;
+  outline: 2px solid var(--sigma-primary-text);
   outline-offset: -2px;
-  background: #2d3449;
+  background: var(--sigma-surface-hover);
 }
 
 .operario-actividad-fila__chevron {
@@ -132,8 +132,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.75rem;
-  border: 1px solid #434655;
-  background: #131b2e;
+  border: 1px solid var(--border-color);
+  background: var(--bg-sidebar);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
   animation: operario-modal-in 0.2s ease;
 }
@@ -205,27 +205,4 @@ body.operario-modal-open {
   }
 }
 
-html:not(.dark) .operario-quick-btn {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-
-html:not(.dark) .operario-quick-btn:hover {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-
-html:not(.dark) .operario-actividad-fila:hover,
-html:not(.dark) .operario-actividad-fila:focus-visible {
-  background: #e2e8f0;
-}
-
-html:not(.dark) .operario-modal__panel {
-  background: #ffffff;
-  border-color: #cbd5e1;
-}
-
-html:not(.dark) .operario-stat-card:hover {
-  background: #f8fafc;
-}
+/* Obsolete overrides removed — theme driven by CSS variables */

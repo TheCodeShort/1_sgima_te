@@ -80,8 +80,8 @@
 .login-demo-box {
   padding: 0.875rem;
   border-radius: 0.5rem;
-  border: 1px dashed #434655;
-  background: rgba(23, 31, 51, 0.55);
+  border: 1px dashed var(--border-color);
+  background: var(--bg-cards);
 }
 
 .login-demo-box__title {
@@ -91,7 +91,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #8d90a0;
+  color: var(--text-secondary);
 }
 
 .login-demo-box__list {
@@ -112,53 +112,38 @@
   padding: 0.5rem 0.625rem;
   border-radius: 0.375rem;
   border: 1px solid transparent;
-  background: rgba(45, 52, 73, 0.35);
-  color: #c3c6d7;
+  background: var(--bg-app-base);
+  color: var(--text-secondary);
   text-align: left;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
 
 .login-demo-box__item:hover {
-  border-color: #434655;
-  background: rgba(45, 52, 73, 0.65);
-  color: #dae2fd;
+  border-color: var(--border-color);
+  background: var(--sigma-surface-hover);
+  color: var(--text-primary);
 }
 
 .login-demo-box__role {
   font-size: 12px;
   font-weight: 600;
-  color: #b4c5ff;
+  color: var(--sigma-primary-text);
 }
 
 .login-demo-box__creds {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: #8d90a0;
+  color: var(--text-secondary);
 }
 
-html:not(.dark) .login-demo-box {
-  background: rgba(248, 250, 252, 0.9);
-  border-color: #cbd5e1;
-}
-
-html:not(.dark) .login-demo-box__item {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-html:not(.dark) .login-demo-box__item:hover {
-  background: #e2e8f0;
-  color: #0f172a;
-}
-
-html:not(.dark) .login-alert--error {
+html[data-theme="light"] .login-alert--error {
   color: #991b1b;
 }
 
-html:not(.dark) .login-alert--success {
+html[data-theme="light"] .login-alert--success {
   color: #065f46;
 }
 
-html:not(.dark) .login-alert--warning {
+html[data-theme="light"] .login-alert--warning {
   color: #92400e;
 }

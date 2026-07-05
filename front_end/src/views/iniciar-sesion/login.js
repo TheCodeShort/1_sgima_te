@@ -23,10 +23,13 @@ function initView(ctx) {
 
   themeToggle?.addEventListener('click', () => {
     const isDark = !document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('sigma_theme', isDark ? 'dark' : 'light');
-    if (typeof Router !== 'undefined' && Router.syncThemeIcons) {
-      Router.syncThemeIcons(isDark);
+    if (typeof Router !== 'undefined' && Router.setTheme) {
+      Router.setTheme(isDark);
+    } else {
+      document.documentElement.classList.toggle('dark', isDark);
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      document.body.classList.toggle('light-theme', !isDark);
+      localStorage.setItem('sigma_theme', isDark ? 'dark' : 'light');
     }
   });
 

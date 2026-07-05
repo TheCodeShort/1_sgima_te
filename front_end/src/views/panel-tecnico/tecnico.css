@@ -28,9 +28,9 @@
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
   border-radius: 0.5rem;
-  border: 1px solid #434655;
-  background: #171f33;
-  color: #dae2fd;
+  border: 1px solid var(--border-color);
+  background: var(--bg-cards);
+  color: var(--text-primary);
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -38,8 +38,8 @@
 }
 
 .tecnico-quick-btn:hover {
-  background: #2d3449;
-  border-color: #b4c5ff;
+  background: var(--sigma-surface-hover);
+  border-color: var(--sigma-primary-text);
 }
 
 .tecnico-quick-btn--primary {
@@ -60,19 +60,19 @@
 
 .tecnico-stat-card:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, #b4c5ff 35%, #434655);
-  background: color-mix(in srgb, #2d3449 35%, #1e293b);
+  border-color: color-mix(in srgb, var(--sigma-primary-text) 35%, var(--border-color));
+  background: var(--sigma-surface-hover);
 }
 
 .tecnico-stat-card:focus-visible {
-  outline: 2px solid #b4c5ff;
+  outline: 2px solid var(--sigma-primary-text);
   outline-offset: 2px;
 }
 
 .tecnico-stat-card.active-filter {
-  border-color: #2563eb;
+  border-color: var(--sigma-primary);
   box-shadow: 0 0 12px rgba(37, 99, 235, 0.25);
-  background: color-mix(in srgb, #2563eb 10%, #1e293b);
+  background: color-mix(in srgb, var(--sigma-primary) 10%, var(--bg-sidebar));
 }
 
 /* Tabla - fila de orden */
@@ -81,7 +81,7 @@
 }
 
 .tecnico-orden-fila:hover {
-  background: #2d3449;
+  background: var(--sigma-surface-hover);
 }
 
 /* Modales */
@@ -113,8 +113,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.75rem;
-  border: 1px solid #434655;
-  background: #131b2e;
+  border: 1px solid var(--border-color);
+  background: var(--bg-sidebar);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
   animation: tecnico-modal-in 0.2s ease;
 }
@@ -173,45 +173,4 @@ body.tecnico-modal-open {
   }
 }
 
-/* Modos claros */
-html:not(.dark) .tecnico-quick-btn {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-
-html:not(.dark) .tecnico-quick-btn:hover {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-
-html:not(.dark) .tecnico-stat-card:hover {
-  background: #f8fafc;
-}
-
-html:not(.dark) .tecnico-stat-card.active-filter {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-
-html:not(.dark) .tecnico-orden-fila:hover {
-  background: #f1f5f9;
-}
-
-html:not(.dark) .tecnico-modal__panel {
-  background: #ffffff;
-  border-color: #cbd5e1;
-}
-
-html:not(.dark) .tecnico-modal__header {
-  border-bottom-color: #cbd5e1;
-}
-
-html:not(.dark) .tecnico-modal__footer {
-  border-top-color: #cbd5e1;
-}
-
-html:not(.dark) .tecnico-modal__close:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
+/* Obsolete overrides removed — theme driven by CSS variables */

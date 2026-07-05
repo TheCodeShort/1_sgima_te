@@ -20,12 +20,12 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b1326; 
+            background: var(--bg-app-base); 
         }
         ::-webkit-scrollbar-thumb {
-            background: #2d3449; 
+            background: var(--border-color); 
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #434655; 
+            background: var(--sigma-surface-hover); 
         }
