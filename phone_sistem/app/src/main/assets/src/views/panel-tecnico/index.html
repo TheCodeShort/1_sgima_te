@@ -1,0 +1,351 @@
+<div class="view-page" data-view="panel-tecnico">
+  <main class="tecnico-main flex-1 overflow-y-auto bg-surface p-4 md:p-margin-desktop space-y-6">
+    <!-- Header/Greeting Section -->
+    <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <p class="text-label-caps font-label-caps text-primary mb-1" id="tecnico-saludo">Bienvenido</p>
+        <h2 class="text-headline-lg font-headline-lg text-on-surface mb-1">Panel Técnico</h2>
+        <p class="text-body-md font-body-md text-on-surface-variant">Vista general de tareas de mantenimiento y órdenes de trabajo en planta.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button class="tecnico-sync-badge hidden md:flex items-center gap-2 bg-surface-container w-fit px-3 py-1.5 rounded-full border border-outline-variant/50 hover:border-primary/40 transition-colors" id="btn-header-sync" type="button" title="Sincronizar datos con servidor">
+          <span class="material-symbols-outlined text-success text-sm fill">check_circle</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Sincronizado</span>
+        </button>
+        <div class="flex md:hidden items-center gap-2 bg-surface-container w-fit px-3 py-1.5 rounded-full border border-outline-variant/50">
+          <span class="material-symbols-outlined text-success text-sm fill">check_circle</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Sincronizado</span>
+        </div>
+        <span class="tecnico-turno-badge text-status-micro font-status-micro text-on-surface-variant bg-surface-container-high px-2.5 py-1 rounded-full border border-outline-variant/40" id="tecnico-turno">Turno: Tarde</span>
+      </div>
+    </section>
+
+    <!-- Quick Actions Section -->
+    <section aria-label="Acciones rápidas" class="flex flex-wrap gap-2">
+      <button class="tecnico-quick-btn tecnico-quick-btn--primary" id="btn-asignar-tarea" type="button">
+        <span class="material-symbols-outlined text-[18px]">person_add</span>
+        Asignar Tarea
+      </button>
+      <button class="tecnico-quick-btn" data-action="registrar-mantenimiento" type="button">
+        <span class="material-symbols-outlined text-[18px]">build_circle</span>
+        Registrar Mantenimiento
+      </button>
+      <button class="tecnico-quick-btn" data-nav="equipos" type="button">
+        <span class="material-symbols-outlined text-[18px]">settings_suggest</span>
+        Ver Equipos
+      </button>
+      <button class="tecnico-quick-btn" id="btn-sync-quick" type="button">
+        <span class="material-symbols-outlined text-[18px]">sync</span>
+        Sincronizar Datos
+      </button>
+    </section>
+
+    <!-- Bento Grid - Status Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Card: Mantenimientos Pendientes -->
+      <button class="tecnico-stat-card bg-surface-card rounded-xl p-5 border border-outline-variant/30 relative overflow-hidden flex flex-col justify-between shadow-sm text-left w-full cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-mantenimientos" type="button" aria-label="Mantenimientos activos">
+        <div class="absolute left-0 top-0 h-full w-1 bg-warning"></div>
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-1">Mantenimientos</p>
+            <h4 class="text-display-id font-display-id text-on-surface" id="stat-count-mantenimientos">12</h4>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+            <span class="material-symbols-outlined">build_circle</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-warning/20 text-warning text-status-micro font-status-micro">ALTA PRIO</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Órdenes pendientes hoy</span>
+        </div>
+      </button>
+
+      <!-- Card: Fallas Reportadas -->
+      <button class="tecnico-stat-card bg-surface-card rounded-xl p-5 border border-outline-variant/30 relative overflow-hidden flex flex-col justify-between shadow-sm text-left w-full cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-fallas" type="button" aria-label="Fallas sin resolver">
+        <div class="absolute left-0 top-0 h-full w-1 bg-error"></div>
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-1">Fallas Reportadas</p>
+            <h4 class="text-display-id font-display-id text-on-surface" id="stat-count-fallas">3</h4>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error">
+            <span class="material-symbols-outlined">warning</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-error/20 text-error text-status-micro font-status-micro">CRÍTICO</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Requieren atención inmediata</span>
+        </div>
+      </button>
+
+      <!-- Card: Equipos Operativos -->
+      <button class="tecnico-stat-card bg-surface-card rounded-xl p-5 border border-outline-variant/30 relative overflow-hidden flex flex-col justify-between shadow-sm text-left w-full cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" id="card-estado-planta" type="button" aria-label="Disponibilidad de planta">
+        <div class="absolute left-0 top-0 h-full w-1 bg-success"></div>
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-1">Estado Planta</p>
+            <h4 class="text-display-id font-display-id text-on-surface" id="stat-count-disponibilidad">94%</h4>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-success/20 text-success text-status-micro font-status-micro">ÓPTIMO</span>
+          <span class="text-body-sm font-body-sm text-on-surface-variant">Disponibilidad de maquinaria</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Active Work Orders Section -->
+    <section class="mt-2">
+      <div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden">
+        <div class="p-4 border-b border-outline-variant flex flex-col lg:flex-row lg:justify-between lg:items-center bg-surface-container gap-4">
+          <div>
+            <h3 class="text-headline-md font-headline-md text-on-surface">Órdenes de Trabajo Activas</h3>
+            <p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5" id="filtro-info">Mostrando todas las órdenes registradas en el sistema.</p>
+          </div>
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <!-- Buscador de órdenes -->
+            <div class="relative flex-1 sm:w-64">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
+              <input type="text" id="buscador-ordenes" placeholder="Buscar por OT o equipo..." class="w-full bg-surface-container-low border border-outline-variant rounded p-1.5 pl-9 text-on-surface text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+            </div>
+            <button class="hidden text-body-sm font-body-sm text-primary hover:text-primary-fixed-dim transition-colors flex items-center gap-1 whitespace-nowrap self-center" id="btn-clear-filter" type="button">
+              <span class="material-symbols-outlined text-[16px]">filter_alt_off</span>
+              Restablecer Filtro
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-highest sticky top-0 z-10">
+              <tr>
+                <th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">OT / Equipo</th>
+                <th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Prioridad</th>
+                <th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Técnico</th>
+                <th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase">Estado</th>
+                <th class="px-4 py-2 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant uppercase text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="text-data-table font-data-table text-on-surface" id="tecnico-ordenes-lista">
+              <!-- Cargar filas dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL 1: DETALLE DE ORDEN -->
+  <div aria-hidden="true" aria-labelledby="detalle-titulo" class="tecnico-modal" hidden id="tecnico-modal-detalle" role="dialog">
+    <div class="tecnico-modal__backdrop" data-close-modal tabindex="-1"></div>
+    <div class="tecnico-modal__panel">
+      <header class="tecnico-modal__header">
+        <div>
+          <span class="text-status-micro font-status-micro text-primary uppercase" id="detalle-ot-id">OT-XXXX</span>
+          <h3 class="text-headline-md font-headline-md text-on-surface" id="detalle-titulo">Detalles de Orden de Trabajo</h3>
+        </div>
+        <button aria-label="Cerrar detalles" class="tecnico-modal__close" data-close-modal type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+      <div class="tecnico-modal__body space-y-4">
+        <!-- Grid de Info Básica -->
+        <div class="grid grid-cols-2 gap-4 bg-surface-container/50 p-3 rounded-lg border border-outline-variant/20">
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Equipo</p>
+            <p class="text-body-md font-semibold text-on-surface mt-0.5" id="detalle-equipo-nombre">Bomba Centrífuga</p>
+            <p class="text-status-micro font-mono text-primary-fixed-dim" id="detalle-equipo-id">EQ-2045</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Tipo de Trabajo</p>
+            <p class="text-body-md font-semibold text-on-surface mt-0.5" id="detalle-tipo">Correctivo</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Prioridad</p>
+            <span class="inline-block mt-0.5 text-status-micro font-status-micro uppercase px-2 py-0.5 rounded" id="detalle-prioridad">Crítica</span>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Estado Actual</p>
+            <span class="inline-block mt-0.5 text-status-micro font-status-micro uppercase px-2 py-0.5 rounded" id="detalle-estado">Pendiente</span>
+          </div>
+        </div>
+
+        <!-- Detalles del Reporte -->
+        <div class="space-y-2">
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Reportado Por</p>
+            <p class="text-body-sm text-on-surface" id="detalle-reportado">Carlos Mendoza (Operario) · Hoy, 09:15</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Técnico Asignado</p>
+            <p class="text-body-sm font-semibold text-on-surface" id="detalle-tecnico">Sin Asignar</p>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Descripción del Problema</p>
+            <p class="text-body-sm text-on-surface bg-surface-container-lowest/50 p-2.5 rounded border border-outline-variant/15 mt-1" id="detalle-descripcion">
+              Pérdida de presión en el circuito de refrigeración principal. Ruido inusual detectado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Detalles del Cierre (Solo visible si completada) -->
+        <div id="detalle-cierre-seccion" class="hidden border-t border-outline-variant/30 pt-4 space-y-2">
+          <p class="text-status-micro font-status-micro text-success uppercase">Información de Cierre</p>
+          <div class="grid grid-cols-2 gap-4 bg-success/5 p-3 rounded-lg border border-success/20">
+            <div>
+              <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Tipo de Cierre</p>
+              <p class="text-body-sm font-semibold text-on-surface mt-0.5" id="detalle-cierre-tipo">Exitoso</p>
+            </div>
+            <div>
+              <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Fecha de Cierre</p>
+              <p class="text-body-sm text-on-surface mt-0.5" id="detalle-cierre-fecha">Ayer, 15:45</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-status-micro font-status-micro text-on-surface-variant uppercase">Notas de Cierre</p>
+            <p class="text-body-sm text-on-surface bg-surface-container-lowest/50 p-2.5 rounded border border-outline-variant/15 mt-1" id="detalle-cierre-notas">
+              Notas del técnico...
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer class="tecnico-modal__footer gap-2" id="detalle-acciones-footer">
+        <!-- Renderizado dinámicamente -->
+      </footer>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ASIGNAR TAREA (CREAR OT) -->
+  <div aria-hidden="true" aria-labelledby="asignar-titulo" class="tecnico-modal" hidden id="tecnico-modal-asignar" role="dialog">
+    <div class="tecnico-modal__backdrop" data-close-modal tabindex="-1"></div>
+    <div class="tecnico-modal__panel">
+      <header class="tecnico-modal__header">
+        <div>
+          <h3 class="text-headline-md font-headline-md text-on-surface" id="asignar-titulo">Nueva Orden de Trabajo</h3>
+          <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Registre e inicialice una orden de mantenimiento</p>
+        </div>
+        <button aria-label="Cerrar formulario" class="tecnico-modal__close" data-close-modal type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+      <form id="form-asignar-tarea">
+        <div class="tecnico-modal__body space-y-4">
+          <!-- Campo: Equipo -->
+          <div>
+            <label for="form-equipo" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Equipo</label>
+            <select id="form-equipo" required class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="" disabled selected>Seleccione un equipo...</option>
+              <option value="EQ-2045|Bomba Centrífuga Principal">EQ-2045 · Bomba Centrífuga Principal</option>
+              <option value="TR-8812|Transportadora Línea A">TR-8812 · Transportadora Línea A</option>
+              <option value="CL-1090|Caldera Auxiliar Norte">CL-1090 · Caldera Auxiliar Norte</option>
+              <option value="CP-5002|Compresor de Aire #2">CP-5002 · Compresor de Aire #2</option>
+              <option value="TX-200|Motor Principal TX-200">TX-200 · Motor Principal TX-200</option>
+              <option value="V-14|Válvula Reguladora B-14">V-14 · Válvula Reguladora B-14</option>
+            </select>
+          </div>
+
+          <!-- Fila: Tipo y Prioridad -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="form-tipo" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Tipo de Trabajo</label>
+              <select id="form-tipo" required class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                <option value="Preventivo">Preventivo</option>
+                <option value="Correctivo" selected>Correctivo</option>
+                <option value="Predictivo">Predictivo</option>
+              </select>
+            </div>
+            <div>
+              <label for="form-prioridad" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Prioridad</label>
+              <select id="form-prioridad" required class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                <option value="Baja">Baja</option>
+                <option value="Media" selected>Media</option>
+                <option value="Alta">Alta</option>
+                <option value="Crítica">Crítica</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Campo: Técnico -->
+          <div>
+            <label for="form-tecnico" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Técnico Asignado</label>
+            <select id="form-tecnico" required class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="Técnico Demo" selected>Técnico Demo (Usted)</option>
+              <option value="Pedro Gomez">Pedro Gomez</option>
+              <option value="Juan Lopez">Juan Lopez</option>
+              <option value="Sin Asignar">Dejar sin asignar</option>
+            </select>
+          </div>
+
+          <!-- Campo: Descripción -->
+          <div>
+            <label for="form-descripcion" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Descripción de la Tarea / Falla</label>
+            <textarea id="form-descripcion" required placeholder="Describa el trabajo a realizar o el problema reportado..." rows="3" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"></textarea>
+          </div>
+        </div>
+        <footer class="tecnico-modal__footer">
+          <button class="tecnico-quick-btn" data-close-modal type="button">Cancelar</button>
+          <button class="tecnico-quick-btn tecnico-quick-btn--primary" type="submit">Crear y Asignar</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: REPORTAR CIERRE -->
+  <div aria-hidden="true" aria-labelledby="cierre-titulo" class="tecnico-modal" hidden id="tecnico-modal-cierre" role="dialog">
+    <div class="tecnico-modal__backdrop" data-close-modal tabindex="-1"></div>
+    <div class="tecnico-modal__panel">
+      <header class="tecnico-modal__header">
+        <div>
+          <span class="text-status-micro font-status-micro text-success uppercase" id="cierre-ot-id">OT-XXXX</span>
+          <h3 class="text-headline-md font-headline-md text-on-surface" id="cierre-titulo">Reportar Cierre de Mantenimiento</h3>
+        </div>
+        <button aria-label="Cerrar formulario de cierre" class="tecnico-modal__close" data-close-modal type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+      <form id="form-reportar-cierre">
+        <input type="hidden" id="cierre-target-id">
+        <div class="tecnico-modal__body space-y-4">
+          <!-- Campo: Tipo de Cierre -->
+          <div>
+            <label for="cierre-tipo" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Resultado de la Intervención</label>
+            <select id="cierre-tipo" required class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="Exitoso" selected>Exitoso · Operativo al 100%</option>
+              <option value="Parcial">Parcial · Operación restringida / Observaciones</option>
+              <option value="Pendiente de Repuestos">Pendiente · Requiere repuestos adicionales</option>
+            </select>
+          </div>
+
+          <!-- Campo: Notas de Intervención -->
+          <div>
+            <label for="cierre-notas" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Detalle de Trabajos Realizados</label>
+            <textarea id="cierre-notas" required placeholder="Describa el diagnóstico, reparaciones efectuadas y pruebas de verificación..." rows="3" class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"></textarea>
+          </div>
+
+          <!-- Campo: Repuestos (Opcional) -->
+          <div>
+            <label for="cierre-repuestos" class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Repuestos o Insumos Utilizados (Opcional)</label>
+            <input type="text" id="cierre-repuestos" placeholder="Ej. Filtro de aire F-45, Grasa de litio, O-ring..." class="w-full bg-surface-container border border-outline-variant rounded p-2 text-on-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+          </div>
+
+          <!-- Campo: Evidencia (Mock) -->
+          <div>
+            <label class="block text-status-micro font-status-micro text-on-surface-variant uppercase mb-1">Cargar Evidencia Fotográfica (Simulado)</label>
+            <div class="border-2 border-dashed border-outline-variant/40 hover:border-primary/50 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-surface-container/30 relative">
+              <input type="file" id="cierre-evidencia" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+              <span class="material-symbols-outlined text-on-surface-variant text-3xl mb-1">upload_file</span>
+              <p class="text-body-sm font-semibold text-on-surface" id="evidencia-label">Seleccione una imagen de su dispositivo</p>
+              <p class="text-status-micro text-on-surface-variant mt-0.5">Formatos soportados: JPG, PNG (máx. 5MB)</p>
+            </div>
+          </div>
+        </div>
+        <footer class="tecnico-modal__footer">
+          <button class="tecnico-quick-btn" data-close-modal type="button">Cancelar</button>
+          <button class="tecnico-quick-btn tecnico-quick-btn--primary bg-success hover:bg-success/80 border-success hover:border-success/80" type="submit">Confirmar Cierre</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>

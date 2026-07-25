@@ -1,0 +1,25 @@
+.view-page[data-view="registrar-mantenimiento"] .material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.view-page[data-view="registrar-mantenimiento"] .material-symbols-outlined[data-weight="fill"] {
+  font-variation-settings: 'FILL' 1;
+}
+
+.view-page[data-view="registrar-mantenimiento"] input[type="text"],
+.view-page[data-view="registrar-mantenimiento"] input[type="number"],
+.view-page[data-view="registrar-mantenimiento"] input[type="date"],
+.view-page[data-view="registrar-mantenimiento"] textarea,
+.view-page[data-view="registrar-mantenimiento"] select {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.view-page[data-view="registrar-mantenimiento"] input:focus,
+.view-page[data-view="registrar-mantenimiento"] textarea:focus,
+.view-page[data-view="registrar-mantenimiento"] select:focus {
+  border-color: var(--sigma-primary-text) !important;
+  box-shadow: none !important;
+  outline: none;
+}

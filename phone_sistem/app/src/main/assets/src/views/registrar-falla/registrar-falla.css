@@ -1,0 +1,78 @@
+.view-page[data-view="registrar-falla"] {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.utilitarian-input {
+  width: 100%;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 0.125rem;
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.utilitarian-input:focus {
+  border-color: var(--sigma-primary-text);
+  box-shadow: 0 0 0 1px var(--sigma-primary-text);
+}
+
+.utilitarian-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.priority-btn {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: var(--bg-sidebar);
+}
+
+.priority-btn:hover {
+  background-color: var(--sigma-surface-hover);
+}
+
+.priority-btn:first-child {
+  border-radius: 0.125rem 0 0 0.125rem;
+}
+
+.priority-btn:last-child {
+  border-radius: 0 0.125rem 0.125rem 0;
+}
+
+input[type="radio"]:checked + .priority-btn-alta {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #EF4444;
+  color: #EF4444;
+  font-weight: 700;
+}
+
+input[type="radio"]:checked + .priority-btn-media {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #F59E0B;
+  color: #F59E0B;
+  font-weight: 700;
+}
+
+input[type="radio"]:checked + .priority-btn-baja {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10B981;
+  color: #10B981;
+  font-weight: 700;
+}
