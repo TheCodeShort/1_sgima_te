@@ -14,16 +14,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SigmaTeAndroide">
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.SigmaTeAndroide"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                android:name=".MainActivity"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+                android:windowSoftInputMode="adjustResize">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            PROBLEMA DE TEMA MODERNOS EN REDMI 9A-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="true"-->
+<!--            android:label="@string/app_name"-->
+<!--            android:theme="@style/Theme.SigmaTeAndroide"-->
+<!--            android:windowSoftInputMode="adjustResize">-->
+
+
+                <intent-filter>
+                        <action android:name="android.intent.action.MAIN" />
+
+                        <category android:name="android.intent.category.LAUNCHER" />
+                    </intent-filter>
         </activity>
     </application>
 
