@@ -25,11 +25,11 @@ public class Evidencia {
     private Equipo equipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_falla")
+    @JoinColumn(name = "id_falla", nullable = true)
     private Falla falla;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_mantenimiento")
+    @JoinColumn(name = "id_mantenimiento", nullable = true)
     private Mantenimiento mantenimiento;
 
     @Column(name = "tipo_archivo", nullable = false, length = 10)
