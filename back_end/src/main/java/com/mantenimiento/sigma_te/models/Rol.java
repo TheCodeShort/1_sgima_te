@@ -1,7 +1,16 @@
 package com.mantenimiento.sigma_te.models;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // Le dice a Hibernate: "esta clase Java no es una clase cualquiera, representa una tabla de la base de datos — trátala como tal."
 @Entity

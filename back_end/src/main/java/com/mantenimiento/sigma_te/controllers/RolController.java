@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/roles")
+@RestController // Le avisa a Spring Boot: "Oye, esta clase es un Controlador de tipo REST".
+@RequestMapping("/api/roles") // Define la URL base (la dirección de internet) para entrar a este
 public class RolController {
 
     private final RolService rolService;
