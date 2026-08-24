@@ -1,4 +1,4 @@
-package com.mantenimiento.sigma_te.dtos;
+package com.mantenimiento.sigma_te.dto.rol;
 
 public record RolDTO(
     Integer idRol,

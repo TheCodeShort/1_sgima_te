@@ -17,7 +17,7 @@ import lombok.Setter;
 @Table(name = "rol")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor // Hibernate usa el constructor vacío para crear el objeto en memoria sin ningún dato dentro
 @AllArgsConstructor
 // lombok
 @Builder
