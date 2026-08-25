@@ -37,7 +37,7 @@ public class FallaController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo una nueva falla")
+    @ResponseStatus(HttpStatus.CREATED)
     public FallaDTO crear(@RequestBody FallaRequestDTO request) {
         return fallaService.crear(request);
     }
@@ -48,7 +48,7 @@ public class FallaController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro una falla")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         fallaService.eliminar(id);
     }

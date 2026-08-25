@@ -30,7 +30,7 @@ public class RolController {
     }
     // para crear un nuevo rol
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo usuario")
+    @ResponseStatus(HttpStatus.CREATED)
     public RolDTO crear(@RequestBody RolRequestDTO request) {
         return rolService.crear(request);
     }
@@ -41,7 +41,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un Rol")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         rolService.eliminar(id);
     }

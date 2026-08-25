@@ -37,7 +37,7 @@ public class EvidenciaController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo una nueva evidencia")
+    @ResponseStatus(HttpStatus.CREATED)
     public EvidenciaDTO crear(@RequestBody EvidenciaRequestDTO request) {
         return evidenciaService.crear(request);
     }
@@ -48,7 +48,7 @@ public class EvidenciaController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro una evidencia")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         evidenciaService.eliminar(id);
     }

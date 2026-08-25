@@ -37,7 +37,7 @@ public class EquipoController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo equipo")
+    @ResponseStatus(HttpStatus.CREATED)
     public EquipoDTO crear(@RequestBody EquipoRequestDTO request) {
         return equipoService.crear(request);
     }
@@ -48,7 +48,7 @@ public class EquipoController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un equipo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         equipoService.eliminar(id);
     }

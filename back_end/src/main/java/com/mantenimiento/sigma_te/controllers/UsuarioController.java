@@ -37,7 +37,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo usuario")
+    @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO crear(@RequestBody UsuarioRequestDTO request) {
         return usuarioService.crear(request);
     }
@@ -48,7 +48,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un usuario")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         usuarioService.eliminar(id);
     }

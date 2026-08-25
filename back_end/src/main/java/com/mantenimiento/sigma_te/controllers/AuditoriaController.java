@@ -37,7 +37,7 @@ public class AuditoriaController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo registro de auditoria")
+    @ResponseStatus(HttpStatus.CREATED)
     public AuditoriaDTO crear(@RequestBody AuditoriaRequestDTO request) {
         return auditoriaService.crear(request);
     }
@@ -48,7 +48,7 @@ public class AuditoriaController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un registro de auditoria")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         auditoriaService.eliminar(id);
     }

@@ -37,7 +37,7 @@ public class MantenimientoController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo mantenimiento")
+    @ResponseStatus(HttpStatus.CREATED)
     public MantenimientoDTO crear(@RequestBody MantenimientoRequestDTO request) {
         return mantenimientoService.crear(request);
     }
@@ -48,7 +48,7 @@ public class MantenimientoController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un mantenimiento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         mantenimientoService.eliminar(id);
     }

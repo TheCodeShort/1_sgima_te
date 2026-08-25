@@ -37,7 +37,7 @@ public class NotificacionController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo una nueva notificacion")
+    @ResponseStatus(HttpStatus.CREATED)
     public NotificacionDTO crear(@RequestBody NotificacionRequestDTO request) {
         return notificacionService.crear(request);
     }
@@ -48,7 +48,7 @@ public class NotificacionController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro una notificacion")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         notificacionService.eliminar(id);
     }

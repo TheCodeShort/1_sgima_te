@@ -37,7 +37,7 @@ public class RolPermisoController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo una nueva asignacion rol-permiso")
+    @ResponseStatus(HttpStatus.CREATED)
     public RolPermisoDTO crear(@RequestBody RolPermisoRequestDTO request) {
         return rolPermisoService.crear(request);
     }
@@ -50,7 +50,7 @@ public class RolPermisoController {
     }
 
     @DeleteMapping("/{idRol}/{idPermiso}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro la asignacion rol-permiso")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer idRol, @PathVariable Integer idPermiso) {
         rolPermisoService.eliminar(idRol, idPermiso);
     }

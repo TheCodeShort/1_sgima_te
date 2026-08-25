@@ -37,7 +37,7 @@ public class PermisoController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "Se creo un nuevo permiso")
+    @ResponseStatus(HttpStatus.CREATED)
     public PermisoDTO crear(@RequestBody PermisoRequestDTO request) {
         return permisoService.crear(request);
     }
@@ -48,7 +48,7 @@ public class PermisoController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Se borro un permiso")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id) {
         permisoService.eliminar(id);
     }
