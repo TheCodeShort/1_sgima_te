@@ -4,6 +4,7 @@ public record UsuarioRequestDTO(
     String nombreUsuario,
     String correoUsuario,
     Integer idRol,
-    String contrasenaHash
+    String contrasenaHash,
+    Boolean cuentaActiva
 ) {
 }

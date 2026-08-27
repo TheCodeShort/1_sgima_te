@@ -47,9 +47,9 @@ public class UsuarioController {
         return usuarioService.actualizar(id, request);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        usuarioService.eliminar(id);
-    }
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void eliminar(@PathVariable Integer id) {
+//        usuarioService.eliminar(id);
+//    }
 }

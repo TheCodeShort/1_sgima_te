@@ -36,6 +36,17 @@
 </header>
 <!-- Canvas -->
 <div class="flex-1 overflow-y-auto p-4 md:p-margin-desktop bg-background">
+<!-- Tabs Navigation -->
+<div class="flex gap-2 border-b border-outline-variant mb-6">
+  <button id="tab-usuarios" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-primary text-primary">
+    Usuarios
+  </button>
+  <button id="tab-roles" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">
+    Roles
+  </button>
+</div>
+
+<div id="panel-usuarios">
 <!-- Page Header -->
 <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
 <div>
@@ -44,7 +55,7 @@
                         Administre el acceso, asigne roles operativos y controle el estado de los operarios y auditores en la plataforma SIGMA-TE.
                     </p>
 </div>
-<button class="bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+<button id="btn-nuevo-usuario" class="bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
 <span class="material-symbols-outlined text-[18px]">person_add</span>
 <span class="text-body-md font-body-md font-semibold">Nuevo Usuario</span>
 </button>
@@ -75,7 +86,7 @@
 <th class="px-4 py-3 font-semibold text-right">Acciones</th>
 </tr>
 </thead>
-<tbody class="text-data-table font-data-table text-on-surface divide-y divide-outline-variant/30">
+<tbody id="tabla-usuarios-body" class="text-data-table font-data-table text-on-surface divide-y divide-outline-variant/30">
 <!-- Row 1: Active Admin -->
 <tr class="h-row-height-dense bg-surface-base hover:bg-surface-container transition-colors group">
 <td class="px-4 align-middle">
@@ -224,5 +235,135 @@
 </div>
 </div>
 </div>
+
+<!-- Section: Roles del Sistema -->
+<div id="panel-roles" style="display:none;">
+<!-- Roles Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+<div>
+<h2 class="text-display-id font-display-id text-on-background mb-1">Roles del Sistema</h2>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+                        Defina y gestione los roles de acceso y privilegios de usuario en la plataforma SIGMA-TE.
+                    </p>
+</div>
+<button id="btn-nuevo-rol" class="bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add_moderator</span>
+<span class="text-body-md font-body-md font-semibold">Nuevo Rol</span>
+</button>
+</div>
+
+<!-- Roles Table Container -->
+<div class="bg-surface-card border border-outline-variant rounded-xl overflow-x-auto shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high border-b border-outline-variant text-label-caps font-label-caps text-on-surface-variant sticky top-0 z-10">
+<tr>
+<th class="px-4 py-3 font-semibold">Nombre del Rol</th>
+<th class="px-4 py-3 font-semibold">Descripción</th>
+<th class="px-4 py-3 font-semibold">Estado</th>
+<th class="px-4 py-3 font-semibold text-right">Acciones</th>
+</tr>
+</thead>
+<tbody id="tabla-roles-body" class="text-data-table font-data-table text-on-surface divide-y divide-outline-variant/30">
+<!-- Filas de roles cargadas dinámicamente -->
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
 </main>
+
+<!-- Modal: Nuevo / Editar Rol -->
+<div id="modal-rol" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" aria-hidden="true" role="dialog" aria-labelledby="modal-rol-titulo">
+<div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+<!-- Modal Header -->
+<div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">admin_panel_settings</span>
+<h3 id="modal-rol-titulo" class="text-headline-sm font-headline-sm font-semibold text-on-surface">Nuevo Rol</h3>
+</div>
+<button id="btn-cerrar-modal-rol" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors" aria-label="Cerrar modal">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+
+<!-- Modal Form -->
+<form id="form-rol" class="p-6 space-y-4">
+<div>
+<label for="rol-nombre" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nombre del Rol <span class="text-error">*</span></label>
+<input id="rol-nombre" type="text" required placeholder="Ej: Supervisor de Turno" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+</div>
+
+<div>
+<label for="rol-descripcion" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Descripción</label>
+<textarea id="rol-descripcion" rows="3" placeholder="Describa las responsabilidades y alcance del rol..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-none"></textarea>
+</div>
+
+<div class="hidden" id="seccion-permisos-rol">
+  <label class="block text-body-sm font-body-sm font-medium text-on-surface mb-2">
+    Permisos
+  </label>
+  <div id="permisos-checkboxes" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto border border-outline-variant rounded-lg p-3 bg-surface-base">
+    <!-- Checkboxes de permisos cargados dinámicamente -->
+  </div>
+</div>
+
+<!-- Modal Actions -->
+<div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
+<button id="btn-cancelar-modal-rol" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">
+                        Cancelar
+                    </button>
+<button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">
+                        Guardar Rol
+                    </button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Modal: Nuevo / Editar Usuario -->
+<div id="modal-usuario" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" aria-hidden="true" role="dialog" aria-labelledby="modal-usuario-titulo">
+  <div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[22px]">person_add</span>
+        <h3 id="modal-usuario-titulo" class="text-headline-sm font-headline-sm font-semibold text-on-surface">Nuevo Usuario</h3>
+      </div>
+      <button id="btn-cerrar-modal-usuario" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors" aria-label="Cerrar modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <form id="form-usuario" class="p-6 space-y-4">
+      <div>
+        <label for="usuario-nombre" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nombre completo <span class="text-error">*</span></label>
+        <input id="usuario-nombre" type="text" required placeholder="Ej: Juan Pérez" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+      </div>
+      <div>
+        <label for="usuario-correo" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Correo <span class="text-error">*</span></label>
+        <input id="usuario-correo" type="email" required placeholder="correo@empresa.com" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+      </div>
+      <div>
+        <label for="usuario-rol" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Rol <span class="text-error">*</span></label>
+        <select id="usuario-rol" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+          <option value="">Seleccione un rol...</option>
+        </select>
+        <p id="usuario-rol-vacio-msg" style="display:none;" class="text-status-micro font-status-micro text-error mt-1">
+          Aún no hay roles creados. <a href="#" id="link-crear-rol-desde-usuario" class="underline font-semibold">Crear un rol ahora</a>
+        </p>
+      </div>
+      <div>
+        <label for="usuario-password" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Contraseña inicial <span class="text-error">*</span></label>
+        <input id="usuario-password" type="password" required placeholder="Mínimo 8 caracteres" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="usuario-requiere-cambio" type="checkbox" checked class="rounded border-outline-variant"/>
+        <label for="usuario-requiere-cambio" class="text-body-sm font-body-sm text-on-surface">Requiere cambiar contraseña en el primer acceso</label>
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
+        <button id="btn-cancelar-modal-usuario" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar Usuario</button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>

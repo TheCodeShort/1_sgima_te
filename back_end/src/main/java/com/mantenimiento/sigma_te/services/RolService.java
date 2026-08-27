@@ -50,6 +50,7 @@ public class RolService {
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
         rol.setNombreRol(request.nombreRol());
         rol.setDescripcionRol(request.descripcionRol());
+        rol.setEstadoRol(request.estadoRol());
         Rol actualizado = rolRepository.save(rol);
         return convertirADto(actualizado);
     }

@@ -71,6 +71,7 @@ public class UsuarioService {
         usuario.setNombreUsuario(request.nombreUsuario());
         usuario.setCorreoUsuario(request.correoUsuario());
         usuario.setRol(rol);
+        usuario.setCuentaActiva(request.cuentaActiva());
         if (request.contrasenaHash() != null && !request.contrasenaHash().isBlank()) {
             usuario.setContrasenaHash(passwordEncoder.encode(request.contrasenaHash()));
             usuario.setFechaUltimoCambioPassword(LocalDateTime.now());
