@@ -1,6 +1,6 @@
 const UsuarioService = {
   async getUsuarios() {
-    const response = await fetch(`${window.API_BASE_URL}/usuarios`);
+    const response = await fetchConAuth(`${window.API_BASE_URL}/usuarios`);
     if (!response.ok) {
       throw new Error(`Error al obtener usuarios: ${response.status}`);
     }
@@ -8,7 +8,7 @@ const UsuarioService = {
   },
 
   async crearUsuario(datos) {
-    const response = await fetch(`${window.API_BASE_URL}/usuarios`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/usuarios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datos)
@@ -21,7 +21,7 @@ const UsuarioService = {
   },
 
   async actualizarUsuario(id, datos) {
-    const response = await fetch(`${window.API_BASE_URL}/usuarios/${id}`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/usuarios/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datos)

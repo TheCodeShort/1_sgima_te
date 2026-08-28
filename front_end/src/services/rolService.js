@@ -1,6 +1,6 @@
 const RolService = {
   async getRoles() {
-    const response = await fetch(`${window.API_BASE_URL}/roles`);
+    const response = await fetchConAuth(`${window.API_BASE_URL}/roles`);
     if (!response.ok) {
       throw new Error(`Error al obtener roles: ${response.status}`);
     }
@@ -8,7 +8,7 @@ const RolService = {
   },
 
   async crearRol(datos) {
-    const response = await fetch(`${window.API_BASE_URL}/roles`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/roles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datos)
@@ -21,7 +21,7 @@ const RolService = {
   },
 
   async actualizarRol(id, datos) {
-    const response = await fetch(`${window.API_BASE_URL}/roles/${id}`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/roles/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datos)

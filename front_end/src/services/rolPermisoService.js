@@ -1,6 +1,6 @@
 const RolPermisoService = {
   async getAsignaciones() {
-    const response = await fetch(`${window.API_BASE_URL}/rol-permisos`);
+    const response = await fetchConAuth(`${window.API_BASE_URL}/rol-permisos`);
     if (!response.ok) {
       throw new Error(`Error al obtener asignaciones: ${response.status}`);
     }
@@ -8,7 +8,7 @@ const RolPermisoService = {
   },
 
   async asignar(idRol, idPermiso) {
-    const response = await fetch(`${window.API_BASE_URL}/rol-permisos`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/rol-permisos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idRol, idPermiso })
@@ -21,7 +21,7 @@ const RolPermisoService = {
   },
 
   async quitar(idRol, idPermiso) {
-    const response = await fetch(`${window.API_BASE_URL}/rol-permisos/${idRol}/${idPermiso}`, {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/rol-permisos/${idRol}/${idPermiso}`, {
       method: 'DELETE'
     });
     if (!response.ok && response.status !== 204) {

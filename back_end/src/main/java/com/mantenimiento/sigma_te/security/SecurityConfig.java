@@ -32,19 +32,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                // TEMPORAL: abierto para pruebas, pendiente configurar JWT completo
-                .requestMatchers("/api/roles/**").permitAll()
-                .requestMatchers("/api/permisos/**").permitAll()
-                .requestMatchers("/api/estados-equipo/**").permitAll()
-                .requestMatchers("/api/tipo-notificacion/**").permitAll()
-                .requestMatchers("/api/usuarios/**").permitAll()
-                .requestMatchers("/api/equipos/**").permitAll()
-                .requestMatchers("/api/fallas/**").permitAll()
-                .requestMatchers("/api/mantenimientos/**").permitAll()
-                .requestMatchers("/api/evidencias/**").permitAll()
-                .requestMatchers("/api/notificaciones/**").permitAll()
-                .requestMatchers("/api/auditorias/**").permitAll()
-                .requestMatchers("/api/rol-permisos/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

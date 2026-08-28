@@ -14,17 +14,13 @@
 <h1 class="font-display-id text-display-id text-primary tracking-tight">SIGMA-TE</h1>
 <p class="font-body-md text-body-md text-on-surface-variant">Sistema de Gestión de Mantenimiento</p>
 </header>
-<div class="login-demo-box" id="login-demo-box">
-<p class="login-demo-box__title">Credenciales de demostración</p>
-<ul class="login-demo-box__list" id="login-demo-list"></ul>
-</div>
 <div aria-live="polite" class="login-alert" hidden id="login-alert" role="alert"></div>
 <form class="flex flex-col gap-5" id="login-form" novalidate>
 <div class="flex flex-col gap-2">
-<label class="font-label-caps text-label-caps text-on-surface" for="username">Usuario</label>
+<label class="font-label-caps text-label-caps text-on-surface" for="correo">Correo</label>
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">person</span>
-<input autocomplete="username" class="w-full bg-surface-card border border-outline-variant text-on-surface font-body-md text-body-md rounded py-2.5 pl-10 pr-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" id="username" name="username" placeholder="Ingrese su usuario" required type="text"/>
+<input autocomplete="email" class="w-full bg-surface-card border border-outline-variant text-on-surface font-body-md text-body-md rounded py-2.5 pl-10 pr-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" id="correo" name="correo" placeholder="Ingrese su correo" required type="email"/>
 </div>
 </div>
 <div class="flex flex-col gap-2">
@@ -37,13 +33,10 @@
 </button>
 </div>
 </div>
-<div class="flex items-center justify-between mt-1">
 <label class="flex items-center gap-2 cursor-pointer group">
 <input class="w-4 h-4 rounded-sm border-outline-variant bg-surface-card text-primary focus:ring-primary focus:ring-offset-background focus:ring-offset-2 transition-colors cursor-pointer" id="remember-me" type="checkbox"/>
 <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Recordar usuario</span>
 </label>
-<button class="font-body-sm text-body-sm text-primary hover:text-primary-fixed transition-colors" id="btn-fill-demo" type="button">Usar cuenta operario</button>
-</div>
 <button class="w-full mt-2 bg-primary text-on-primary font-headline-md text-headline-md py-3 px-4 rounded-lg hover:bg-primary-fixed transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background flex justify-center items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" id="login-submit" type="submit">
 <span id="login-submit-label">Iniciar sesión</span>
 <span class="material-symbols-outlined text-sm" id="login-submit-icon">login</span>

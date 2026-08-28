@@ -92,6 +92,50 @@ async function cargarTablaRoles(root) {
   }
 }
 
+async function cargarCheckboxesPermisos(root, idRol) {
+  const seccion = root.querySelector('#seccion-permisos-rol');
+  const contenedor = root.querySelector('#permisos-checkboxes');
+
+  if (idRol === null || idRol === undefined) {
+    if (seccion) seccion.classList.add('hidden');
+    return;
+  }
+
+  try {
+    const [permisos, asignaciones] = await Promise.all([
+      PermisoService.getPermisos(),
+      RolPermisoService.getAsignaciones()
+    ]);
+
+    const asignacionesRol = Array.isArray(asignaciones)
+      ? asignaciones.filter((a) => Number(a.idRol) === Number(idRol))
+      : [];
+    const asignadosSet = new Set(asignacionesRol.map((a) => Number(a.idPermiso)));
+
+    if (seccion) seccion.classList.remove('hidden');
+
+    if (contenedor && Array.isArray(permisos)) {
+      let html = '';
+      permisos.forEach((permiso) => {
+        const idPermiso = permiso.idPermiso ?? permiso.id;
+        const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
+        const estaAsignado = asignadosSet.has(Number(idPermiso));
+
+        html += `
+          <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
+            <input type="checkbox" class="checkbox-permiso rounded border-outline-variant" 
+                   data-id-permiso="${idPermiso}" ${estaAsignado ? 'checked' : ''}/>
+            ${nombrePermiso}
+          </label>
+        `;
+      });
+      contenedor.innerHTML = html;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 function pintarTablaUsuarios(root, usuarios, rolesMap) {
   const tbody = root.querySelector('#tabla-usuarios-body');
   if (!tbody) return;
@@ -244,6 +288,7 @@ function initView(ctx) {
   const cerrarModal = () => {
     if (modal) modal.style.display = 'none';
     if (formRol) formRol.reset();
+    cargarCheckboxesPermisos(root, null);
     rolEnEdicion = null;
     const modalTitulo = root.querySelector('#modal-rol-titulo');
     if (modalTitulo) modalTitulo.textContent = 'Nuevo Rol';
@@ -253,6 +298,7 @@ function initView(ctx) {
     btnNuevoRol.addEventListener('click', () => {
       rolEnEdicion = null;
       if (formRol) formRol.reset();
+      cargarCheckboxesPermisos(root, null);
       const modalTitulo = root.querySelector('#modal-rol-titulo');
       if (modalTitulo) modalTitulo.textContent = 'Nuevo Rol';
       modal.style.display = 'flex';
@@ -281,6 +327,8 @@ function initView(ctx) {
         const inputDescripcion = root.querySelector('#rol-descripcion');
         if (inputNombre) inputNombre.value = nombre ?? '';
         if (inputDescripcion) inputDescripcion.value = (descripcion === 'Sin descripción' ? '' : descripcion) ?? '';
+
+        await cargarCheckboxesPermisos(root, Number(id));
 
         if (modal) modal.style.display = 'flex';
         return;
@@ -331,6 +379,31 @@ function initView(ctx) {
             descripcionRol,
             estadoRol: true
           });
+
+          try {
+            const checkboxes = root.querySelectorAll('#permisos-checkboxes .checkbox-permiso');
+            const marcados = Array.from(checkboxes)
+              .filter((cb) => cb.checked)
+              .map((cb) => Number(cb.dataset.idPermiso));
+
+            const asignaciones = await RolPermisoService.getAsignaciones();
+            const asignacionesRol = Array.isArray(asignaciones)
+              ? asignaciones.filter((a) => Number(a.idRol) === Number(rolEnEdicion))
+              : [];
+            const actuales = asignacionesRol.map((a) => Number(a.idPermiso));
+
+            const paraAsignar = marcados.filter((id) => !actuales.includes(id));
+            const paraQuitar = actuales.filter((id) => !marcados.includes(id));
+
+            const promesas = [
+              ...paraAsignar.map((idPermiso) => RolPermisoService.asignar(Number(rolEnEdicion), idPermiso)),
+              ...paraQuitar.map((idPermiso) => RolPermisoService.quitar(Number(rolEnEdicion), idPermiso))
+            ];
+
+            await Promise.all(promesas);
+          } catch (err) {
+            alert('Los datos del rol se guardaron, pero hubo un error actualizando permisos: ' + err.message);
+          }
         } else {
           await RolService.crearRol({
             nombreRol,
