@@ -65,7 +65,20 @@ function initView(ctx) {
         AppState.saveRememberedUsername('');
       }
 
-      AppState.setUser(correo, result.role, result.nombre);
+      let nombreRolParaPanel = 'operario';
+      try {
+        const roles = await RolService.getRoles();
+        const rolEncontrado = Array.isArray(roles)
+          ? roles.find((r) => Number(r.idRol) === Number(result.role))
+          : null;
+        if (rolEncontrado && rolEncontrado.nombreRol) {
+          nombreRolParaPanel = rolEncontrado.nombreRol;
+        }
+      } catch (err) {
+        console.error('No se pudo resolver el nombre del rol:', err);
+      }
+
+      AppState.setUser(correo, nombreRolParaPanel, result.nombre);
       showToast(result.message, 'success');
       ctx.navigate(AppState.getPanelRoute());
     } catch (err) {

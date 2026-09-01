@@ -95,35 +95,31 @@ async function cargarTablaRoles(root) {
 async function cargarCheckboxesPermisos(root, idRol) {
   const seccion = root.querySelector('#seccion-permisos-rol');
   const contenedor = root.querySelector('#permisos-checkboxes');
-
-  if (idRol === null || idRol === undefined) {
-    if (seccion) seccion.classList.add('hidden');
-    return;
-  }
+  if (!seccion || !contenedor) return;
 
   try {
-    const [permisos, asignaciones] = await Promise.all([
-      PermisoService.getPermisos(),
-      RolPermisoService.getAsignaciones()
-    ]);
+    const permisos = await PermisoService.getPermisos();
+    let asignadosSet = new Set();
 
-    const asignacionesRol = Array.isArray(asignaciones)
-      ? asignaciones.filter((a) => Number(a.idRol) === Number(idRol))
-      : [];
-    const asignadosSet = new Set(asignacionesRol.map((a) => Number(a.idPermiso)));
+    if (idRol !== null && idRol !== undefined) {
+      const asignaciones = await RolPermisoService.getAsignaciones();
+      const asignacionesRol = Array.isArray(asignaciones)
+        ? asignaciones.filter((a) => Number(a.idRol) === Number(idRol))
+        : [];
+      asignadosSet = new Set(asignacionesRol.map((a) => Number(a.idPermiso)));
+    }
 
-    if (seccion) seccion.classList.remove('hidden');
+    seccion.classList.remove('hidden');
 
-    if (contenedor && Array.isArray(permisos)) {
+    if (Array.isArray(permisos)) {
       let html = '';
       permisos.forEach((permiso) => {
         const idPermiso = permiso.idPermiso ?? permiso.id;
         const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
         const estaAsignado = asignadosSet.has(Number(idPermiso));
-
         html += `
           <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
-            <input type="checkbox" class="checkbox-permiso rounded border-outline-variant" 
+            <input type="checkbox" class="checkbox-permiso rounded border-outline-variant"
                    data-id-permiso="${idPermiso}" ${estaAsignado ? 'checked' : ''}/>
             ${nombrePermiso}
           </label>
@@ -263,6 +259,7 @@ async function cargarSelectRolesUsuario(root) {
 
 function initView(ctx) {
   let rolEnEdicion = null;
+  let confirmacionSinPermisosPendiente = false;
   let usuarioEnEdicion = null;
   const root = document.querySelector('[data-view="gestion-usuarios-roles"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
@@ -275,6 +272,7 @@ function initView(ctx) {
   const btnCerrarModal = root.querySelector('#btn-cerrar-modal-rol');
   const btnCancelarModal = root.querySelector('#btn-cancelar-modal-rol');
   const formRol = root.querySelector('#form-rol');
+  let wizardRol = null;
   const tablaRolesBody = root.querySelector('#tabla-roles-body');
 
   const modalUsuario = root.querySelector('#modal-usuario');
@@ -292,6 +290,12 @@ function initView(ctx) {
     rolEnEdicion = null;
     const modalTitulo = root.querySelector('#modal-rol-titulo');
     if (modalTitulo) modalTitulo.textContent = 'Nuevo Rol';
+    if (wizardRol) wizardRol.reiniciar();
+    confirmacionSinPermisosPendiente = false;
+    const advertenciaReset = root.querySelector('#advertencia-permisos-rol');
+    if (advertenciaReset) advertenciaReset.style.display = 'none';
+    const btnFinalizarReset = root.querySelector('[data-wizard-finalizar]');
+    if (btnFinalizarReset) btnFinalizarReset.textContent = 'Guardar Rol';
   };
 
   if (btnNuevoRol && modal) {
@@ -301,6 +305,12 @@ function initView(ctx) {
       cargarCheckboxesPermisos(root, null);
       const modalTitulo = root.querySelector('#modal-rol-titulo');
       if (modalTitulo) modalTitulo.textContent = 'Nuevo Rol';
+      if (wizardRol) wizardRol.reiniciar();
+      confirmacionSinPermisosPendiente = false;
+      const advertenciaReset = root.querySelector('#advertencia-permisos-rol');
+      if (advertenciaReset) advertenciaReset.style.display = 'none';
+      const btnFinalizarReset = root.querySelector('[data-wizard-finalizar]');
+      if (btnFinalizarReset) btnFinalizarReset.textContent = 'Guardar Rol';
       modal.style.display = 'flex';
     });
   }
@@ -330,6 +340,12 @@ function initView(ctx) {
 
         await cargarCheckboxesPermisos(root, Number(id));
 
+        if (wizardRol) wizardRol.reiniciar();
+        confirmacionSinPermisosPendiente = false;
+        const advertenciaReset = root.querySelector('#advertencia-permisos-rol');
+        if (advertenciaReset) advertenciaReset.style.display = 'none';
+        const btnFinalizarReset = root.querySelector('[data-wizard-finalizar]');
+        if (btnFinalizarReset) btnFinalizarReset.textContent = 'Guardar Rol';
         if (modal) modal.style.display = 'flex';
         return;
       }
@@ -360,12 +376,12 @@ function initView(ctx) {
     });
   }
 
-  if (formRol) {
-    formRol.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  wizardRol = initWizard({
+    root: modal,
+    totalPasos: 2,
+    onFinalizar: async () => {
       const inputNombre = root.querySelector('#rol-nombre');
       const inputDescripcion = root.querySelector('#rol-descripcion');
-
       const nombreRol = inputNombre ? inputNombre.value.trim() : '';
       const descripcionRol = inputDescripcion ? inputDescripcion.value.trim() : '';
 
@@ -395,30 +411,87 @@ function initView(ctx) {
             const paraAsignar = marcados.filter((id) => !actuales.includes(id));
             const paraQuitar = actuales.filter((id) => !marcados.includes(id));
 
-            const promesas = [
+            await Promise.all([
               ...paraAsignar.map((idPermiso) => RolPermisoService.asignar(Number(rolEnEdicion), idPermiso)),
               ...paraQuitar.map((idPermiso) => RolPermisoService.quitar(Number(rolEnEdicion), idPermiso))
-            ];
-
-            await Promise.all(promesas);
+            ]);
           } catch (err) {
             alert('Los datos del rol se guardaron, pero hubo un error actualizando permisos: ' + err.message);
           }
-        } else {
-          await RolService.crearRol({
-            nombreRol,
-            descripcionRol
-          });
-        }
 
-        cerrarModal();
-        cargarTablaRoles(root);
-        cargarFiltroRoles(root);
+          showToast('Rol actualizado correctamente.', 'success');
+          cerrarModal();
+          cargarTablaRoles(root);
+          cargarFiltroRoles(root);
+        } else {
+          const respuesta = await RolService.crearRol({ nombreRol, descripcionRol });
+          const idRolNuevo = respuesta?.idRol ?? respuesta?.id ?? respuesta;
+
+          const checkboxes = root.querySelectorAll('#permisos-checkboxes .checkbox-permiso');
+          const marcados = Array.from(checkboxes)
+            .filter((cb) => cb.checked)
+            .map((cb) => Number(cb.dataset.idPermiso));
+
+          try {
+            await Promise.all(
+              marcados.map((idPermiso) => RolPermisoService.asignar(Number(idRolNuevo), idPermiso))
+            );
+          } catch (err) {
+            alert('El rol se creó correctamente, pero hubo un error asignando permisos: ' + err.message);
+          }
+
+          showToast('Rol creado correctamente.', 'success');
+          cerrarModal();
+          cargarTablaRoles(root);
+          cargarFiltroRoles(root);
+        }
       } catch (err) {
         alert(err.message);
       }
-    });
-  }
+    },
+    onPasoCambio: async (paso) => {
+      if (paso === 2) {
+        await cargarCheckboxesPermisos(root, rolEnEdicion);
+      }
+    },
+    validarPaso: (paso) => {
+      if (paso === 1) {
+        const inputNombre = root.querySelector('#rol-nombre');
+        if (!inputNombre || !inputNombre.value.trim()) {
+          alert('El nombre del rol es obligatorio.');
+          return false;
+        }
+      }
+
+      if (paso === 2) {
+        const checkboxes = root.querySelectorAll('#permisos-checkboxes .checkbox-permiso');
+        const algunoMarcado = Array.from(checkboxes).some((cb) => cb.checked);
+        const advertencia = root.querySelector('#advertencia-permisos-rol');
+        const btnFinalizarEl = root.querySelector('[data-wizard-finalizar]');
+
+        if (algunoMarcado) {
+          if (advertencia) advertencia.style.display = 'none';
+          if (btnFinalizarEl) btnFinalizarEl.textContent = 'Guardar Rol';
+          confirmacionSinPermisosPendiente = false;
+          return true;
+        }
+
+        if (!confirmacionSinPermisosPendiente) {
+          confirmacionSinPermisosPendiente = true;
+          if (advertencia) advertencia.style.display = 'block';
+          if (btnFinalizarEl) btnFinalizarEl.textContent = 'Confirmar sin permisos';
+          return false;
+        }
+
+        confirmacionSinPermisosPendiente = false;
+        if (advertencia) advertencia.style.display = 'none';
+        if (btnFinalizarEl) btnFinalizarEl.textContent = 'Guardar Rol';
+        return true;
+      }
+
+      return true;
+    }
+  });
 
   // --- Modal Usuario ---
   const cerrarModalUsuario = () => {
@@ -433,6 +506,14 @@ function initView(ctx) {
     btnNuevoUsuario.addEventListener('click', async () => {
       usuarioEnEdicion = null;
       if (formUsuario) formUsuario.reset();
+      const inputPassword = root.querySelector('#usuario-password');
+      const passwordHint = root.querySelector('#usuario-password-hint');
+      if (passwordHint) passwordHint.style.display = 'none';
+      if (inputPassword) inputPassword.setAttribute('required', 'true');
+      const labelPassword = root.querySelector('label[for="usuario-password"]');
+      if (labelPassword && !labelPassword.innerHTML.includes('*')) {
+        labelPassword.innerHTML = 'Contraseña inicial <span class="text-error">*</span>';
+      }
       const modalTitulo = root.querySelector('#modal-usuario-titulo');
       if (modalTitulo) modalTitulo.textContent = 'Nuevo Usuario';
       await cargarSelectRolesUsuario(root);
@@ -468,13 +549,21 @@ function initView(ctx) {
       const selectRol = root.querySelector('#usuario-rol');
       const inputPassword = root.querySelector('#usuario-password');
 
+      const passwordVal = inputPassword ? inputPassword.value : '';
       const datos = {
         nombreUsuario: inputNombre ? inputNombre.value.trim() : '',
         correoUsuario: inputCorreo ? inputCorreo.value.trim() : '',
         idRol: selectRol ? parseInt(selectRol.value, 10) : 0,
-        contrasenaHash: inputPassword ? inputPassword.value : '',
         cuentaActiva: true
       };
+
+      if (usuarioEnEdicion !== null) {
+        if (passwordVal !== '') {
+          datos.contrasenaHash = passwordVal;
+        }
+      } else {
+        datos.contrasenaHash = passwordVal;
+      }
 
       try {
         if (usuarioEnEdicion !== null) {
@@ -507,9 +596,18 @@ function initView(ctx) {
         const inputNombre = root.querySelector('#usuario-nombre');
         const inputCorreo = root.querySelector('#usuario-correo');
         const inputPassword = root.querySelector('#usuario-password');
+        const passwordHint = root.querySelector('#usuario-password-hint');
+        const labelPassword = root.querySelector('label[for="usuario-password"]');
+        if (labelPassword) {
+          labelPassword.innerHTML = 'Contraseña inicial';
+        }
         if (inputNombre) inputNombre.value = nombre ?? '';
         if (inputCorreo) inputCorreo.value = correo ?? '';
-        if (inputPassword) inputPassword.value = '';
+        if (inputPassword) {
+          inputPassword.value = '';
+          inputPassword.removeAttribute('required');
+        }
+        if (passwordHint) passwordHint.style.display = 'block';
 
         await cargarSelectRolesUsuario(root);
         const selectRol = root.querySelector('#usuario-rol');

@@ -289,34 +289,60 @@
 
 <!-- Modal Form -->
 <form id="form-rol" class="p-6 space-y-4">
-<div>
-<label for="rol-nombre" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nombre del Rol <span class="text-error">*</span></label>
-<input id="rol-nombre" type="text" required placeholder="Ej: Supervisor de Turno" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
-</div>
 
-<div>
-<label for="rol-descripcion" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Descripción</label>
-<textarea id="rol-descripcion" rows="3" placeholder="Describa las responsabilidades y alcance del rol..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-none"></textarea>
-</div>
-
-<div class="hidden" id="seccion-permisos-rol">
-  <label class="block text-body-sm font-body-sm font-medium text-on-surface mb-2">
-    Permisos
-  </label>
-  <div id="permisos-checkboxes" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto border border-outline-variant rounded-lg p-3 bg-surface-base">
-    <!-- Checkboxes de permisos cargados dinámicamente -->
+  <!-- Barra de progreso del wizard -->
+  <div class="mb-2">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-status-micro font-status-micro text-on-surface-variant" data-wizard-contador>1/2</span>
+    </div>
+    <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+      <div class="h-full bg-primary transition-all duration-300" data-wizard-barra style="width: 50%;"></div>
+    </div>
   </div>
-</div>
 
-<!-- Modal Actions -->
-<div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
-<button id="btn-cancelar-modal-rol" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">
-                        Cancelar
-                    </button>
-<button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">
-                        Guardar Rol
-                    </button>
-</div>
+  <!-- Paso 1: Datos del rol -->
+  <div data-wizard-paso="1">
+    <div>
+      <label for="rol-nombre" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nombre del Rol <span class="text-error">*</span></label>
+      <input id="rol-nombre" type="text" required placeholder="Ej: Supervisor de Turno" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+    </div>
+    <div class="mt-4">
+      <label for="rol-descripcion" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Descripción</label>
+      <textarea id="rol-descripcion" rows="3" placeholder="Describa las responsabilidades y alcance del rol..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-none"></textarea>
+    </div>
+  </div>
+
+  <!-- Paso 2: Permisos -->
+  <div data-wizard-paso="2" style="display:none;">
+    <div id="seccion-permisos-rol">
+      <label class="block text-body-sm font-body-sm font-medium text-on-surface mb-2">Permisos</label>
+      <div id="permisos-checkboxes" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto border border-outline-variant rounded-lg p-3 bg-surface-base">
+        <!-- Checkboxes de permisos cargados dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <p id="advertencia-permisos-rol" style="display:none;" class="text-status-micro font-status-micro text-error mb-2">
+    Este rol no tendrá ningún permiso asignado. Da clic de nuevo en el botón para confirmar.
+  </p>
+
+  <!-- Modal Actions -->
+  <div class="flex items-center justify-between gap-3 pt-4 border-t border-outline-variant/50">
+    <button id="btn-cancelar-modal-rol" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">
+      Cancelar
+    </button>
+    <div class="flex items-center gap-2">
+      <button type="button" data-wizard-atras class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium" style="display:none;">
+        Atrás
+      </button>
+      <button type="button" data-wizard-siguiente class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">
+        Siguiente
+      </button>
+      <button type="button" data-wizard-finalizar class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm" style="display:none;">
+        Guardar Rol
+      </button>
+    </div>
+  </div>
 </form>
 </div>
 </div>
@@ -352,8 +378,9 @@
         </p>
       </div>
       <div>
-        <label for="usuario-password" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Contraseña inicial <span class="text-error">*</span></label>
-        <input id="usuario-password" type="password" required placeholder="Mínimo 8 caracteres" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+        <label for="usuario-password" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Contraseña inicial</label>
+        <input id="usuario-password" type="password" placeholder="Mínimo 8 caracteres" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+        <p id="usuario-password-hint" style="display:none" class="text-status-micro font-status-micro text-on-surface-variant mt-1">Deja este campo vacío para no cambiar la contraseña actual.</p>
       </div>
       <div class="flex items-center gap-2">
         <input id="usuario-requiere-cambio" type="checkbox" checked class="rounded border-outline-variant"/>
