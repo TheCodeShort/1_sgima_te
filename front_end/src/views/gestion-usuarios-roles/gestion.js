@@ -1,3 +1,7 @@
+let todosLosUsuariosCache = [];
+let todosLosRolesCache = new Map();
+let todosLosRolesCacheTabla = [];
+
 async function cargarFiltroRoles(root) {
   const select = root.querySelector('#filtro-rol');
   if (!select) return;
@@ -85,11 +89,25 @@ async function cargarTablaRoles(root) {
   try {
     const roles = await RolService.getRoles();
     if (Array.isArray(roles)) {
+      todosLosRolesCacheTabla = roles;
       pintarTablaRoles(root, roles);
     }
   } catch (err) {
     console.error(err);
   }
+}
+
+function aplicarFiltroRoles(root) {
+  const inputBuscador = root.querySelector('#buscador-roles');
+  const textoBusqueda = inputBuscador ? inputBuscador.value.trim().toLowerCase() : '';
+
+  const rolesFiltrados = todosLosRolesCacheTabla.filter((rol) => {
+    if (!textoBusqueda) return true;
+    const nombre = (rol.nombreRol ?? rol.nombre ?? '').toLowerCase();
+    return nombre.includes(textoBusqueda);
+  });
+
+  pintarTablaRoles(root, rolesFiltrados);
 }
 
 async function cargarCheckboxesPermisos(root, idRol) {
@@ -222,10 +240,39 @@ async function cargarTablaUsuarios(root) {
         rolesMap.set(Number(idRol), nombreRol);
       });
     }
+    todosLosUsuariosCache = Array.isArray(usuarios) ? usuarios : [];
+    todosLosRolesCache = rolesMap;
     pintarTablaUsuarios(root, usuarios, rolesMap);
   } catch (err) {
     console.error(err);
   }
+}
+
+function aplicarFiltrosUsuarios(root) {
+  const inputBuscador = root.querySelector('#buscador-usuarios');
+  const selectRol = root.querySelector('#filtro-rol');
+
+  const textoBusqueda = inputBuscador ? inputBuscador.value.trim().toLowerCase() : '';
+  const rolSeleccionado = selectRol ? selectRol.value.trim() : '';
+
+  const usuariosFiltrados = todosLosUsuariosCache.filter((usuario) => {
+    let cumpleBusqueda = true;
+    if (textoBusqueda) {
+      const nombre = (usuario.nombreUsuario ?? usuario.nombre ?? '').toLowerCase();
+      const correo = (usuario.correoUsuario ?? usuario.correo ?? '').toLowerCase();
+      cumpleBusqueda = nombre.includes(textoBusqueda) || correo.includes(textoBusqueda);
+    }
+
+    let cumpleRol = true;
+    if (rolSeleccionado !== '') {
+      const idRolUsuario = usuario.idRol ?? usuario.rolId;
+      cumpleRol = Number(idRolUsuario) === Number(rolSeleccionado);
+    }
+
+    return cumpleBusqueda && cumpleRol;
+  });
+
+  pintarTablaUsuarios(root, usuariosFiltrados, todosLosRolesCache);
 }
 
 async function cargarSelectRolesUsuario(root) {
@@ -261,11 +308,30 @@ function initView(ctx) {
   let rolEnEdicion = null;
   let confirmacionSinPermisosPendiente = false;
   let usuarioEnEdicion = null;
+  let todosLosUsuariosCache = [];
+  let todosLosRolesCache = new Map();
+  let todosLosRolesCacheTabla = [];
   const root = document.querySelector('[data-view="gestion-usuarios-roles"]') || document.getElementById('app-root');
   bindViewNavigation(root, ctx);
   cargarFiltroRoles(root);
   cargarTablaRoles(root);
   cargarTablaUsuarios(root);
+
+  const inputBuscadorUsuarios = root.querySelector('#buscador-usuarios');
+
+  if (inputBuscadorUsuarios) {
+    inputBuscadorUsuarios.addEventListener('input', () => aplicarFiltrosUsuarios(root));
+  }
+
+  const selectFiltroRol = root.querySelector('#filtro-rol');
+  if (selectFiltroRol) {
+    selectFiltroRol.addEventListener('change', () => aplicarFiltrosUsuarios(root));
+  }
+
+  const inputBuscadorRoles = root.querySelector('#buscador-roles');
+  if (inputBuscadorRoles) {
+    inputBuscadorRoles.addEventListener('input', () => aplicarFiltroRoles(root));
+  }
 
   const modal = root.querySelector('#modal-rol');
   const btnNuevoRol = root.querySelector('#btn-nuevo-rol');
