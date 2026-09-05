@@ -1,6 +1,7 @@
 let todosLosUsuariosCache = [];
 let todosLosRolesCache = new Map();
 let todosLosRolesCacheTabla = [];
+let idsRolesProtegidosCache = new Set();
 
 async function cargarFiltroRoles(root) {
   const select = root.querySelector('#filtro-rol');
@@ -38,6 +39,7 @@ function pintarTablaRoles(root, roles) {
   }
 
   roles = roles.filter((r) => !(r.nombreRol ?? r.nombre ?? '').startsWith('Rol eliminado'));
+  roles = roles.filter((r) => !r.esProtegido);
 
   let rowsHtml = '';
   roles.forEach((rol, index) => {
@@ -156,7 +158,7 @@ async function cargarCheckboxesPermisos(root, idRol) {
   }
 }
 
-function pintarTablaUsuarios(root, usuarios, rolesMap) {
+function pintarTablaUsuarios(root, usuarios, rolesMap, idsRolesProtegidos = new Set()) {
   const tbody = root.querySelector('#tabla-usuarios-body');
   if (!tbody) return;
 
@@ -170,6 +172,11 @@ function pintarTablaUsuarios(root, usuarios, rolesMap) {
     `;
     return;
   }
+
+  usuarios = usuarios.filter((u) => {
+    const idRolUsuario = Number(u.idRol ?? u.rolId);
+    return !idsRolesProtegidos.has(idRolUsuario);
+  });
 
   usuarios = usuarios.filter((u) => !(u.correoUsuario || '').startsWith('eliminado_'));
 
@@ -252,9 +259,14 @@ async function cargarTablaUsuarios(root) {
         rolesMap.set(Number(idRol), nombreRol);
       });
     }
+    idsRolesProtegidosCache = new Set(
+      (Array.isArray(roles) ? roles : [])
+        .filter((r) => r.esProtegido)
+        .map((r) => Number(r.idRol ?? r.id))
+    );
     todosLosUsuariosCache = Array.isArray(usuarios) ? usuarios : [];
     todosLosRolesCache = rolesMap;
-    pintarTablaUsuarios(root, usuarios, rolesMap);
+    pintarTablaUsuarios(root, usuarios, rolesMap, idsRolesProtegidosCache);
   } catch (err) {
     console.error(err);
   }
@@ -284,7 +296,7 @@ function aplicarFiltrosUsuarios(root) {
     return cumpleBusqueda && cumpleRol;
   });
 
-  pintarTablaUsuarios(root, usuariosFiltrados, todosLosRolesCache);
+  pintarTablaUsuarios(root, usuariosFiltrados, todosLosRolesCache, idsRolesProtegidosCache);
 }
 
 async function cargarSelectRolesUsuario(root) {

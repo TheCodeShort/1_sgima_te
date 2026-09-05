@@ -64,6 +64,13 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id));
+
+        if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Este usuario está protegido y no puede modificarse desde aquí.");
+        }
+
         Rol rol = rolRepository.findById(request.idRol())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
@@ -85,6 +92,16 @@ public class UsuarioService {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id);
         }
+
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> 
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id));
+
+        if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Este usuario está protegido y no puede eliminarse.");
+        }
+
         usuarioRepository.deleteById(id);
     }
 

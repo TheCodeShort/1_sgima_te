@@ -2,6 +2,7 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.rolpermiso.RolPermisoDTO;
 import com.mantenimiento.sigma_te.dto.rolpermiso.RolPermisoRequestDTO;
+import com.mantenimiento.sigma_te.models.Rol;
 import com.mantenimiento.sigma_te.models.RolPermiso;
 import com.mantenimiento.sigma_te.models.RolPermisoId;
 import com.mantenimiento.sigma_te.repositories.PermisoRepository;
@@ -50,6 +51,14 @@ public class RolPermisoService {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol());
         }
+
+        Rol rol = rolRepository.findById(request.idRol()).orElse(null);
+        if (rol != null && Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No se pueden modificar los permisos de un rol protegido.");
+        }
+
         if (!permisoRepository.existsById(request.idPermiso())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Permiso no encontrado con ID: " + request.idPermiso());
@@ -118,6 +127,14 @@ public class RolPermisoService {
                     HttpStatus.NOT_FOUND,
                     "RolPermiso no encontrado para idRol: " + idRol + " e idPermiso: " + idPermiso);
         }
+
+        Rol rol = rolRepository.findById(idRol).orElse(null);
+        if (rol != null && Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No se pueden modificar los permisos de un rol protegido.");
+        }
+
         rolPermisoRepository.deleteById(id);
     }
 

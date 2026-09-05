@@ -48,6 +48,13 @@ public class RolService {
         Rol rol = rolRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
+
+        if (Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, 
+                    "Este rol está protegido y no puede modificarse desde aquí.");
+        }
+
         rol.setNombreRol(request.nombreRol());
         rol.setDescripcionRol(request.descripcionRol());
         rol.setEstadoRol(request.estadoRol());
@@ -60,6 +67,16 @@ public class RolService {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id);
         }
+
+        Rol rol = rolRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
+
+        if (Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, 
+                    "Este rol está protegido y no puede eliminarse.");
+        }
+
         rolRepository.deleteById(id);
     }
 
@@ -69,7 +86,8 @@ public class RolService {
                 rol.getIdRol(),
                 rol.getNombreRol(),
                 rol.getDescripcionRol(),
-                rol.getEstadoRol()
+                rol.getEstadoRol(),
+                rol.getEsProtegido()
         );
     }
 }

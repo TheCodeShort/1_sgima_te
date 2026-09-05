@@ -38,4 +38,8 @@ public class Rol {
     // lombok y para que esta anotacion funcione debe estar @Builder al inicio
     @Builder.Default
     private Boolean estadoRol = true; // lombok
+
+    @Column(name = "es_protegido", nullable = false)
+    @Builder.Default
+    private Boolean esProtegido = false;
 }

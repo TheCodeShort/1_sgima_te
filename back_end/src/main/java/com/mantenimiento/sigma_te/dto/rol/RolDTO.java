@@ -4,6 +4,7 @@ public record RolDTO(
     Integer idRol,
     String nombreRol,
     String descripcionRol,
-    Boolean estadoRol
+    Boolean estadoRol,
+    Boolean esProtegido
 ) {
 }
