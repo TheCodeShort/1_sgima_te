@@ -454,3 +454,14 @@ button:disabled {
     max-width: none;
   }
 }
+
+/* Oculta el texto crudo de los íconos mientras la fuente Material Symbols carga */
+.material-symbols-outlined {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.fonts-loaded .material-symbols-outlined {
+  opacity: 1;
+}
+

@@ -341,6 +341,32 @@ function initView(ctx) {
   let wizardRol = null;
   const tablaRolesBody = root.querySelector('#tabla-roles-body');
 
+  const inputNombreRol = root.querySelector('#rol-nombre');
+  const inputDescripcionRol = root.querySelector('#rol-descripcion');
+
+  if (inputNombreRol) {
+    inputNombreRol.addEventListener('input', () => {
+      const error = ValidadorHelper.validarNombre(inputNombreRol.value);
+      if (error) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-rol-nombre', error, 'advertencia');
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-rol-nombre');
+      }
+    });
+  }
+
+  if (inputDescripcionRol) {
+    inputDescripcionRol.addEventListener('input', () => {
+      if (inputDescripcionRol.value.length > 300) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-rol-descripcion', 
+          `La descripción no puede superar los 300 caracteres (actualmente: ${inputDescripcionRol.value.length}).`, 
+          'advertencia');
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-rol-descripcion');
+      }
+    });
+  }
+
   const modalUsuario = root.querySelector('#modal-usuario');
   const btnNuevoUsuario = root.querySelector('#btn-nuevo-usuario');
   const btnCerrarModalUsuario = root.querySelector('#btn-cerrar-modal-usuario');
@@ -362,6 +388,9 @@ function initView(ctx) {
     if (advertenciaReset) advertenciaReset.style.display = 'none';
     const btnFinalizarReset = root.querySelector('[data-wizard-finalizar]');
     if (btnFinalizarReset) btnFinalizarReset.textContent = 'Guardar Rol';
+    ['error-rol-nombre', 'error-rol-descripcion'].forEach(
+      (id) => ValidadorHelper.limpiarErrorCampo(root, id)
+    );
   };
 
   if (btnNuevoRol && modal) {
@@ -523,10 +552,26 @@ function initView(ctx) {
     validarPaso: (paso) => {
       if (paso === 1) {
         const inputNombre = root.querySelector('#rol-nombre');
-        if (!inputNombre || !inputNombre.value.trim()) {
-          alert('El nombre del rol es obligatorio.');
-          return false;
+        const inputDescripcion = root.querySelector('#rol-descripcion');
+        let valido = true;
+
+        const errorNombre = ValidadorHelper.validarNombre(inputNombre ? inputNombre.value : '');
+        if (errorNombre) {
+          ValidadorHelper.mostrarErrorCampo(root, 'error-rol-nombre', errorNombre, 'bloqueante');
+          valido = false;
+        } else {
+          ValidadorHelper.limpiarErrorCampo(root, 'error-rol-nombre');
         }
+
+        if (inputDescripcion && inputDescripcion.value.length > 300) {
+          ValidadorHelper.mostrarErrorCampo(root, 'error-rol-descripcion', 
+            'La descripción no puede superar los 300 caracteres.', 'bloqueante');
+          valido = false;
+        } else {
+          ValidadorHelper.limpiarErrorCampo(root, 'error-rol-descripcion');
+        }
+
+        if (!valido) return false;
       }
 
       if (paso === 2) {
@@ -566,6 +611,9 @@ function initView(ctx) {
     usuarioEnEdicion = null;
     const modalTitulo = root.querySelector('#modal-usuario-titulo');
     if (modalTitulo) modalTitulo.textContent = 'Nuevo Usuario';
+    ['error-usuario-nombre', 'error-usuario-correo', 'error-usuario-rol', 'error-usuario-password'].forEach(
+      (id) => ValidadorHelper.limpiarErrorCampo(root, id)
+    );
   };
 
   if (btnNuevoUsuario) {
@@ -607,6 +655,31 @@ function initView(ctx) {
     });
   }
 
+  const inputNombreUsuario = root.querySelector('#usuario-nombre');
+  const inputCorreoUsuario = root.querySelector('#usuario-correo');
+
+  if (inputNombreUsuario) {
+    inputNombreUsuario.addEventListener('input', () => {
+      const error = ValidadorHelper.validarNombre(inputNombreUsuario.value);
+      if (error) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-nombre', error, 'advertencia');
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-nombre');
+      }
+    });
+  }
+
+  if (inputCorreoUsuario) {
+    inputCorreoUsuario.addEventListener('input', () => {
+      const error = ValidadorHelper.validarEmail(inputCorreoUsuario.value);
+      if (error) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-correo', error, 'advertencia');
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-correo');
+      }
+    });
+  }
+
   if (formUsuario) {
     formUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -616,6 +689,46 @@ function initView(ctx) {
       const inputPassword = root.querySelector('#usuario-password');
 
       const passwordVal = inputPassword ? inputPassword.value : '';
+
+      const nombreVal = inputNombre ? inputNombre.value.trim() : '';
+      const correoVal = inputCorreo ? inputCorreo.value.trim() : '';
+      let hayErrores = false;
+
+      const errorNombre = ValidadorHelper.validarNombre(nombreVal);
+      if (errorNombre) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-nombre', errorNombre, 'bloqueante');
+        hayErrores = true;
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-nombre');
+      }
+
+      const errorCorreo = ValidadorHelper.validarEmail(correoVal);
+      if (errorCorreo) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-correo', errorCorreo, 'bloqueante');
+        hayErrores = true;
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-correo');
+      }
+
+      if (!selectRol || !selectRol.value || isNaN(parseInt(selectRol.value, 10))) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-rol', 'Debe seleccionar un rol.', 'bloqueante');
+        hayErrores = true;
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-rol');
+      }
+
+      if (usuarioEnEdicion === null && (!passwordVal || passwordVal.length < 8)) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-password', 'La contraseña debe tener al menos 8 caracteres.', 'bloqueante');
+        hayErrores = true;
+      } else if (usuarioEnEdicion !== null && passwordVal !== '' && passwordVal.length < 8) {
+        ValidadorHelper.mostrarErrorCampo(root, 'error-usuario-password', 'La nueva contraseña debe tener al menos 8 caracteres.', 'bloqueante');
+        hayErrores = true;
+      } else {
+        ValidadorHelper.limpiarErrorCampo(root, 'error-usuario-password');
+      }
+
+      if (hayErrores) return;
+
       const datos = {
         nombreUsuario: inputNombre ? inputNombre.value.trim() : '',
         correoUsuario: inputCorreo ? inputCorreo.value.trim() : '',

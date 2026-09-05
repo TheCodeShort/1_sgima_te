@@ -49,6 +49,21 @@ function initView(ctx) {
     const correo = usernameInput?.value?.trim() || '';
     const password = passwordInput?.value || '';
 
+    if (!correo) {
+      showAlert(alertBox, 'Por favor ingrese su correo electrónico.', 'error');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      showAlert(alertBox, 'Ingrese un correo electrónico válido.', 'error');
+      return;
+    }
+
+    if (!password) {
+      showAlert(alertBox, 'Por favor ingrese su contraseña.', 'error');
+      return;
+    }
+
     setLoading(true);
 
     try {
