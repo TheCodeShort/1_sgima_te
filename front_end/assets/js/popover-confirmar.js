@@ -21,8 +21,24 @@ function mostrarPopoverConfirmar({ botonAncla, mensaje, onConfirmar }) {
       cerrar();
       return;
     }
-    popover.style.top = `${rect.bottom + 6}px`;
-    popover.style.left = `${Math.max(8, rect.right - 220)}px`;
+
+    const alturaPopover = popover.offsetHeight || 120;
+    const espacioAbajo = window.innerHeight - rect.bottom;
+    const espacioArriba = rect.top;
+
+    if (espacioAbajo >= alturaPopover + 10 || espacioAbajo >= espacioArriba) {
+      popover.style.top = `${rect.bottom + 6}px`;
+    } else {
+      popover.style.top = `${rect.top - alturaPopover - 6}px`;
+    }
+
+    const anchoPopover = 220;
+    let left = rect.right - anchoPopover;
+    if (left < 8) left = 8;
+    if (left + anchoPopover > window.innerWidth - 8) {
+      left = window.innerWidth - anchoPopover - 8;
+    }
+    popover.style.left = `${left}px`;
   }
 
   posicionar();

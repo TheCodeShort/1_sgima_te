@@ -37,6 +37,8 @@ function pintarTablaRoles(root, roles) {
     return;
   }
 
+  roles = roles.filter((r) => !(r.nombreRol ?? r.nombre ?? '').startsWith('Rol eliminado'));
+
   let rowsHtml = '';
   roles.forEach((rol, index) => {
     const idRol = rol.idRol ?? rol.id;
@@ -63,6 +65,10 @@ function pintarTablaRoles(root, roles) {
             <button class="btn-editar-rol p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest rounded transition-colors" 
                     data-id="${idRol}" data-nombre="${nombre}" data-descripcion="${descripcion}" title="Editar">
               <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="btn-eliminar-rol p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors"
+                    data-id="${idRol}" title="Eliminar">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
             ${esActivo ? `
             <button class="btn-toggle-rol p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors" 
@@ -165,6 +171,8 @@ function pintarTablaUsuarios(root, usuarios, rolesMap) {
     return;
   }
 
+  usuarios = usuarios.filter((u) => !(u.correoUsuario || '').startsWith('eliminado_'));
+
   let rowsHtml = '';
   usuarios.forEach((usuario, index) => {
     const idUsuario = usuario.idUsuario ?? usuario.id;
@@ -203,6 +211,10 @@ function pintarTablaUsuarios(root, usuarios, rolesMap) {
             <button class="btn-editar-usuario p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest rounded transition-colors" 
                     data-id="${idUsuario}" data-nombre="${nombre}" data-correo="${correo}" data-idrol="${idRol ?? ''}" title="Editar">
               <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="btn-eliminar-usuario p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors"
+                    data-id="${idUsuario}" title="Eliminar">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
             ${esActivo ? `
             <button class="btn-toggle-usuario p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors" 
@@ -442,6 +454,30 @@ function initView(ctx) {
         const btnFinalizarReset = root.querySelector('[data-wizard-finalizar]');
         if (btnFinalizarReset) btnFinalizarReset.textContent = 'Guardar Rol';
         if (modal) modal.style.display = 'flex';
+        return;
+      }
+
+      const btnEliminarRol = e.target.closest('.btn-eliminar-rol');
+      if (btnEliminarRol) {
+        const { id } = btnEliminarRol.dataset;
+        mostrarPopoverConfirmar({
+          botonAncla: btnEliminarRol,
+          mensaje: '¿Eliminar este rol? Esta acción no se puede deshacer.',
+          onConfirmar: async () => {
+            try {
+              await RolService.actualizarRol(id, {
+                nombreRol: `Rol eliminado ${id}`,
+                descripcionRol: '',
+                estadoRol: false
+              });
+              showToast('Rol eliminado correctamente.', 'success');
+              cargarTablaRoles(root);
+              cargarFiltroRoles(root);
+            } catch (err) {
+              alert(err.message);
+            }
+          }
+        });
         return;
       }
 
@@ -795,6 +831,31 @@ function initView(ctx) {
         }
 
         if (modalUsuario) modalUsuario.style.display = 'flex';
+        return;
+      }
+
+      const btnEliminarUsuario = e.target.closest('.btn-eliminar-usuario');
+      if (btnEliminarUsuario) {
+        const { id } = btnEliminarUsuario.dataset;
+        mostrarPopoverConfirmar({
+          botonAncla: btnEliminarUsuario,
+          mensaje: '¿Eliminar este usuario? Esta acción no se puede deshacer.',
+          onConfirmar: async () => {
+            try {
+              await UsuarioService.actualizarUsuario(id, {
+                nombreUsuario: 'Usuario eliminado',
+                correoUsuario: `eliminado_${id}@sistema.local`,
+                idRol: 1,
+                contrasenaHash: '',
+                cuentaActiva: false
+              });
+              showToast('Usuario eliminado correctamente.', 'success');
+              cargarTablaUsuarios(root);
+            } catch (err) {
+              alert(err.message);
+            }
+          }
+        });
         return;
       }
 
