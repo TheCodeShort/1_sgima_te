@@ -56,6 +56,26 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
         rolAdmin = rolRepository.save(rolAdmin);
 
+        if (permisoRepository.count() == 0) {
+            String[][] permisosBase = {
+                {"ver_equipos", "Equipos"},
+                {"registrar_falla", "Fallas"},
+                {"registrar_mantenimiento", "Mantenimiento"},
+                {"cargar_evidencia", "Evidencia"},
+                {"gestionar_usuarios", "Administracion"},
+                {"gestionar_roles", "Administracion"},
+                {"mi_perfil", "mi-perfil"}
+            };
+
+            for (String[] datos : permisosBase) {
+                Permiso permiso = Permiso.builder()
+                        .nombrePermiso(datos[0])
+                        .modulo(datos[1])
+                        .build();
+                permisoRepository.save(permiso);
+            }
+        }
+
         // b. Obtener todos los permisos existentes
         List<Permiso> permisos = permisoRepository.findAll();
 

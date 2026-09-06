@@ -153,7 +153,13 @@ button:disabled {
   display: none !important;
 }
 
-#app-shell.layout-fullscreen #app-root {
+#app-shell.layout-fullscreen #global-topbar,
+#app-shell.layout-fullscreen #global-sidebar,
+#app-shell.layout-fullscreen #mobile-nav-toggle {
+  display: none !important;
+}
+
+#app-shell.layout-fullscreen #app-content-area {
   margin-left: 0 !important;
   width: 100%;
 }
@@ -259,11 +265,19 @@ button:disabled {
   background: rgba(239, 68, 68, 0.1);
 }
 
-#app-root {
+/* Área de contenido principal (topbar global + app-root) */
+#app-content-area {
   flex: 1;
   margin-left: 260px;
   min-width: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app-root {
+  flex: 1;
+  min-width: 0;
 }
 
 #mobile-nav-toggle {
@@ -443,9 +457,12 @@ button:disabled {
     display: block;
   }
 
-  #app-root {
+  #app-content-area {
     margin-left: 0;
-    padding-top: 3.5rem;
+  }
+
+  #app-root {
+    padding-top: 0;
   }
 
   #sigma-toast-container {
