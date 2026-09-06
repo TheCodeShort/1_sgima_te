@@ -1,46 +1,6 @@
 <div class="view-page" data-view="equipos">
 <main class="flex-1 flex flex-col h-screen overflow-hidden">
 
-<header class="bg-surface dark:bg-surface bg-surface-container-high border-b border-outline-variant flat no shadows sticky top-0 z-50 flex items-center justify-between px-gutter h-topbar-height w-full">
-<!-- Mobile Menu Toggle (Visible only on mobile) -->
-<button class="md:hidden text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">menu</span>
-</button>
-<!-- Brand Context (Desktop hides this as sidebar has it, but JSON mandates brand logo presence) -->
-<div class="text-headline-lg font-headline-lg font-bold text-primary tracking-tight md:hidden">
-                SIGMA-TE
-            </div>
-<!-- Breadcrumb / Context (Desktop) -->
-<div class="hidden md:flex items-center text-body-sm font-body-sm text-on-surface-variant gap-2">
-<span>Gestión de Activos</span>
-<span class="material-symbols-outlined text-[16px]">chevron_right</span>
-<span class="text-on-surface font-semibold">Catálogo de Equipos</span>
-</div>
-<!-- Trailing Actions -->
-<div class="flex items-center gap-4">
-<!-- Sync Status Indicator -->
-<div class="hidden md:flex items-center gap-1.5 px-2 py-1 rounded bg-success/10 border border-success/20">
-<span class="material-symbols-outlined text-[14px] text-success">cloud_done</span>
-<span class="text-status-micro font-status-micro text-success uppercase tracking-wider">Sincronizado</span>
-</div>
-<div class="flex items-center gap-2">
-<button aria-label="Sync" class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded p-1.5 flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px]" data-icon="sync">sync</span>
-</button>
-<button aria-label="Toggle Dark Mode" class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded p-1.5 flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px]" data-icon="dark_mode">dark_mode</span>
-</button>
-<button aria-label="Notifications" class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded p-1.5 flex items-center justify-center relative">
-<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
-<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
-</button>
-</div>
-<!-- Profile -->
-<div class="w-8 h-8 rounded border border-outline-variant overflow-hidden shrink-0 cursor-pointer hover:border-primary transition-colors">
-<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A small, professional headshot photograph of a male industrial maintenance administrator. He is wearing standard protective gear and looking confidently at the camera. The lighting is studio quality, highlighting the subject clearly against a neutral dark grey background. The image serves as a standard profile avatar for a corporate application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJpjZ-gOBqi7s4hxyoeSw1iEwUtSbcSOCr8-I7skhQQUYGpn3aRjOKeWIqgDxZg3mpkdtkIjl2R03cs7DJ8n9CX-JbFzM-Hos3z6JmZD9DYd72PcaKs5BVmrdcZT71Vls2n4ClJiUAMg4WA0cj8dsTf0yABqbLyr-onMPMjsDZGtgicPZfK1cWT-tt2NRfKiCZESIoED-TU0c_Rclv8Ww840hMOyFB_NAuG1BeCILZJ6S3BxdUHlc7JxrUhpPKh1slHKG3iAmzGJXU"/>
-</div>
-</div>
-</header>
 <!-- Page Content Canvas -->
 <div class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
 <!-- Page Header -->
