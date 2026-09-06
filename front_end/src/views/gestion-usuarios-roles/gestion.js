@@ -10,8 +10,12 @@ async function cargarFiltroRoles(root) {
   try {
     const roles = await RolService.getRoles();
     if (Array.isArray(roles)) {
+      const rolesVisibles = roles.filter((rol) => 
+        !(rol.nombreRol ?? rol.nombre ?? '').startsWith('Rol eliminado') && 
+        !rol.esProtegido
+      );
       let optionsHtml = '<option value="">Todos los Roles</option>';
-      roles.forEach((rol) => {
+      rolesVisibles.forEach((rol) => {
         const idRol = rol.idRol ?? rol.id;
         const nombreRol = rol.nombreRol ?? rol.nombre;
         optionsHtml += `<option value="${idRol}">${nombreRol}</option>`;
@@ -307,7 +311,12 @@ async function cargarSelectRolesUsuario(root) {
   try {
     const roles = await RolService.getRoles();
     const rolesActivos = Array.isArray(roles)
-      ? roles.filter((rol) => rol.estadoRol !== false && rol.estado !== false)
+      ? roles.filter((rol) => 
+          rol.estadoRol !== false && 
+          rol.estado !== false &&
+          !(rol.nombreRol ?? rol.nombre ?? '').startsWith('Rol eliminado') &&
+          !rol.esProtegido
+        )
       : [];
 
     if (rolesActivos.length === 0) {
