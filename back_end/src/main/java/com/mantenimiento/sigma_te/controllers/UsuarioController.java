@@ -103,6 +103,16 @@ public class UsuarioController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/mi-perfil")
+    public UsuarioDTO obtenerMiPerfil(org.springframework.security.core.Authentication authentication) {
+        String correoActual = authentication.getName();
+
+        Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        return usuarioService.buscarPorId(usuario.getIdUsuario());
+    }
+
 //    @DeleteMapping("/{id}")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public void eliminar(@PathVariable Integer id) {

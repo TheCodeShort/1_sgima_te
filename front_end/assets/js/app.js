@@ -95,6 +95,13 @@ const ROUTES = {
     js: 'sincronizacion.js',
     css: 'sincronizacion.css',
   },
+  'mi-perfil': {
+    path: 'src/views/mi-perfil',
+    title: 'Mi Perfil',
+    group: 'account',
+    js: 'gestion.js',
+    css: 'mi-perfil.css',
+  },
 };
 
 const Router = {

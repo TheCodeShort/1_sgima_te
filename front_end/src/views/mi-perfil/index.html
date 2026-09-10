@@ -1,0 +1,82 @@
+<div class="view-page" data-view="mi-perfil">
+  <div class="flex-1 overflow-y-auto p-4 md:p-margin-desktop bg-background">
+    <div class="mb-8">
+      <h2 class="text-display-id font-display-id text-on-background mb-1">Mi Perfil</h2>
+      <p class="text-body-md font-body-md text-on-surface-variant max-w-2xl">
+        Administra tu información de acceso al sistema.
+      </p>
+    </div>
+
+    <div class="max-w-md space-y-6">
+      <div class="bg-surface-card border border-outline-variant rounded-xl p-5">
+        <h3 class="text-headline-sm font-headline-sm font-semibold text-on-surface mb-1">Correo electrónico</h3>
+        <p id="mi-perfil-correo-actual" class="text-body-sm font-body-sm text-on-surface-variant mb-4">Cargando...</p>
+        <button id="btn-cambiar-correo" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">
+          Cambiar correo
+        </button>
+      </div>
+
+      <div class="bg-surface-card border border-outline-variant rounded-xl p-5">
+        <h3 class="text-headline-sm font-headline-sm font-semibold text-on-surface mb-1">Contraseña</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant mb-4">••••••••</p>
+        <button id="btn-cambiar-password" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">
+          Cambiar contraseña
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal: Cambiar Correo -->
+<div id="modal-cambiar-correo" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+  <div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+      <h3 class="text-headline-sm font-headline-sm font-semibold text-on-surface">Cambiar Correo</h3>
+      <button id="btn-cerrar-modal-correo" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <form id="form-cambiar-correo" class="p-6 space-y-4">
+      <div>
+        <label for="mp-correo-nuevo" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nuevo correo</label>
+        <input id="mp-correo-nuevo" type="email" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <p id="error-mp-correo-nuevo" style="display:none;" class="text-status-micro font-status-micro mt-1"></p>
+      </div>
+      <div>
+        <label for="mp-correo-password-actual" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Confirma tu contraseña actual</label>
+        <input id="mp-correo-password-actual" type="password" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <p id="error-mp-correo-password" style="display:none;" class="text-status-micro font-status-micro mt-1"></p>
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
+        <button id="btn-cancelar-modal-correo" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Cambiar Contraseña -->
+<div id="modal-cambiar-password" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+  <div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+      <h3 class="text-headline-sm font-headline-sm font-semibold text-on-surface">Cambiar Contraseña</h3>
+      <button id="btn-cerrar-modal-password" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <form id="form-cambiar-password" class="p-6 space-y-4">
+      <div>
+        <label for="mp-password-actual" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Contraseña actual</label>
+        <input id="mp-password-actual" type="password" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+      </div>
+      <div>
+        <label for="mp-password-nueva" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nueva contraseña</label>
+        <input id="mp-password-nueva" type="password" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <p id="error-mp-password-nueva" style="display:none;" class="text-status-micro font-status-micro mt-1"></p>
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
+        <button id="btn-cancelar-modal-password" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
