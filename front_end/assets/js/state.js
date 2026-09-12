@@ -34,6 +34,7 @@ const AppState = {
     this.user = null;
     this.role = null;
     this.displayName = null;
+    this.permisos = [];
     sessionStorage.removeItem('sigma_user');
     sessionStorage.removeItem('sigma_role');
     sessionStorage.removeItem('sigma_display_name');

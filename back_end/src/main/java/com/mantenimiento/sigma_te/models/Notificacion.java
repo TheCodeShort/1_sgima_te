@@ -32,6 +32,10 @@ public class Notificacion {
     private Integer idNotificacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresa", nullable = true)
+    private Empresa empresa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_equipo", nullable = false)
     private Equipo equipo;
 

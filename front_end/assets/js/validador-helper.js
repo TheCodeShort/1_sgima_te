@@ -37,9 +37,33 @@ function validarEmail(valor) {
   return null;
 }
 
+function setupFieldValidation(root, inputId, errorId, validateFn, onValidChange) {
+  const input = root.querySelector(`#${inputId}`);
+  const errorEl = root.querySelector(`#${errorId}`);
+  if (!input || !errorEl) return;
+
+  function validate() {
+    const error = validateFn(input.value);
+    if (error) {
+      mostrarErrorCampo(root, errorId, error, 'advertencia');
+    } else {
+      limpiarErrorCampo(root, errorId);
+    }
+    if (typeof onValidChange === 'function') {
+      onValidChange();
+    }
+  }
+
+  input.addEventListener('input', validate);
+  input.addEventListener('blur', validate);
+
+  return { validate };
+}
+
 window.ValidadorHelper = {
   validarNombre,
   validarEmail,
   mostrarErrorCampo,
-  limpiarErrorCampo
+  limpiarErrorCampo,
+  setupFieldValidation
 };

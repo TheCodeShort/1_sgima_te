@@ -48,7 +48,9 @@ public class DataInitializer implements CommandLineRunner {
 
         // 2. Si la tabla rol está vacía:
         // a. Crear rol Administrador protegido
+        // El usuario main y su rol Administrador son globales, sin empresa asociada
         Rol rolAdmin = Rol.builder()
+                .empresa(null)
                 .nombreRol("Administrador")
                 .descripcionRol("Rol con acceso total al sistema")
                 .estadoRol(true)
@@ -92,7 +94,9 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // d. Crear usuario Administrador inicial
+        // El usuario main y su rol Administrador son globales, sin empresa asociada
         Usuario admin = Usuario.builder()
+                .empresa(null)
                 .nombreUsuario("Administrador")
                 .correoUsuario("admin@sistema.local")
                 .rol(rolAdmin)

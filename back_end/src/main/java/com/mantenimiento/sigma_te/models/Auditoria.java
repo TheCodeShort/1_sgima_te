@@ -32,6 +32,10 @@ public class Auditoria {
     private Integer idAuditoria;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresa", nullable = true)
+    private Empresa empresa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_equipo")
     private Equipo equipo;
 

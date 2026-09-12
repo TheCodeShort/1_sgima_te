@@ -35,6 +35,7 @@ const AuthService = {
     sessionStorage.removeItem('sigma_token');
     sessionStorage.removeItem('sigma_usuario');
     if (window.AppState) AppState.clear();
+    document.dispatchEvent(new CustomEvent('sigma:auth-changed'));
     return { ok: true, message: 'Sesión cerrada correctamente.' };
   },
 

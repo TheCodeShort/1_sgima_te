@@ -104,6 +104,8 @@ const ROUTES = {
   },
 };
 
+AppState.permisos = [];
+
 const Router = {
   currentRoute: null,
   currentScript: null,
@@ -116,6 +118,12 @@ const Router = {
     this.initSidebar();
     this.initThemeToggle();
     this.initLogout();
+    document.addEventListener('sigma:auth-changed', async () => {
+      if (AppState.isAuthenticated()) {
+        AppState.permisos = [];
+        await this.updateSidebarNavigation();
+      }
+    });
     this.handleHash();
   },
 
@@ -282,9 +290,27 @@ const Router = {
     }
   },
 
-  updateSidebarNavigation() {
+  async loadUserPermissions() {
+    if (!AppState.isAuthenticated()) return;
+    try {
+      const datos = await fetchConAuth(`${window.API_BASE_URL}/usuarios/mi-perfil/permisos`);
+      if (datos.ok) {
+        AppState.permisos = await datos.json();
+      }
+    } catch (err) {
+      console.error('Error cargando permisos:', err);
+      AppState.permisos = [];
+    }
+  },
+
+  async updateSidebarNavigation() {
     const isAuth = AppState.isAuthenticated();
     const userRole = AppState.role ? AppState.role.toLowerCase() : null;
+
+    // Cargar permisos si el usuario está autenticado
+    if (isAuth) {
+      await this.loadUserPermissions();
+    }
 
     // Toggle "Acceso" section and "Iniciar Sesión" button
     const accesoLabel = document.getElementById('nav-section-acceso');
@@ -310,7 +336,7 @@ const Router = {
       btn.style.display = (isAuth && isAdmin) ? '' : 'none';
     });
 
-    // Show/Hide operations section label and buttons based on auth
+    // Show/Hide operations section label based on auth
     const navLabels = document.querySelectorAll('.sidebar-nav .nav-section-label');
     navLabels.forEach(label => {
       const text = label.textContent.trim().toLowerCase();
@@ -319,9 +345,21 @@ const Router = {
       }
     });
 
+    // Show/Hide operation buttons based on auth AND permissions
     const operationsButtons = document.querySelectorAll('.sidebar-nav button[data-route="equipos"], .sidebar-nav button[data-route="detalle-equipo"], .sidebar-nav button[data-route="registrar-falla"], .sidebar-nav button[data-route="registrar-mantenimiento"], .sidebar-nav button[data-route="cargar-evidencia"]');
     operationsButtons.forEach(btn => {
-      btn.style.display = isAuth ? '' : 'none';
+      if (!isAuth) {
+        btn.style.display = 'none';
+        return;
+      }
+      const permisoStr = btn.getAttribute('data-modulo-permiso');
+      if (permisoStr) {
+        const requiredPerms = permisoStr.split(',').map(p => p.trim());
+        const hasAccess = requiredPerms.some(p => (AppState.permisos || []).includes(p));
+        btn.style.display = hasAccess ? '' : 'none';
+      } else {
+        btn.style.display = '';
+      }
     });
 
     const panelRoutes = {
@@ -351,14 +389,14 @@ const Router = {
     });
   },
 
-  setLayout(routeKey) {
+  async setLayout(routeKey) {
     const shell = document.getElementById('app-shell');
     const route = ROUTES[routeKey];
     if (shell) {
       shell.classList.toggle('layout-fullscreen', Boolean(route?.fullscreen));
     }
     this.updateSidebarUser();
-    this.updateSidebarNavigation();
+    await this.updateSidebarNavigation();
   },
 
   removeViewAssets() {
@@ -379,7 +417,7 @@ const Router = {
 
     this.currentRoute = routeKey;
     this.updateActiveNav(routeKey);
-    this.setLayout(routeKey);
+    await this.setLayout(routeKey);
     document.title = `SIGMA-TE — ${route.title}`;
 
     const root = document.getElementById('app-root');

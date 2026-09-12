@@ -31,6 +31,10 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresa", nullable = true)
+    private Empresa empresa;
+
     @Column(name = "nombre_usuario", nullable = false, length = 120)
     private String nombreUsuario;
 

@@ -94,6 +94,7 @@ function initView(ctx) {
       }
 
       AppState.setUser(correo, nombreRolParaPanel, result.nombre);
+      document.dispatchEvent(new CustomEvent('sigma:auth-changed'));
       showToast(result.message, 'success');
       ctx.navigate(AppState.getPanelRoute());
     } catch (err) {

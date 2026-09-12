@@ -224,7 +224,7 @@ function pintarTablaUsuarios(root, usuarios, rolesMap, idsRolesProtegidos = new 
               <span class="material-symbols-outlined text-[18px]">edit</span>
             </button>
             <button class="btn-eliminar-usuario p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors"
-                    data-id="${idUsuario}" title="Eliminar">
+                    data-id="${idUsuario}" data-idrol="${idRol ?? ''}" title="Eliminar">
               <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
             ${esActivo ? `
@@ -857,7 +857,7 @@ function initView(ctx) {
 
       const btnEliminarUsuario = e.target.closest('.btn-eliminar-usuario');
       if (btnEliminarUsuario) {
-        const { id } = btnEliminarUsuario.dataset;
+        const { id, idrol } = btnEliminarUsuario.dataset;
         mostrarPopoverConfirmar({
           botonAncla: btnEliminarUsuario,
           mensaje: '¿Eliminar este usuario? Esta acción no se puede deshacer.',
@@ -866,7 +866,7 @@ function initView(ctx) {
               await UsuarioService.actualizarUsuario(id, {
                 nombreUsuario: 'Usuario eliminado',
                 correoUsuario: `eliminado_${id}@sistema.local`,
-                idRol: 1,
+                idRol: idrol ? parseInt(idrol, 10) : 0,
                 contrasenaHash: '',
                 cuentaActiva: false
               });

@@ -4,8 +4,10 @@ import com.mantenimiento.sigma_te.dto.usuario.MiPerfilRequestDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
 import com.mantenimiento.sigma_te.models.Usuario;
+import com.mantenimiento.sigma_te.repositories.RolPermisoRepository;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
 import com.mantenimiento.sigma_te.services.UsuarioService;
+import com.mantenimiento.sigma_te.security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,13 +34,19 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final RolPermisoRepository rolPermisoRepository;
 
     public UsuarioController(UsuarioService usuarioService,
-                             UsuarioRepository usuarioRepository,
-                             PasswordEncoder passwordEncoder) {
+                              UsuarioRepository usuarioRepository,
+                              PasswordEncoder passwordEncoder,
+                              JwtUtil jwtUtil,
+                              RolPermisoRepository rolPermisoRepository) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.rolPermisoRepository = rolPermisoRepository;
     }
 
     @GetMapping
@@ -72,17 +80,26 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
+        if (!rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol()).contains("mi_perfil")) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta sección.");
+        }
+
         if (request.contrasenaActual() == null || 
             !passwordEncoder.matches(request.contrasenaActual(), usuario.getContrasenaHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "La contraseña actual es incorrecta.");
         }
 
         boolean huboCambios = false;
+        boolean correoCambio = false;
 
-        if (request.nuevoCorreo() != null && !request.nuevoCorreo().isBlank() 
+        if (request.nuevoCorreo() != null && !request.nuevoCorreo().isBlank()
             && !request.nuevoCorreo().equals(usuario.getCorreoUsuario())) {
+            if (usuarioRepository.existsByCorreoUsuario(request.nuevoCorreo().trim())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
+            }
             usuario.setCorreoUsuario(request.nuevoCorreo().trim());
             huboCambios = true;
+            correoCambio = true;
         }
 
         if (request.nuevaContrasena() != null && !request.nuevaContrasena().isBlank()) {
@@ -100,6 +117,10 @@ public class UsuarioController {
 
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("mensaje", "Perfil actualizado correctamente.");
+        if (correoCambio) {
+            String nuevoToken = jwtUtil.generateToken(usuario.getIdUsuario(), usuario.getCorreoUsuario(), usuario.getRol().getIdRol());
+            respuesta.put("token", nuevoToken);
+        }
         return ResponseEntity.ok(respuesta);
     }
 
@@ -110,7 +131,31 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
+        if (!rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol()).contains("mi_perfil")) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta sección.");
+        }
+
         return usuarioService.buscarPorId(usuario.getIdUsuario());
+    }
+
+    @GetMapping("/mi-perfil/permisos")
+    public List<String> obtenerMisPermisos(org.springframework.security.core.Authentication authentication) {
+        String correoActual = authentication.getName();
+
+        Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        return rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol());
+    }
+
+    @GetMapping("/mi-perfil/rol")
+    public Map<String, String> obtenerMiRol(org.springframework.security.core.Authentication authentication) {
+        String correoActual = authentication.getName();
+
+        Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        return Map.of("nombreRol", usuario.getRol().getNombreRol());
     }
 
 //    @DeleteMapping("/{id}")

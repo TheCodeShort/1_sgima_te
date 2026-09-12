@@ -87,6 +87,20 @@ public class RolPermisoService {
                         HttpStatus.NOT_FOUND,
                         "RolPermiso no encontrado para idRol: " + idRol + " e idPermiso: " + idPermiso));
 
+        Rol origen = rolRepository.findById(idRol).orElse(null);
+        if (origen != null && Boolean.TRUE.equals(origen.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No se pueden modificar los permisos de un rol protegido.");
+        }
+
+        Rol rol = rolRepository.findById(request.idRol()).orElse(null);
+        if (rol != null && Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No se pueden modificar los permisos de un rol protegido.");
+        }
+
         if (!idRol.equals(request.idRol()) || !idPermiso.equals(request.idPermiso())) {
             if (!rolRepository.existsById(request.idRol())) {
                 throw new ResponseStatusException(

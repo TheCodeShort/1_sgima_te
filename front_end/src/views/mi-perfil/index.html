@@ -38,7 +38,7 @@
     <form id="form-cambiar-correo" class="p-6 space-y-4">
       <div>
         <label for="mp-correo-nuevo" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nuevo correo</label>
-        <input id="mp-correo-nuevo" type="email" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <input id="mp-correo-nuevo" type="email" required placeholder="ejemplo@correo.com" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
         <p id="error-mp-correo-nuevo" style="display:none;" class="text-status-micro font-status-micro mt-1"></p>
       </div>
       <div>
@@ -48,7 +48,7 @@
       </div>
       <div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
         <button id="btn-cancelar-modal-correo" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar</button>
+        <button id="btn-guardar-correo" type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-surface-container-highest" disabled>Guardar</button>
       </div>
     </form>
   </div>
@@ -67,6 +67,7 @@
       <div>
         <label for="mp-password-actual" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Contraseña actual</label>
         <input id="mp-password-actual" type="password" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <p id="error-mp-password-actual" style="display:none;" class="text-status-micro font-status-micro mt-1"></p>
       </div>
       <div>
         <label for="mp-password-nueva" class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nueva contraseña</label>
@@ -75,7 +76,7 @@
       </div>
       <div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/50">
         <button id="btn-cancelar-modal-password" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar</button>
+        <button id="btn-guardar-password" type="submit" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-surface-container-highest" disabled>Guardar</button>
       </div>
     </form>
   </div>

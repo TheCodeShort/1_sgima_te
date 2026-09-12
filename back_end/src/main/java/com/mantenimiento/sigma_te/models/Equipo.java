@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "equipo")
+@Table(name = "equipo", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id_empresa", "codigo_equipo"}),
+    @UniqueConstraint(columnNames = {"id_empresa", "serial"}),
+    @UniqueConstraint(columnNames = {"id_empresa", "codigo_qr"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,7 +36,11 @@ public class Equipo {
     @Column(name = "id_equipo")
     private Integer idEquipo;
 
-    @Column(name = "codigo_equipo", nullable = false, unique = true, length = 30)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresa", nullable = true)
+    private Empresa empresa;
+
+    @Column(name = "codigo_equipo", nullable = false, length = 30)
     private String codigoEquipo;
 
     @Column(name = "nombre_equipo", nullable = false, length = 120)
@@ -46,7 +55,7 @@ public class Equipo {
     @Column(name = "modelo", length = 80)
     private String modelo;
 
-    @Column(name = "serial", unique = true, length = 80)
+    @Column(name = "serial", length = 80)
     private String serial;
 
     @Column(name = "ubicacion", length = 120)
@@ -59,7 +68,7 @@ public class Equipo {
     @Column(name = "frecuencia_calibracion_dias")
     private Integer frecuenciaCalibracionDias;
 
-    @Column(name = "codigo_qr", unique = true, length = 120)
+    @Column(name = "codigo_qr", length = 120)
     private String codigoQr;
 
     @Column(name = "observaciones_equipo", columnDefinition = "TEXT")

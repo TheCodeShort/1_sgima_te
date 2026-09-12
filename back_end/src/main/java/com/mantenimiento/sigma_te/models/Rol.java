@@ -2,10 +2,14 @@ package com.mantenimiento.sigma_te.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +18,7 @@ import lombok.Setter;
 
 // Le dice a Hibernate: "esta clase Java no es una clase cualquiera, representa una tabla de la base de datos — trátala como tal."
 @Entity
-@Table(name = "rol")
+@Table(name = "rol", uniqueConstraints = @UniqueConstraint(columnNames = {"id_empresa", "nombre_rol"}))
 @Getter
 @Setter
 @NoArgsConstructor // Hibernate usa el constructor vacío para crear el objeto en memoria sin ningún dato dentro
@@ -28,7 +32,11 @@ public class Rol {
     @Column(name = "id_rol") // Nombre de la columna
     private Integer idRol;
 
-    @Column(name = "nombre_rol", nullable = false, unique = true, length = 30)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresa", nullable = true)
+    private Empresa empresa;
+
+    @Column(name = "nombre_rol", nullable = false, length = 30)
     private String nombreRol;
 
     @Column(name = "descripcion_rol", length = 150)

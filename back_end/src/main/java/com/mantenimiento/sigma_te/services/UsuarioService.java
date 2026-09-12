@@ -75,6 +75,18 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
 
+        if (Boolean.TRUE.equals(rol.getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "No se puede asignar un rol protegido mediante esta operación.");
+        }
+
+        if (request.correoUsuario() != null && !request.correoUsuario().isBlank()
+                && !request.correoUsuario().equals(usuario.getCorreoUsuario())
+                && usuarioRepository.existsByCorreoUsuario(request.correoUsuario())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
+        }
+
         usuario.setNombreUsuario(request.nombreUsuario());
         usuario.setCorreoUsuario(request.correoUsuario());
         usuario.setRol(rol);
