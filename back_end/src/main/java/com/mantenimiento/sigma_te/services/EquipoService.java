@@ -2,13 +2,17 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
+import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.Equipo;
 import com.mantenimiento.sigma_te.models.EstadoEquipo;
 import com.mantenimiento.sigma_te.models.Usuario;
+import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
 import com.mantenimiento.sigma_te.repositories.EquipoRepository;
 import com.mantenimiento.sigma_te.repositories.EstadoEquipoRepository;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
+import com.mantenimiento.sigma_te.security.TenantContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,30 +25,50 @@ public class EquipoService {
     private final EquipoRepository equipoRepository;
     private final EstadoEquipoRepository estadoEquipoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EmpresaRepository empresaRepository;
+    private final TenantContext tenantContext;
 
     public EquipoService(EquipoRepository equipoRepository,
                          EstadoEquipoRepository estadoEquipoRepository,
-                         UsuarioRepository usuarioRepository) {
+                         UsuarioRepository usuarioRepository,
+                         EmpresaRepository empresaRepository,
+                         TenantContext tenantContext) {
         this.equipoRepository = equipoRepository;
         this.estadoEquipoRepository = estadoEquipoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.empresaRepository = empresaRepository;
+        this.tenantContext = tenantContext;
     }
 
-    public List<EquipoDTO> listarTodos() {
-        return equipoRepository.findAll()
-                .stream()
+    public List<EquipoDTO> listarTodos(Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        List<Equipo> equipos = idEmpresaActual == null
+                ? equipoRepository.findByEmpresaIsNull()
+                : equipoRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
+
+        return equipos.stream()
                 .map(this::convertirADto)
                 .toList();
     }
 
-    public EquipoDTO buscarPorId(Integer id) {
+    public EquipoDTO buscarPorId(Integer id, Authentication authentication) {
         Equipo equipo = equipoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Equipo no encontrado con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+        }
+
         return convertirADto(equipo);
     }
 
-    public EquipoDTO crear(EquipoRequestDTO request) {
+    public EquipoDTO crear(EquipoRequestDTO request, Authentication authentication) {
         EstadoEquipo estadoEquipo = estadoEquipoRepository.findById(request.idEstadoEquipo())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Estado de equipo no encontrado con ID: " + request.idEstadoEquipo()));
@@ -53,7 +77,16 @@ public class EquipoService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + request.idUsuarioRegistro()));
 
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        Empresa empresa = null;
+        if (idEmpresaActual != null) {
+            empresa = empresaRepository.findById(idEmpresaActual)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+        }
+
         Equipo equipo = Equipo.builder()
+                .empresa(empresa)
                 .codigoEquipo(request.codigoEquipo())
                 .nombreEquipo(request.nombreEquipo())
                 .tipoEquipo(request.tipoEquipo())
@@ -73,10 +106,18 @@ public class EquipoService {
         return convertirADto(guardado);
     }
 
-    public EquipoDTO actualizar(Integer id, EquipoRequestDTO request) {
+    public EquipoDTO actualizar(Integer id, EquipoRequestDTO request, Authentication authentication) {
         Equipo equipo = equipoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Equipo no encontrado con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+        }
 
         EstadoEquipo estadoEquipo = estadoEquipoRepository.findById(request.idEstadoEquipo())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -103,12 +144,20 @@ public class EquipoService {
         return convertirADto(actualizado);
     }
 
-    public void eliminar(Integer id) {
-        if (!equipoRepository.existsById(id)) {
+    public void eliminar(Integer id, Authentication authentication) {
+        Equipo equipo = equipoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Equipo no encontrado con ID: " + id);
+                    HttpStatus.NOT_FOUND, "Equipo no encontrado.");
         }
-        equipoRepository.deleteById(id);
+
+        equipoRepository.delete(equipo);
     }
 
     private EquipoDTO convertirADto(Equipo equipo) {

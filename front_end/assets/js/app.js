@@ -184,6 +184,9 @@ const Router = {
   },
 
   logout() {
+    if (typeof limpiarAvatarMenu === 'function') {
+      limpiarAvatarMenu();
+    }
     const result = typeof AuthService !== 'undefined'
       ? AuthService.logout()
       : { message: 'Sesión cerrada.' };

@@ -4,7 +4,7 @@ import com.mantenimiento.sigma_te.dto.usuario.MiPerfilRequestDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
 import com.mantenimiento.sigma_te.models.Usuario;
-import com.mantenimiento.sigma_te.repositories.RolPermisoRepository;
+import com.mantenimiento.sigma_te.services.RolPermisoService;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
 import com.mantenimiento.sigma_te.services.UsuarioService;
 import com.mantenimiento.sigma_te.security.JwtUtil;
@@ -35,18 +35,18 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RolPermisoRepository rolPermisoRepository;
+    private final RolPermisoService rolPermisoService;
 
     public UsuarioController(UsuarioService usuarioService,
                               UsuarioRepository usuarioRepository,
                               PasswordEncoder passwordEncoder,
                               JwtUtil jwtUtil,
-                              RolPermisoRepository rolPermisoRepository) {
+                              RolPermisoService rolPermisoService) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
-        this.rolPermisoRepository = rolPermisoRepository;
+        this.rolPermisoService = rolPermisoService;
     }
 
     @GetMapping
@@ -80,7 +80,7 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
-        if (!rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol()).contains("mi_perfil")) {
+        if (!rolPermisoService.obtenerPermisosEfectivos(usuario).contains("mi_perfil")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta sección.");
         }
 
@@ -131,7 +131,7 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
-        if (!rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol()).contains("mi_perfil")) {
+        if (!rolPermisoService.obtenerPermisosEfectivos(usuario).contains("mi_perfil")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta sección.");
         }
 
@@ -145,7 +145,7 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
-        return rolPermisoRepository.findNombresPermisoByIdRol(usuario.getRol().getIdRol());
+        return rolPermisoService.obtenerPermisosEfectivos(usuario);
     }
 
     @GetMapping("/mi-perfil/rol")

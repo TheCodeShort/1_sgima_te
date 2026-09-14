@@ -4,6 +4,7 @@ import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
 import com.mantenimiento.sigma_te.services.EquipoService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,29 +28,31 @@ public class EquipoController {
     }
 
     @GetMapping
-    public List<EquipoDTO> listarTodos() {
-        return equipoService.listarTodos();
+    public List<EquipoDTO> listarTodos(Authentication authentication) {
+        return equipoService.listarTodos(authentication);
     }
 
     @GetMapping("/{id}")
-    public EquipoDTO buscarPorId(@PathVariable Integer id) {
-        return equipoService.buscarPorId(id);
+    public EquipoDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return equipoService.buscarPorId(id, authentication);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EquipoDTO crear(@RequestBody EquipoRequestDTO request) {
-        return equipoService.crear(request);
+    public EquipoDTO crear(@RequestBody EquipoRequestDTO request, Authentication authentication) {
+        return equipoService.crear(request, authentication);
     }
 
     @PutMapping("/{id}")
-    public EquipoDTO actualizar(@PathVariable Integer id, @RequestBody EquipoRequestDTO request) {
-        return equipoService.actualizar(id, request);
+    public EquipoDTO actualizar(@PathVariable Integer id,
+                                @RequestBody EquipoRequestDTO request,
+                                Authentication authentication) {
+        return equipoService.actualizar(id, request, authentication);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        equipoService.eliminar(id);
+    public void eliminar(@PathVariable Integer id, Authentication authentication) {
+        equipoService.eliminar(id, authentication);
     }
 }

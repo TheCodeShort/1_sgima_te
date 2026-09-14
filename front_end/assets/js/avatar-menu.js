@@ -76,3 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('sigma:auth-changed', refrescarAvatarMenu);
 });
+
+function limpiarAvatarMenu() {
+  const elPlaca = document.getElementById('mi-panel-rol-nombre');
+  if (elPlaca) elPlaca.textContent = 'Cargando...';
+
+  const btnMiPerfil = document.getElementById('btn-ir-mi-perfil');
+  if (btnMiPerfil) btnMiPerfil.style.display = 'none';
+}
+
+window.limpiarAvatarMenu = limpiarAvatarMenu;
