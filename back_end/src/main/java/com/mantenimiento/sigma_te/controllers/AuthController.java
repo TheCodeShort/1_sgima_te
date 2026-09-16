@@ -1,4 +1,4 @@
-package com.mantenimiento.sigma_te.controllers;
+﻿package com.mantenimiento.sigma_te.controllers;
 
 import com.mantenimiento.sigma_te.dto.auth.EmergenciaResetDTO;
 import com.mantenimiento.sigma_te.dto.auth.LoginRequestDTO;
@@ -62,6 +62,11 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Esta cuenta está desactivada.");
         }
 
+        if (usuario.getEmpresa() != null
+                && Boolean.FALSE.equals(usuario.getEmpresa().getEstadoEmpresa())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "La empresa asociada a esta cuenta está desactivada.");
+        }
+
         if (!passwordEncoder.matches(request.contrasena(), usuario.getContrasenaHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Correo o contraseña incorrectos.");
         }
@@ -104,4 +109,3 @@ public class AuthController {
         return ResponseEntity.ok(respuesta);
     }
 }
-

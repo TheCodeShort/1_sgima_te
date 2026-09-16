@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.services;
 
+import com.mantenimiento.sigma_te.dto.usuario.UsuarioCambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
 import com.mantenimiento.sigma_te.models.Empresa;
@@ -182,6 +183,37 @@ public class UsuarioService {
         }
 
         usuarioRepository.deleteById(id);
+    }
+
+    public UsuarioDTO cambiarEstado(Integer id, boolean nuevoEstado, Authentication authentication) {
+        Usuario usuarioAutenticado = usuarioRepository.findByCorreoUsuario(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autenticado."));
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaUsuario = usuario.getEmpresa() != null ? usuario.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuario, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado.");
+            }
+        }
+
+        if (usuario.getIdUsuario().equals(usuarioAutenticado.getIdUsuario())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes desactivar tu propia cuenta.");
+        }
+
+        if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Este usuario está protegido y no puede modificarse desde aquí.");
+        }
+
+        usuario.setCuentaActiva(nuevoEstado);
+        Usuario actualizado = usuarioRepository.save(usuario);
+        return convertirADto(actualizado);
     }
 
     private UsuarioDTO convertirADto(Usuario usuario) {

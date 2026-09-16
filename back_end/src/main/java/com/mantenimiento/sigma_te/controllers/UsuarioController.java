@@ -1,6 +1,7 @@
 package com.mantenimiento.sigma_te.controllers;
 
 import com.mantenimiento.sigma_te.dto.usuario.MiPerfilRequestDTO;
+import com.mantenimiento.sigma_te.dto.usuario.UsuarioCambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
 import com.mantenimiento.sigma_te.models.Usuario;
@@ -161,6 +162,15 @@ public class UsuarioController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
         return Map.of("nombreRol", usuario.getRol().getNombreRol());
+    }
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")
+    @PatchMapping("/{id}/estado")
+    public UsuarioDTO cambiarEstado(
+            @PathVariable Integer id,
+            @RequestBody UsuarioCambiarEstadoDTO request,
+            Authentication authentication) {
+        return usuarioService.cambiarEstado(id, request.activo(), authentication);
     }
 
 //    @DeleteMapping("/{id}")

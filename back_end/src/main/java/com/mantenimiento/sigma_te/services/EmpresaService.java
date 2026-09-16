@@ -1,7 +1,10 @@
 package com.mantenimiento.sigma_te.services;
 
+import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
+import com.mantenimiento.sigma_te.dto.empresa.EmpresaListadoDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaRegistroDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaResponseDTO;
+import com.mantenimiento.sigma_te.dto.empresa.EmpresaUpdateDTO;
 import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.EmpresaPermiso;
 import com.mantenimiento.sigma_te.models.EmpresaPermisoId;
@@ -10,8 +13,14 @@ import com.mantenimiento.sigma_te.models.Rol;
 import com.mantenimiento.sigma_te.models.RolPermiso;
 import com.mantenimiento.sigma_te.models.RolPermisoId;
 import com.mantenimiento.sigma_te.models.Usuario;
+import com.mantenimiento.sigma_te.repositories.AuditoriaRepository;
 import com.mantenimiento.sigma_te.repositories.EmpresaPermisoRepository;
 import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
+import com.mantenimiento.sigma_te.repositories.EquipoRepository;
+import com.mantenimiento.sigma_te.repositories.EvidenciaRepository;
+import com.mantenimiento.sigma_te.repositories.FallaRepository;
+import com.mantenimiento.sigma_te.repositories.MantenimientoRepository;
+import com.mantenimiento.sigma_te.repositories.NotificacionRepository;
 import com.mantenimiento.sigma_te.repositories.PermisoRepository;
 import com.mantenimiento.sigma_te.repositories.RolPermisoRepository;
 import com.mantenimiento.sigma_te.repositories.RolRepository;
@@ -38,6 +47,12 @@ public class EmpresaService {
     private final UsuarioRepository usuarioRepository;
     private final PermisoRepository permisoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EquipoRepository equipoRepository;
+    private final AuditoriaRepository auditoriaRepository;
+    private final NotificacionRepository notificacionRepository;
+    private final MantenimientoRepository mantenimientoRepository;
+    private final FallaRepository fallaRepository;
+    private final EvidenciaRepository evidenciaRepository;
 
     public EmpresaService(EmpresaRepository empresaRepository,
                           EmpresaPermisoRepository empresaPermisoRepository,
@@ -45,7 +60,13 @@ public class EmpresaService {
                           RolPermisoRepository rolPermisoRepository,
                           UsuarioRepository usuarioRepository,
                           PermisoRepository permisoRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          EquipoRepository equipoRepository,
+                          AuditoriaRepository auditoriaRepository,
+                          NotificacionRepository notificacionRepository,
+                          MantenimientoRepository mantenimientoRepository,
+                          FallaRepository fallaRepository,
+                          EvidenciaRepository evidenciaRepository) {
         this.empresaRepository = empresaRepository;
         this.empresaPermisoRepository = empresaPermisoRepository;
         this.rolRepository = rolRepository;
@@ -53,11 +74,16 @@ public class EmpresaService {
         this.usuarioRepository = usuarioRepository;
         this.permisoRepository = permisoRepository;
         this.passwordEncoder = passwordEncoder;
+        this.equipoRepository = equipoRepository;
+        this.auditoriaRepository = auditoriaRepository;
+        this.notificacionRepository = notificacionRepository;
+        this.mantenimientoRepository = mantenimientoRepository;
+        this.fallaRepository = fallaRepository;
+        this.evidenciaRepository = evidenciaRepository;
     }
 
     @Transactional
     public EmpresaResponseDTO registrarEmpresaConAdmin(EmpresaRegistroDTO request) {
-        // Validaciones previas
         if (request.nombreEmpresa() == null || request.nombreEmpresa().trim().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la empresa es obligatorio.");
         }
@@ -86,7 +112,6 @@ public class EmpresaService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Debe habilitar al menos un permiso para la empresa.");
         }
 
-        // a. Crea la fila en empresa
         Empresa empresa = Empresa.builder()
                 .nombreEmpresa(nombreEmpresaLimpio)
                 .estadoEmpresa(true)
@@ -94,7 +119,6 @@ public class EmpresaService {
                 .build();
         Empresa empresaGuardada = empresaRepository.save(empresa);
 
-        // b. Inserta en empresa_permiso todos los permisos habilitados recibidos
         for (Permiso permiso : permisosHabilitados) {
             EmpresaPermisoId empresaPermisoId = new EmpresaPermisoId(empresaGuardada.getIdEmpresa(), permiso.getIdPermiso());
             EmpresaPermiso empresaPermiso = EmpresaPermiso.builder()
@@ -104,7 +128,6 @@ public class EmpresaService {
             empresaPermisoRepository.save(empresaPermiso);
         }
 
-        // c. Crea un Rol nuevo para esa empresa: nombreRol "Administrador de Empresa", esProtegido = true, empresa = la empresa recién creada
         Rol rolAdminEmpresa = Rol.builder()
                 .empresa(empresaGuardada)
                 .nombreRol("Administrador de Empresa")
@@ -114,7 +137,6 @@ public class EmpresaService {
                 .build();
         Rol rolGuardado = rolRepository.save(rolAdminEmpresa);
 
-        // d. Asigna a ese rol TODOS los permisos que se le habilitaron a la empresa (vía rol_permiso)
         for (Permiso permiso : permisosHabilitados) {
             RolPermisoId rolPermisoId = new RolPermisoId(rolGuardado.getIdRol(), permiso.getIdPermiso());
             RolPermiso rolPermiso = RolPermiso.builder()
@@ -124,7 +146,6 @@ public class EmpresaService {
             rolPermisoRepository.save(rolPermiso);
         }
 
-        // e. Crea el usuario con ese rol y esa empresa, contraseña encriptada con PasswordEncoder, y requiereCambioPassword = true
         Usuario subAdmin = Usuario.builder()
                 .empresa(empresaGuardada)
                 .nombreUsuario(request.nombreUsuario().trim())
@@ -196,5 +217,124 @@ public class EmpresaService {
         }
 
         return new ArrayList<>(resultado);
+    }
+
+    public List<EmpresaListadoDTO> listarTodos() {
+        List<Empresa> empresas = empresaRepository.findAll();
+        List<EmpresaListadoDTO> resultado = new ArrayList<>();
+        for (Empresa e : empresas) {
+            resultado.add(new EmpresaListadoDTO(
+                    e.getIdEmpresa(),
+                    e.getNombreEmpresa(),
+                    e.getEstadoEmpresa(),
+                    e.getFechaCreacion()
+            ));
+        }
+        return resultado;
+    }
+
+    public EmpresaResponseDTO buscarPorId(Integer id) {
+        Empresa empresa = empresaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada."));
+        return new EmpresaResponseDTO(
+                empresa.getIdEmpresa(),
+                empresa.getNombreEmpresa(),
+                empresa.getEstadoEmpresa(),
+                empresa.getFechaCreacion(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Transactional
+    public EmpresaResponseDTO actualizar(Integer id, EmpresaUpdateDTO request) {
+        Empresa empresa = buscarPorIdParaEntidad(id);
+
+        if (request.nombreEmpresa() == null || request.nombreEmpresa().trim().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la empresa no puede estar en blanco.");
+        }
+
+        String nombreLimpio = request.nombreEmpresa().trim();
+        if (!nombreLimpio.equals(empresa.getNombreEmpresa())
+                && empresaRepository.existsByNombreEmpresa(nombreLimpio)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otra empresa con ese nombre.");
+        }
+
+        empresa.setNombreEmpresa(nombreLimpio);
+        Empresa empresaActualizada = empresaRepository.save(empresa);
+
+        return new EmpresaResponseDTO(
+                empresaActualizada.getIdEmpresa(),
+                empresaActualizada.getNombreEmpresa(),
+                empresaActualizada.getEstadoEmpresa(),
+                empresaActualizada.getFechaCreacion(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    private Empresa buscarPorIdParaEntidad(Integer id) {
+        return empresaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada."));
+    }
+
+    @Transactional
+    public void eliminar(Integer id) {
+        Empresa empresa = buscarPorIdParaEntidad(id);
+
+        if (!usuarioRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!equipoRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!auditoriaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!notificacionRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!mantenimientoRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!fallaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!evidenciaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+        if (!rolRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
+        }
+
+        empresaRepository.delete(empresa);
+    }
+
+    @Transactional
+    public EmpresaResponseDTO cambiarEstado(Integer id, CambiarEstadoDTO request) {
+        Empresa empresa = buscarPorIdParaEntidad(id);
+        empresa.setEstadoEmpresa(request.activo());
+        Empresa empresaActualizada = empresaRepository.save(empresa);
+
+        return new EmpresaResponseDTO(
+                empresaActualizada.getIdEmpresa(),
+                empresaActualizada.getNombreEmpresa(),
+                empresaActualizada.getEstadoEmpresa(),
+                empresaActualizada.getFechaCreacion(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
     }
 }
