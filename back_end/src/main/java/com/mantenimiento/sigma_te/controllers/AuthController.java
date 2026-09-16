@@ -1,5 +1,4 @@
-﻿package com.mantenimiento.sigma_te.controllers;
-
+package com.mantenimiento.sigma_te.controllers;
 import com.mantenimiento.sigma_te.dto.auth.EmergenciaResetDTO;
 import com.mantenimiento.sigma_te.dto.auth.LoginRequestDTO;
 import com.mantenimiento.sigma_te.dto.auth.LoginResponseDTO;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +34,6 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
-
     @PostMapping("/login")
     public LoginResponseDTO login(@RequestBody LoginRequestDTO request) {
         if (request == null) {
