@@ -10,6 +10,7 @@ import com.mantenimiento.sigma_te.services.UsuarioService;
 import com.mantenimiento.sigma_te.security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,25 +50,29 @@ public class UsuarioController {
         this.rolPermisoService = rolPermisoService;
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")
     @GetMapping
-    public List<UsuarioDTO> listarTodos() {
-        return usuarioService.listarTodos();
+    public List<UsuarioDTO> listarTodos(Authentication authentication) {
+        return usuarioService.listarTodos(authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")
     @GetMapping("/{id}")
-    public UsuarioDTO buscarPorId(@PathVariable Integer id) {
-        return usuarioService.buscarPorId(id);
+    public UsuarioDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return usuarioService.buscarPorId(id, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTO crear(@RequestBody UsuarioRequestDTO request) {
-        return usuarioService.crear(request);
+    public UsuarioDTO crear(@RequestBody UsuarioRequestDTO request, Authentication authentication) {
+        return usuarioService.crear(request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")
     @PutMapping("/{id}")
-    public UsuarioDTO actualizar(@PathVariable Integer id, @RequestBody UsuarioRequestDTO request) {
-        return usuarioService.actualizar(id, request);
+    public UsuarioDTO actualizar(@PathVariable Integer id, @RequestBody UsuarioRequestDTO request, Authentication authentication) {
+        return usuarioService.actualizar(id, request, authentication);
     }
 
     @PutMapping("/mi-perfil")
@@ -135,7 +140,7 @@ public class UsuarioController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta sección.");
         }
 
-        return usuarioService.buscarPorId(usuario.getIdUsuario());
+        return usuarioService.buscarPorId(usuario.getIdUsuario(), authentication);
     }
 
     @GetMapping("/mi-perfil/permisos")
@@ -164,4 +169,3 @@ public class UsuarioController {
 //        usuarioService.eliminar(id);
 //    }
 }
-

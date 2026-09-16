@@ -34,3 +34,6 @@ build/
 ### conecion MCP con intellij
 .mcp.json
 .claude
+
+# Variables de entorno locales (no compartir con el repo)
+.env

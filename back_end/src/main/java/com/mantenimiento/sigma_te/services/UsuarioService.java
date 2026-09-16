@@ -2,11 +2,15 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
+import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.Rol;
 import com.mantenimiento.sigma_te.models.Usuario;
+import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
 import com.mantenimiento.sigma_te.repositories.RolRepository;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
+import com.mantenimiento.sigma_te.security.TenantContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,33 +24,77 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmpresaRepository empresaRepository;
+    private final TenantContext tenantContext;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          RolRepository rolRepository,
+                          PasswordEncoder passwordEncoder,
+                          EmpresaRepository empresaRepository,
+                          TenantContext tenantContext) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
+        this.empresaRepository = empresaRepository;
+        this.tenantContext = tenantContext;
     }
 
-    public List<UsuarioDTO> listarTodos() {
-        return usuarioRepository.findAll()
-                .stream()
+    public List<UsuarioDTO> listarTodos(Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        List<Usuario> usuarios = idEmpresaActual == null
+                ? usuarioRepository.findAll()
+                : usuarioRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
+
+        return usuarios.stream()
                 .map(this::convertirADto)
                 .toList();
     }
 
-    public UsuarioDTO buscarPorId(Integer id) {
+    public UsuarioDTO buscarPorId(Integer id, Authentication authentication) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaUsuario = usuario.getEmpresa() != null ? usuario.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuario, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado.");
+            }
+        }
+
         return convertirADto(usuario);
     }
 
-    public UsuarioDTO crear(UsuarioRequestDTO request) {
+    public UsuarioDTO crear(UsuarioRequestDTO request, Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
         Rol rol = rolRepository.findById(request.idRol())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
 
+        if (idEmpresaActual != null) {
+            Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        } else {
+            if (rol.getEmpresa() != null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        }
+
+        Empresa empresa = null;
+        if (idEmpresaActual != null) {
+            empresa = empresaRepository.findById(idEmpresaActual)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+        }
+
         Usuario usuario = Usuario.builder()
+                .empresa(empresa)
                 .nombreUsuario(request.nombreUsuario())
                 .correoUsuario(request.correoUsuario())
                 .rol(rol)
@@ -60,10 +108,19 @@ public class UsuarioService {
         return convertirADto(guardado);
     }
 
-    public UsuarioDTO actualizar(Integer id, UsuarioRequestDTO request) {
+    public UsuarioDTO actualizar(Integer id, UsuarioRequestDTO request, Authentication authentication) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Usuario no encontrado."));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaUsuario = usuario.getEmpresa() != null ? usuario.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuario, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado.");
+            }
+        }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
             throw new ResponseStatusException(
@@ -75,10 +132,15 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
 
-        if (Boolean.TRUE.equals(rol.getEsProtegido())) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "No se puede asignar un rol protegido mediante esta operación.");
+        if (idEmpresaActual != null) {
+            Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        } else {
+            if (rol.getEmpresa() != null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
         }
 
         if (request.correoUsuario() != null && !request.correoUsuario().isBlank()
@@ -99,14 +161,19 @@ public class UsuarioService {
         return convertirADto(actualizado);
     }
 
-    public void eliminar(Integer id) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id);
-        }
+    public void eliminar(Integer id, Authentication authentication) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> 
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id));
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaUsuario = usuario.getEmpresa() != null ? usuario.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuario, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado.");
+            }
+        }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
             throw new ResponseStatusException(

@@ -4,6 +4,7 @@ import com.mantenimiento.sigma_te.dto.auditoria.AuditoriaDTO;
 import com.mantenimiento.sigma_te.dto.auditoria.AuditoriaRequestDTO;
 import com.mantenimiento.sigma_te.services.AuditoriaService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,29 +28,29 @@ public class AuditoriaController {
     }
 
     @GetMapping
-    public List<AuditoriaDTO> listarTodos() {
-        return auditoriaService.listarTodos();
+    public List<AuditoriaDTO> listarTodos(Authentication authentication) {
+        return auditoriaService.listarTodos(authentication);
     }
 
     @GetMapping("/{id}")
-    public AuditoriaDTO buscarPorId(@PathVariable Integer id) {
-        return auditoriaService.buscarPorId(id);
+    public AuditoriaDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return auditoriaService.buscarPorId(id, authentication);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AuditoriaDTO crear(@RequestBody AuditoriaRequestDTO request) {
-        return auditoriaService.crear(request);
+    public AuditoriaDTO crear(@RequestBody AuditoriaRequestDTO request, Authentication authentication) {
+        return auditoriaService.crear(request, authentication);
     }
 
     @PutMapping("/{id}")
-    public AuditoriaDTO actualizar(@PathVariable Integer id, @RequestBody AuditoriaRequestDTO request) {
-        return auditoriaService.actualizar(id, request);
+    public AuditoriaDTO actualizar(@PathVariable Integer id, @RequestBody AuditoriaRequestDTO request, Authentication authentication) {
+        return auditoriaService.actualizar(id, request, authentication);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        auditoriaService.eliminar(id);
+    public void eliminar(@PathVariable Integer id, Authentication authentication) {
+        auditoriaService.eliminar(id, authentication);
     }
 }

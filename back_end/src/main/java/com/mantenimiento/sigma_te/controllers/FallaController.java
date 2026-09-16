@@ -4,6 +4,8 @@ import com.mantenimiento.sigma_te.dto.falla.FallaDTO;
 import com.mantenimiento.sigma_te.dto.falla.FallaRequestDTO;
 import com.mantenimiento.sigma_te.services.FallaService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,30 +28,37 @@ public class FallaController {
         this.fallaService = fallaService;
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'registrar_falla')")
     @GetMapping
-    public List<FallaDTO> listarTodos() {
-        return fallaService.listarTodos();
+    public List<FallaDTO> listarTodos(Authentication authentication) {
+        return fallaService.listarTodos(authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'registrar_falla')")
     @GetMapping("/{id}")
-    public FallaDTO buscarPorId(@PathVariable Integer id) {
-        return fallaService.buscarPorId(id);
+    public FallaDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return fallaService.buscarPorId(id, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'registrar_falla')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FallaDTO crear(@RequestBody FallaRequestDTO request) {
-        return fallaService.crear(request);
+    public FallaDTO crear(@RequestBody FallaRequestDTO request, Authentication authentication) {
+        return fallaService.crear(request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'registrar_falla')")
     @PutMapping("/{id}")
-    public FallaDTO actualizar(@PathVariable Integer id, @RequestBody FallaRequestDTO request) {
-        return fallaService.actualizar(id, request);
+    public FallaDTO actualizar(@PathVariable Integer id,
+                                @RequestBody FallaRequestDTO request,
+                                Authentication authentication) {
+        return fallaService.actualizar(id, request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'registrar_falla')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        fallaService.eliminar(id);
+    public void eliminar(@PathVariable Integer id, Authentication authentication) {
+        fallaService.eliminar(id, authentication);
     }
 }

@@ -4,6 +4,8 @@ import com.mantenimiento.sigma_te.dto.evidencia.EvidenciaDTO;
 import com.mantenimiento.sigma_te.dto.evidencia.EvidenciaRequestDTO;
 import com.mantenimiento.sigma_te.services.EvidenciaService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,30 +28,35 @@ public class EvidenciaController {
         this.evidenciaService = evidenciaService;
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'cargar_evidencia')")
     @GetMapping
-    public List<EvidenciaDTO> listarTodos() {
-        return evidenciaService.listarTodos();
+    public List<EvidenciaDTO> listarTodos(Authentication authentication) {
+        return evidenciaService.listarTodos(authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'cargar_evidencia')")
     @GetMapping("/{id}")
-    public EvidenciaDTO buscarPorId(@PathVariable Integer id) {
-        return evidenciaService.buscarPorId(id);
+    public EvidenciaDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return evidenciaService.buscarPorId(id, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'cargar_evidencia')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EvidenciaDTO crear(@RequestBody EvidenciaRequestDTO request) {
-        return evidenciaService.crear(request);
+    public EvidenciaDTO crear(@RequestBody EvidenciaRequestDTO request, Authentication authentication) {
+        return evidenciaService.crear(request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'cargar_evidencia')")
     @PutMapping("/{id}")
-    public EvidenciaDTO actualizar(@PathVariable Integer id, @RequestBody EvidenciaRequestDTO request) {
-        return evidenciaService.actualizar(id, request);
+    public EvidenciaDTO actualizar(@PathVariable Integer id, @RequestBody EvidenciaRequestDTO request, Authentication authentication) {
+        return evidenciaService.actualizar(id, request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'cargar_evidencia')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        evidenciaService.eliminar(id);
+    public void eliminar(@PathVariable Integer id, Authentication authentication) {
+        evidenciaService.eliminar(id, authentication);
     }
 }

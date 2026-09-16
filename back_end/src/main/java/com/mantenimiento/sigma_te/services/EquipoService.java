@@ -78,6 +78,11 @@ public class EquipoService {
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + request.idUsuarioRegistro()));
 
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        Integer idEmpresaDelUsuarioRegistro = usuarioRegistro.getEmpresa() != null ? usuarioRegistro.getEmpresa().getIdEmpresa() : null;
+        if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, idEmpresaActual)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no encontrado.");
+        }
+
         Empresa empresa = null;
         if (idEmpresaActual != null) {
             empresa = empresaRepository.findById(idEmpresaActual)
@@ -126,6 +131,11 @@ public class EquipoService {
         Usuario usuarioRegistro = usuarioRepository.findById(request.idUsuarioRegistro())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + request.idUsuarioRegistro()));
+
+        Integer idEmpresaDelUsuarioRegistro = usuarioRegistro.getEmpresa() != null ? usuarioRegistro.getEmpresa().getIdEmpresa() : null;
+        if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, idEmpresaActual)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no encontrado.");
+        }
 
         equipo.setCodigoEquipo(request.codigoEquipo());
         equipo.setNombreEquipo(request.nombreEquipo());

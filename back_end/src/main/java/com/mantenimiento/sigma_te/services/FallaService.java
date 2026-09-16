@@ -2,13 +2,17 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.falla.FallaDTO;
 import com.mantenimiento.sigma_te.dto.falla.FallaRequestDTO;
+import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.Equipo;
 import com.mantenimiento.sigma_te.models.Falla;
 import com.mantenimiento.sigma_te.models.Usuario;
+import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
 import com.mantenimiento.sigma_te.repositories.EquipoRepository;
 import com.mantenimiento.sigma_te.repositories.FallaRepository;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
+import com.mantenimiento.sigma_te.security.TenantContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,30 +25,52 @@ public class FallaService {
     private final FallaRepository fallaRepository;
     private final EquipoRepository equipoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EmpresaRepository empresaRepository;
+    private final TenantContext tenantContext;
 
     public FallaService(FallaRepository fallaRepository,
                         EquipoRepository equipoRepository,
-                        UsuarioRepository usuarioRepository) {
+                        UsuarioRepository usuarioRepository,
+                        EmpresaRepository empresaRepository,
+                        TenantContext tenantContext) {
         this.fallaRepository = fallaRepository;
         this.equipoRepository = equipoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.empresaRepository = empresaRepository;
+        this.tenantContext = tenantContext;
     }
 
-    public List<FallaDTO> listarTodos() {
-        return fallaRepository.findAll()
-                .stream()
+    public List<FallaDTO> listarTodos(Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        List<Falla> fallas = idEmpresaActual == null
+                ? fallaRepository.findByEmpresaIsNull()
+                : fallaRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
+
+        return fallas.stream()
                 .map(this::convertirADto)
                 .toList();
     }
 
-    public FallaDTO buscarPorId(Integer id) {
+    public FallaDTO buscarPorId(Integer id, Authentication authentication) {
         Falla falla = fallaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Falla no encontrada con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Falla no encontrada."));
+
+        Integer idEmpresaFalla = falla.getEmpresa() != null ? falla.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaFalla, idEmpresaActual)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Falla no encontrada.");
+        }
+
         return convertirADto(falla);
     }
 
-    public FallaDTO crear(FallaRequestDTO request) {
+    public FallaDTO crear(FallaRequestDTO request, Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
         Equipo equipo = equipoRepository.findById(request.idEquipo())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Equipo no encontrado con ID: " + request.idEquipo()));
@@ -53,11 +79,21 @@ public class FallaService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario que reporta no encontrado con ID: " + request.idUsuarioReporta()));
 
+        Integer idEmpresaUsuarioReporta = usuarioReporta.getEmpresa() != null ? usuarioReporta.getEmpresa().getIdEmpresa() : null;
+        if (!tenantContext.coincideEmpresa(idEmpresaUsuarioReporta, idEmpresaActual)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que reporta no encontrado.");
+        }
+
         Usuario usuarioRecibe = null;
         if (request.idUsuarioRecibe() != null) {
             usuarioRecibe = usuarioRepository.findById(request.idUsuarioRecibe())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Usuario que recibe no encontrado con ID: " + request.idUsuarioRecibe()));
+
+            Integer idEmpresaUsuarioRecibe = usuarioRecibe.getEmpresa() != null ? usuarioRecibe.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuarioRecibe, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que recibe no encontrado.");
+            }
         }
 
         Usuario usuarioAtiende = null;
@@ -65,9 +101,22 @@ public class FallaService {
             usuarioAtiende = usuarioRepository.findById(request.idUsuarioAtiende())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Usuario que atiende no encontrado con ID: " + request.idUsuarioAtiende()));
+
+            Integer idEmpresaUsuarioAtiende = usuarioAtiende.getEmpresa() != null ? usuarioAtiende.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuarioAtiende, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que atiende no encontrado.");
+            }
+        }
+
+        Empresa empresa = null;
+        if (idEmpresaActual != null) {
+            empresa = empresaRepository.findById(idEmpresaActual)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
         }
 
         Falla falla = Falla.builder()
+                .empresa(empresa)
                 .equipo(equipo)
                 .fechaReporte(LocalDateTime.now())
                 .fechaAtencion(request.fechaAtencion())
@@ -85,10 +134,18 @@ public class FallaService {
         return convertirADto(guardado);
     }
 
-    public FallaDTO actualizar(Integer id, FallaRequestDTO request) {
+    public FallaDTO actualizar(Integer id, FallaRequestDTO request, Authentication authentication) {
         Falla falla = fallaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Falla no encontrada con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Falla no encontrada."));
+
+        Integer idEmpresaFalla = falla.getEmpresa() != null ? falla.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaFalla, idEmpresaActual)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Falla no encontrada.");
+        }
 
         Equipo equipo = equipoRepository.findById(request.idEquipo())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -98,11 +155,21 @@ public class FallaService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario que reporta no encontrado con ID: " + request.idUsuarioReporta()));
 
+        Integer idEmpresaUsuarioReporta = usuarioReporta.getEmpresa() != null ? usuarioReporta.getEmpresa().getIdEmpresa() : null;
+        if (!tenantContext.coincideEmpresa(idEmpresaUsuarioReporta, idEmpresaActual)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que reporta no encontrado.");
+        }
+
         Usuario usuarioRecibe = null;
         if (request.idUsuarioRecibe() != null) {
             usuarioRecibe = usuarioRepository.findById(request.idUsuarioRecibe())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Usuario que recibe no encontrado con ID: " + request.idUsuarioRecibe()));
+
+            Integer idEmpresaUsuarioRecibe = usuarioRecibe.getEmpresa() != null ? usuarioRecibe.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuarioRecibe, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que recibe no encontrado.");
+            }
         }
 
         Usuario usuarioAtiende = null;
@@ -110,6 +177,11 @@ public class FallaService {
             usuarioAtiende = usuarioRepository.findById(request.idUsuarioAtiende())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Usuario que atiende no encontrado con ID: " + request.idUsuarioAtiende()));
+
+            Integer idEmpresaUsuarioAtiende = usuarioAtiende.getEmpresa() != null ? usuarioAtiende.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaUsuarioAtiende, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario que atiende no encontrado.");
+            }
         }
 
         falla.setEquipo(equipo);
@@ -129,12 +201,20 @@ public class FallaService {
         return convertirADto(actualizado);
     }
 
-    public void eliminar(Integer id) {
-        if (!fallaRepository.existsById(id)) {
+    public void eliminar(Integer id, Authentication authentication) {
+        Falla falla = fallaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Falla no encontrada."));
+
+        Integer idEmpresaFalla = falla.getEmpresa() != null ? falla.getEmpresa().getIdEmpresa() : null;
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (!tenantContext.coincideEmpresa(idEmpresaFalla, idEmpresaActual)) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Falla no encontrada con ID: " + id);
+                    HttpStatus.NOT_FOUND, "Falla no encontrada.");
         }
-        fallaRepository.deleteById(id);
+
+        fallaRepository.delete(falla);
     }
 
     private FallaDTO convertirADto(Falla falla) {

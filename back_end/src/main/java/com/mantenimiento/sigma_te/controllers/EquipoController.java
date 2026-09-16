@@ -4,6 +4,7 @@ import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
 import com.mantenimiento.sigma_te.services.EquipoService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,22 +28,26 @@ public class EquipoController {
         this.equipoService = equipoService;
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @GetMapping
     public List<EquipoDTO> listarTodos(Authentication authentication) {
         return equipoService.listarTodos(authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @GetMapping("/{id}")
     public EquipoDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
         return equipoService.buscarPorId(id, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EquipoDTO crear(@RequestBody EquipoRequestDTO request, Authentication authentication) {
         return equipoService.crear(request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @PutMapping("/{id}")
     public EquipoDTO actualizar(@PathVariable Integer id,
                                 @RequestBody EquipoRequestDTO request,
@@ -50,6 +55,7 @@ public class EquipoController {
         return equipoService.actualizar(id, request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id, Authentication authentication) {

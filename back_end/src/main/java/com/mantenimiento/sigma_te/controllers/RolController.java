@@ -4,12 +4,14 @@ import com.mantenimiento.sigma_te.dto.rol.RolDTO;
 import com.mantenimiento.sigma_te.dto.rol.RolRequestDTO;
 import com.mantenimiento.sigma_te.services.RolService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-// Representational State Transfer (Transferencia de Estado Representacional)
-@RestController // Le avisa a Spring Boot: "Oye, esta clase es un Controlador de tipo REST".
-@RequestMapping("/api/roles") // Define la URL base (la dirección de internet) para entrar a este
+
+@RestController
+@RequestMapping("/api/roles")
 public class RolController {
 
     private final RolService rolService;
@@ -18,31 +20,35 @@ public class RolController {
         this.rolService = rolService;
     }
 
-    // para ver todos los datos de la DB
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_roles')")
     @GetMapping
-    public List<RolDTO> listarTodos() {
-        return rolService.listarTodos();
+    public List<RolDTO> listarTodos(Authentication authentication) {
+        return rolService.listarTodos(authentication);
     }
-    // para ver solo un dato por ID
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_roles')")
     @GetMapping("/{id}")
-    public RolDTO buscarPorId(@PathVariable Integer id) {
-        return rolService.buscarPorId(id);
+    public RolDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
+        return rolService.buscarPorId(id, authentication);
     }
-    // para crear un nuevo rol
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_roles')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RolDTO crear(@RequestBody RolRequestDTO request) {
-        return rolService.crear(request);
+    public RolDTO crear(@RequestBody RolRequestDTO request, Authentication authentication) {
+        return rolService.crear(request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_roles')")
     @PutMapping("/{id}")
-    public RolDTO actualizar(@PathVariable Integer id, @RequestBody RolRequestDTO request) {
-        return rolService.actualizar(id, request);
+    public RolDTO actualizar(@PathVariable Integer id, @RequestBody RolRequestDTO request, Authentication authentication) {
+        return rolService.actualizar(id, request, authentication);
     }
 
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_roles')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Integer id) {
-        rolService.eliminar(id);
+    public void eliminar(@PathVariable Integer id, Authentication authentication) {
+        rolService.eliminar(id, authentication);
     }
 }

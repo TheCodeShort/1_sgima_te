@@ -2,9 +2,13 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.rol.RolDTO;
 import com.mantenimiento.sigma_te.dto.rol.RolRequestDTO;
+import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.Rol;
+import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
 import com.mantenimiento.sigma_te.repositories.RolRepository;
+import com.mantenimiento.sigma_te.security.TenantContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,28 +18,58 @@ import java.util.List;
 public class RolService {
 
     private final RolRepository rolRepository;
+    private final EmpresaRepository empresaRepository;
+    private final TenantContext tenantContext;
 
-    public RolService(RolRepository rolRepository) {
+    public RolService(RolRepository rolRepository,
+                       EmpresaRepository empresaRepository,
+                       TenantContext tenantContext) {
         this.rolRepository = rolRepository;
+        this.empresaRepository = empresaRepository;
+        this.tenantContext = tenantContext;
     }
 
-    public List<RolDTO> listarTodos() {
-        return rolRepository.findAll()
-                                .stream()
-                                .map(this::convertirADto)
-                                .toList();
+    public List<RolDTO> listarTodos(Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        List<Rol> roles = idEmpresaActual == null
+                ? rolRepository.findAll()
+                : rolRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
+
+        return roles.stream()
+                .map(this::convertirADto)
+                .toList();
     }
 
-    // Control de Errores Elegante con Excepciones HTTP
-    public RolDTO buscarPorId(Integer id) {
+    public RolDTO buscarPorId(Integer id, Authentication authentication) {
         Rol rol = rolRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
+                        HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        }
+
         return convertirADto(rol);
     }
 
-    public RolDTO crear(RolRequestDTO request) {
+    public RolDTO crear(RolRequestDTO request, Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        Empresa empresa = null;
+        if (idEmpresaActual != null) {
+            empresa = empresaRepository.findById(idEmpresaActual)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+        }
+
         Rol rol = Rol.builder()
+                .empresa(empresa)
                 .nombreRol(request.nombreRol())
                 .descripcionRol(request.descripcionRol())
                 .estadoRol(true)
@@ -44,14 +78,23 @@ public class RolService {
         return convertirADto(guardado);
     }
 
-    public RolDTO actualizar(Integer id, RolRequestDTO request) {
+    public RolDTO actualizar(Integer id, RolRequestDTO request, Authentication authentication) {
         Rol rol = rolRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
 
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        }
+
         if (Boolean.TRUE.equals(rol.getEsProtegido())) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, 
+                    HttpStatus.FORBIDDEN,
                     "Este rol está protegido y no puede modificarse desde aquí.");
         }
 
@@ -62,25 +105,29 @@ public class RolService {
         return convertirADto(actualizado);
     }
 
-    public void eliminar(Integer id) {
-        if (!rolRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id);
-        }
+    public void eliminar(Integer id, Authentication authentication) {
+        Rol rol = rolRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
 
-        Rol rol = rolRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + id));
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+
+        if (idEmpresaActual != null) {
+            Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
+            }
+        }
 
         if (Boolean.TRUE.equals(rol.getEsProtegido())) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, 
+                    HttpStatus.FORBIDDEN,
                     "Este rol está protegido y no puede eliminarse.");
         }
 
         rolRepository.deleteById(id);
     }
 
-    //  El traductor manual (convertirADto)
     private RolDTO convertirADto(Rol rol) {
         return new RolDTO(
                 rol.getIdRol(),
