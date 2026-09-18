@@ -124,9 +124,11 @@ public class UsuarioService {
         }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Este usuario está protegido y no puede modificarse desde aquí.");
+            Integer idEmpresaDelRol = usuario.getRol().getEmpresa() != null
+                    ? usuario.getRol().getEmpresa().getIdEmpresa() : null;
+            if (idEmpresaDelRol == null || !tenantContext.esAdminGlobalAutenticado(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este usuario está protegido y no puede modificarse desde aquí.");
+            }
         }
 
         Rol rol = rolRepository.findById(request.idRol())
@@ -177,12 +179,16 @@ public class UsuarioService {
         }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Este usuario está protegido y no puede eliminarse.");
+            Integer idEmpresaDelRol = usuario.getRol().getEmpresa() != null
+                    ? usuario.getRol().getEmpresa().getIdEmpresa() : null;
+            if (idEmpresaDelRol == null || !tenantContext.esAdminGlobalAutenticado(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este usuario está protegido y no puede eliminarse.");
+            }
         }
 
-        usuarioRepository.deleteById(id);
+        usuario.setCorreoUsuario("eliminado_" + usuario.getIdUsuario() + "@eliminado.local");
+        usuario.setCuentaActiva(false);
+        usuarioRepository.save(usuario);
     }
 
     public UsuarioDTO cambiarEstado(Integer id, boolean nuevoEstado, Authentication authentication) {
@@ -206,9 +212,11 @@ public class UsuarioService {
         }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Este usuario está protegido y no puede modificarse desde aquí.");
+            Integer idEmpresaDelRol = usuario.getRol().getEmpresa() != null
+                    ? usuario.getRol().getEmpresa().getIdEmpresa() : null;
+            if (idEmpresaDelRol == null || !tenantContext.esAdminGlobalAutenticado(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Este usuario está protegido y no puede modificarse desde aquí.");
+            }
         }
 
         usuario.setCuentaActiva(nuevoEstado);

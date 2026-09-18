@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.security;
 
+import com.mantenimiento.sigma_te.models.Rol;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,5 +37,24 @@ public class TenantContext {
 
     public boolean coincideEmpresa(Integer idEmpresaDelRegistro, Integer idEmpresaDelUsuario) {
         return Objects.equals(idEmpresaDelRegistro, idEmpresaDelUsuario);
+    }
+
+    public boolean esAdminGlobalAutenticado(Authentication authentication) {
+        Authentication auth = authentication != null
+                ? authentication
+                : SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || auth.getName() == null) {
+            return false;
+        }
+
+        return usuarioRepository.findByCorreoUsuario(auth.getName())
+                .map(usuario -> {
+                    Rol rol = usuario.getRol();
+                    return rol != null
+                            && Boolean.TRUE.equals(rol.getEsProtegido())
+                            && rol.getEmpresa() == null;
+                })
+                .orElse(false);
     }
 }

@@ -16,6 +16,8 @@ public record EquipoDTO(
     String codigoQr,
     String observacionesEquipo,
     Integer idUsuarioRegistro,
-    LocalDateTime fechaRegistroEquipo
+    LocalDateTime fechaRegistroEquipo,
+    Integer idEmpresa,
+    String nombreEmpresa
 ) {
 }

@@ -287,35 +287,20 @@ public class EmpresaService {
     }
 
     @Transactional
-    public void eliminar(Integer id) {
+    public EmpresaResponseDTO eliminar(Integer id) {
         Empresa empresa = buscarPorIdParaEntidad(id);
-
-        if (!usuarioRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!equipoRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!auditoriaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!notificacionRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!mantenimientoRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!fallaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!evidenciaRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-        if (!rolRepository.findByEmpresa_IdEmpresa(id).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar una empresa con datos asociados. Desactívela en su lugar.");
-        }
-
-        empresaRepository.delete(empresa);
+        String nombreAnonimizado = "Eliminado - " + empresa.getNombreEmpresa()
+                + " (ID " + empresa.getIdEmpresa() + ")";
+        empresa.setNombreEmpresa(nombreAnonimizado);
+        empresa.setEstadoEmpresa(false);
+        Empresa empresaActualizada = empresaRepository.save(empresa);
+        return new EmpresaResponseDTO(
+                empresaActualizada.getIdEmpresa(),
+                empresaActualizada.getNombreEmpresa(),
+                empresaActualizada.getEstadoEmpresa(),
+                empresaActualizada.getFechaCreacion(),
+                null, null, null, null, null, null
+        );
     }
 
     @Transactional
@@ -338,3 +323,4 @@ public class EmpresaService {
         );
     }
 }
+

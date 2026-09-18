@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.services;
 
+import com.mantenimiento.sigma_te.security.TenantContext;
 import com.mantenimiento.sigma_te.dto.rolpermiso.RolPermisoDTO;
 import com.mantenimiento.sigma_te.dto.rolpermiso.RolPermisoRequestDTO;
 import com.mantenimiento.sigma_te.models.Rol;
@@ -26,15 +27,18 @@ public class RolPermisoService {
     private final RolRepository rolRepository;
     private final PermisoRepository permisoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TenantContext tenantContext;
 
     public RolPermisoService(RolPermisoRepository rolPermisoRepository,
-                             RolRepository rolRepository,
-                             PermisoRepository permisoRepository,
-                             UsuarioRepository usuarioRepository) {
+                              RolRepository rolRepository,
+                              PermisoRepository permisoRepository,
+                              UsuarioRepository usuarioRepository,
+                              TenantContext tenantContext) {
         this.rolPermisoRepository = rolPermisoRepository;
         this.rolRepository = rolRepository;
         this.permisoRepository = permisoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.tenantContext = tenantContext;
     }
 
     public List<RolPermisoDTO> listarTodos() {
@@ -166,22 +170,7 @@ public class RolPermisoService {
     }
 
     private boolean esAdminGlobalAutenticado(Authentication authentication) {
-        Authentication auth = authentication != null
-                ? authentication
-                : SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null || auth.getName() == null) {
-            return false;
-        }
-
-        return usuarioRepository.findByCorreoUsuario(auth.getName())
-                .map(usuario -> {
-                    Rol rol = usuario.getRol();
-                    return rol != null
-                            && Boolean.TRUE.equals(rol.getEsProtegido())
-                            && rol.getEmpresa() == null;
-                })
-                .orElse(false);
+        return tenantContext.esAdminGlobalAutenticado(authentication);
     }
 
     private RolPermisoDTO convertirADto(RolPermiso rolPermiso) {

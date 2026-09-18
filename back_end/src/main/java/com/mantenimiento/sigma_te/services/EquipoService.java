@@ -44,7 +44,7 @@ public class EquipoService {
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
 
         List<Equipo> equipos = idEmpresaActual == null
-                ? equipoRepository.findByEmpresaIsNull()
+                ? equipoRepository.findAll()
                 : equipoRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
 
         return equipos.stream()
@@ -73,21 +73,42 @@ public class EquipoService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Estado de equipo no encontrado con ID: " + request.idEstadoEquipo()));
 
+        if (request.idUsuarioRegistro() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El campo idUsuarioRegistro es obligatorio.");
+        }
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        Empresa empresa = null;
+
+        if (idEmpresaActual != null) {
+            // Caso normal: lo crea un usuario de una empresa, se asigna la suya (comportamiento actual, NO CAMBIAR)
+            empresa = empresaRepository.findById(idEmpresaActual)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+        } else if (tenantContext.esAdminGlobalAutenticado(authentication)) {
+            // Caso MAIN: debe indicar explícitamente para qué empresa es
+            if (request.idEmpresa() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Como administrador global, debes indicar idEmpresa al crear un equipo.");
+            }
+            empresa = empresaRepository.findById(request.idEmpresa())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + request.idEmpresa()));
+        }
+        // Si ninguna de las dos condiciones aplica (caso raro: usuario global no-MAIN sin idEmpresa), empresa queda null como hoy
+
         Usuario usuarioRegistro = usuarioRepository.findById(request.idUsuarioRegistro())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + request.idUsuarioRegistro()));
 
-        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        // Verificar que el usuario de registro pertenece a la empresa del equipo
         Integer idEmpresaDelUsuarioRegistro = usuarioRegistro.getEmpresa() != null ? usuarioRegistro.getEmpresa().getIdEmpresa() : null;
-        if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, idEmpresaActual)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no encontrado.");
-        }
-
-        Empresa empresa = null;
         if (idEmpresaActual != null) {
-            empresa = empresaRepository.findById(idEmpresaActual)
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+            if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, idEmpresaActual)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no encontrado.");
+            }
+        } else if (tenantContext.esAdminGlobalAutenticado(authentication) && request.idEmpresa() != null) {
+            if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, request.idEmpresa())) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no pertenece a la empresa indicada.");
+            }
         }
 
         Equipo equipo = Equipo.builder()
@@ -127,6 +148,11 @@ public class EquipoService {
         EstadoEquipo estadoEquipo = estadoEquipoRepository.findById(request.idEstadoEquipo())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Estado de equipo no encontrado con ID: " + request.idEstadoEquipo()));
+
+        if (request.idUsuarioRegistro() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El campo idUsuarioRegistro es obligatorio.");
+        }
 
         Usuario usuarioRegistro = usuarioRepository.findById(request.idUsuarioRegistro())
                 .orElseThrow(() -> new ResponseStatusException(
@@ -171,6 +197,10 @@ public class EquipoService {
     }
 
     private EquipoDTO convertirADto(Equipo equipo) {
+        Integer idEmpresa = equipo.getEmpresa() != null 
+                ? equipo.getEmpresa().getIdEmpresa() : null;
+        String nombreEmpresa = equipo.getEmpresa() != null 
+                ? equipo.getEmpresa().getNombreEmpresa() : null;
         return new EquipoDTO(
                 equipo.getIdEquipo(),
                 equipo.getCodigoEquipo(),
@@ -185,7 +215,12 @@ public class EquipoService {
                 equipo.getCodigoQr(),
                 equipo.getObservacionesEquipo(),
                 equipo.getUsuarioRegistro() != null ? equipo.getUsuarioRegistro().getIdUsuario() : null,
-                equipo.getFechaRegistroEquipo()
+                equipo.getFechaRegistroEquipo(),
+                idEmpresa,
+                nombreEmpresa
         );
     }
 }
+
+
+

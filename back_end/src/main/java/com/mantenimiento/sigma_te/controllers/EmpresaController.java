@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/empresas")
@@ -90,13 +89,12 @@ public class EmpresaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> eliminar(
+    public ResponseEntity<EmpresaResponseDTO> eliminar(
             @PathVariable Integer id,
             Authentication authentication) {
         validarUsuarioMain(authentication);
-        empresaService.eliminar(id);
-        Map<String, String> respuesta = Map.of("mensaje", "Empresa eliminada correctamente.");
-        return ResponseEntity.ok(respuesta);
+        EmpresaResponseDTO dto = empresaService.eliminar(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PatchMapping("/{id}/estado")

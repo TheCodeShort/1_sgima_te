@@ -129,12 +129,16 @@ public class RolService {
     }
 
     private RolDTO convertirADto(Rol rol) {
+        String nombreVisible = (Boolean.TRUE.equals(rol.getEsProtegido()) && rol.getEmpresa() != null)
+                ? "Admin - " + rol.getEmpresa().getNombreEmpresa()
+                : rol.getNombreRol();
         return new RolDTO(
                 rol.getIdRol(),
                 rol.getNombreRol(),
                 rol.getDescripcionRol(),
                 rol.getEstadoRol(),
-                rol.getEsProtegido()
+                rol.getEsProtegido(),
+                nombreVisible
         );
     }
 }

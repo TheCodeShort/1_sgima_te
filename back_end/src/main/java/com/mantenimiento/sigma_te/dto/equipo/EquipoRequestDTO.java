@@ -12,6 +12,7 @@ public record EquipoRequestDTO(
     Integer frecuenciaCalibracionDias,
     String codigoQr,
     String observacionesEquipo,
-    Integer idUsuarioRegistro
+    Integer idUsuarioRegistro,
+    Integer idEmpresa
 ) {
 }
