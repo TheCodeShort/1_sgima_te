@@ -4,6 +4,7 @@ import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
 import com.mantenimiento.sigma_te.services.EquipoService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +35,12 @@ public class EquipoController {
         return equipoService.listarTodos(authentication);
     }
 
+    @GetMapping("/empresa/{idEmpresa}")
+    public ResponseEntity<List<EquipoDTO>> listarPorEmpresa(
+            @PathVariable Integer idEmpresa, Authentication authentication) {
+        return ResponseEntity.ok(equipoService.listarPorEmpresa(idEmpresa, authentication));
+    }
+
     @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
     @GetMapping("/{id}")
     public EquipoDTO buscarPorId(@PathVariable Integer id, Authentication authentication) {
@@ -62,3 +69,6 @@ public class EquipoController {
         equipoService.eliminar(id, authentication);
     }
 }
+
+
+
