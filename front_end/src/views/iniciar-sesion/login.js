@@ -82,12 +82,12 @@ function initView(ctx) {
 
       let nombreRolParaPanel = 'operario';
       try {
-        const roles = await RolService.getRoles();
-        const rolEncontrado = Array.isArray(roles)
-          ? roles.find((r) => Number(r.idRol) === Number(result.role))
-          : null;
-        if (rolEncontrado && rolEncontrado.nombreRol) {
-          nombreRolParaPanel = rolEncontrado.nombreRol;
+        const rolResp = await fetchConAuth(`${window.API_BASE_URL}/usuarios/mi-perfil/rol`);
+        if (rolResp.ok) {
+          const datosRol = await rolResp.json();
+          if (datosRol.nombreRol) {
+            nombreRolParaPanel = datosRol.nombreRol;
+          }
         }
       } catch (err) {
         console.error('No se pudo resolver el nombre del rol:', err);

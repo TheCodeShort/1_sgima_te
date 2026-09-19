@@ -306,6 +306,12 @@ public class EmpresaService {
     @Transactional
     public EmpresaResponseDTO cambiarEstado(Integer id, CambiarEstadoDTO request) {
         Empresa empresa = buscarPorIdParaEntidad(id);
+
+        if (empresa.getNombreEmpresa() != null && empresa.getNombreEmpresa().startsWith("Eliminado - ")) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Esta empresa fue eliminada y no puede reactivarse desde aquí.");
+        }
+
         empresa.setEstadoEmpresa(request.activo());
         Empresa empresaActualizada = empresaRepository.save(empresa);
 
@@ -314,12 +320,7 @@ public class EmpresaService {
                 empresaActualizada.getNombreEmpresa(),
                 empresaActualizada.getEstadoEmpresa(),
                 empresaActualizada.getFechaCreacion(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                null, null, null, null, null, null
         );
     }
 }

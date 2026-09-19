@@ -88,6 +88,13 @@ const ROUTES = {
     js: 'gestion.js',
     css: 'gestion.css',
   },
+  'empresas': {
+    path: 'src/views/empresas',
+    title: 'Empresas',
+    group: 'admin',
+    js: 'empresas.js',
+    css: 'empresas.css',
+  },
   'estado-sincronizacion': {
     path: 'src/views/estado-sincronizacion',
     title: 'Estado de Sincronización',
@@ -110,6 +117,7 @@ const Router = {
   currentRoute: null,
   currentScript: null,
   viewStyleEl: null,
+  loadToken: 0,
 
   init() {
     this.initTheme();
@@ -334,7 +342,7 @@ const Router = {
     const adminSection = document.getElementById('nav-section-admin');
     if (adminSection) adminSection.style.display = (isAuth && isAdmin) ? '' : 'none';
 
-    const adminButtons = document.querySelectorAll('.sidebar-nav button[data-route="gestion-usuarios-roles"], .sidebar-nav button[data-route="estado-sincronizacion"]');
+    const adminButtons = document.querySelectorAll('.sidebar-nav button[data-route="gestion-usuarios-roles"], .sidebar-nav button[data-route="estado-sincronizacion"], .sidebar-nav button[data-route="empresas"]');
     adminButtons.forEach(btn => {
       btn.style.display = (isAuth && isAdmin) ? '' : 'none';
     });
@@ -417,6 +425,7 @@ const Router = {
   async loadView(routeKey) {
     const route = ROUTES[routeKey];
     if (!route) return;
+    const miToken = ++this.loadToken;
 
     this.currentRoute = routeKey;
     this.updateActiveNav(routeKey);
@@ -439,6 +448,7 @@ const Router = {
       const templateRes = await fetch(`${route.path}/index.html`);
       if (!templateRes.ok) throw new Error(`No se pudo cargar la plantilla de ${route.title}`);
       const html = await templateRes.text();
+      if (miToken !== this.loadToken) return;
       root.innerHTML = html;
 
       const styleLink = document.createElement('link');
@@ -460,6 +470,7 @@ const Router = {
         this.currentScript = script;
       });
 
+      if (miToken !== this.loadToken) return;
       if (typeof window.initView === 'function') {
         window.initView({ route: routeKey, navigate: (r) => this.navigate(r) });
       }
