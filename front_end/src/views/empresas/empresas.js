@@ -1,7 +1,11 @@
+(function () {
 let empresasCache = [];
 let modalEmpresa = null;
 let formEmpresa = null;
 let wizardEmpresa = null;
+let modalEditarEmpresa = null;
+let formEditarEmpresa = null;
+let confirmacionSinPermisosPendiente = false;
 
 async function cargarEmpresas(root) {
   const tbody = root.querySelector('#tabla-empresas-body');
@@ -141,9 +145,44 @@ async function cargarCheckboxesPermisosEmpresa(root) {
   }
 }
 
+async function cargarCheckboxesPermisosEditarEmpresa(root, idEmpresa) {
+  const contenedor = root.querySelector('#permisos-checkboxes-editar-empresa');
+  if (!contenedor) return;
+  try {
+    const permisos = await PermisoService.getPermisos();
+    const empresa = await EmpresaService.getEmpresaPorId(idEmpresa);
+    const permisosHabilitados = Array.isArray(empresa.permisosHabilitados) ? empresa.permisosHabilitados : [];
+    if (Array.isArray(permisos)) {
+      let html = '';
+      permisos.forEach((permiso) => {
+        const idPermiso = permiso.idPermiso ?? permiso.id;
+        const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
+        const estaAsignado = permisosHabilitados.includes(nombrePermiso);
+        html += `
+          <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
+            <input type="checkbox" class="checkbox-permiso-empresa rounded border-outline-variant"
+                   data-id-permiso="${idPermiso}" ${estaAsignado ? 'checked' : ''}/>
+            ${nombrePermiso}
+          </label>
+        `;
+      });
+      contenedor.innerHTML = html;
+    }
+  } catch (err) {
+    console.error(err);
+    contenedor.innerHTML = '<p class="text-error text-body-sm">No se pudieron cargar los permisos.</p>';
+  }
+}
+
 function cerrarModalEmpresa() {
   if (modalEmpresa) modalEmpresa.style.display = 'none';
   if (modalEmpresa) modalEmpresa.setAttribute('aria-hidden', 'true');
+  confirmacionSinPermisosPendiente = false;
+}
+
+function cerrarModalEditarEmpresa() {
+  if (modalEditarEmpresa) modalEditarEmpresa.style.display = 'none';
+  if (modalEditarEmpresa) modalEditarEmpresa.setAttribute('aria-hidden', 'true');
 }
 
 function initView(ctx) {
@@ -152,6 +191,8 @@ function initView(ctx) {
 
   modalEmpresa = root.querySelector('#modal-empresa');
   formEmpresa = root.querySelector('#form-empresa');
+  modalEditarEmpresa = root.querySelector('#modal-editar-empresa');
+  formEditarEmpresa = root.querySelector('#form-editar-empresa');
 
   const btnNueva = root.querySelector('#btn-nueva-empresa');
   if (btnNueva) {
@@ -159,6 +200,7 @@ function initView(ctx) {
       if (formEmpresa) formEmpresa.reset();
       const errorCampos = root.querySelectorAll('[id^="error-empresa"]');
       errorCampos.forEach((p) => { p.style.display = 'none'; });
+      confirmacionSinPermisosPendiente = false;
       wizardEmpresa = initWizard({
         root: modalEmpresa,
         totalPasos: 2,
@@ -214,21 +256,31 @@ function initView(ctx) {
             if (!valido) return false;
           }
 
-          if (paso === 2) {
+if (paso === 2) {
             const checkboxes = root.querySelectorAll('#permisos-checkboxes-empresa .checkbox-permiso-empresa');
             const algunoMarcado = Array.from(checkboxes).some((cb) => cb.checked);
             const pErr = root.querySelector('#error-empresa-permisos');
             const btnFinalizarEl = root.querySelector('[data-wizard-finalizar]');
 
-            if (!algunoMarcado) {
-              if (pErr) pErr.style.display = 'block';
-              if (btnFinalizarEl) btnFinalizarEl.textContent = 'Crear Empresa';
-              return false;
+            if (algunoMarcado) {
+                if (pErr) pErr.style.display = 'none';
+                if (btnFinalizarEl) btnFinalizarEl.textContent = 'Crear Empresa';
+                confirmacionSinPermisosPendiente = false;
+                return true;
             }
 
+            if (!confirmacionSinPermisosPendiente) {
+                confirmacionSinPermisosPendiente = true;
+                if (pErr) pErr.style.display = 'block';
+                if (btnFinalizarEl) btnFinalizarEl.textContent = 'Confirmar sin permisos';
+                return false;
+            }
+
+            confirmacionSinPermisosPendiente = false;
             if (pErr) pErr.style.display = 'none';
+            if (btnFinalizarEl) btnFinalizarEl.textContent = 'Crear Empresa';
             return true;
-          }
+        }
 
           return true;
         },
@@ -254,7 +306,7 @@ function initView(ctx) {
             cerrarModalEmpresa();
             await cargarEmpresas(root);
           } catch (err) {
-            alert(err.message);
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
           }
         }
       });
@@ -276,6 +328,75 @@ function initView(ctx) {
     btnCancelar.addEventListener('click', () => { cerrarModalEmpresa(); });
   }
 
+  const btnCerrarEditar = root.querySelector('#btn-cerrar-modal-editar-empresa');
+  if (btnCerrarEditar) {
+    btnCerrarEditar.addEventListener('click', () => { cerrarModalEditarEmpresa(); });
+  }
+
+  const btnCancelarEditar = root.querySelector('#btn-cancelar-modal-editar-empresa');
+  if (btnCancelarEditar) {
+    btnCancelarEditar.addEventListener('click', () => { cerrarModalEditarEmpresa(); });
+  }
+
+const btnGuardarEditar = root.querySelector('#btn-guardar-editar-empresa');
+  if (btnGuardarEditar) {
+    btnGuardarEditar.addEventListener('click', async () => {
+      const idEmpresa = document.querySelector('#editar-empresa-id').value;
+      const idUsuarioAdmin = document.querySelector('#editar-empresa-id-usuario-admin').value;
+      const idRolAdmin = document.querySelector('#editar-empresa-id-rol-admin').value;
+      const nombreEmpresa = document.querySelector('#editar-empresa-nombre').value.trim();
+      const nombreAdmin = document.querySelector('#editar-empresa-admin-nombre').value.trim();
+      const correoAdmin = document.querySelector('#editar-empresa-admin-correo').value.trim();
+      const password = document.querySelector('#editar-empresa-admin-password').value;
+
+      try {
+        const nombreOriginal = (document.querySelector('#editar-empresa-nombre').dataset.valorOriginal || '').trim();
+        if (nombreEmpresa !== nombreOriginal) {
+          await EmpresaService.actualizarEmpresa(idEmpresa, { nombreEmpresa });
+        }
+
+        if (idUsuarioAdmin) {
+          const idRolNum = Number(idRolAdmin);
+          const nombreCambio = nombreAdmin !== (document.querySelector('#editar-empresa-admin-nombre').dataset.valorOriginal || '').trim();
+          const correoCambio = correoAdmin !== (document.querySelector('#editar-empresa-admin-correo').dataset.valorOriginal || '').trim();
+          const passwordCambio = password !== '';
+
+          if (nombreCambio || correoCambio || passwordCambio) {
+            const datos = {
+              nombreUsuario: nombreAdmin,
+              correoUsuario: correoAdmin,
+              idRol: idRolNum,
+              cuentaActiva: true
+            };
+            if (password !== '') {
+              datos.contrasenaHash = password;
+            }
+            await UsuarioService.actualizarUsuario(idUsuarioAdmin, datos);
+          }
+        } else {
+          const nombreAdminCambio = nombreAdmin !== (document.querySelector('#editar-empresa-admin-nombre').dataset.valorOriginal || '').trim();
+          const correoAdminCambio = correoAdmin !== (document.querySelector('#editar-empresa-admin-correo').dataset.valorOriginal || '').trim();
+          const passwordCambio = password !== '';
+          if (nombreAdminCambio || correoAdminCambio || passwordCambio) {
+            await mostrarAlerta({ titulo: 'Advertencia', mensaje: 'No se encontró el administrador de esta empresa. Los cambios en sus datos no se guardaron.' });
+          }
+        }
+
+        const checkboxesEditar = root.querySelectorAll('#permisos-checkboxes-editar-empresa .checkbox-permiso-empresa');
+        const idsPermisosMarcados = Array.from(checkboxesEditar)
+          .filter((cb) => cb.checked)
+          .map((cb) => Number(cb.dataset.idPermiso));
+        await EmpresaService.actualizarPermisosEmpresa(idEmpresa, idsPermisosMarcados);
+
+        cerrarModalEditarEmpresa();
+        await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Los cambios se guardaron correctamente.' });
+        cargarEmpresas(root);
+      } catch (err) {
+        await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+      }
+    });
+  }
+
   const buscador = root.querySelector('#buscador-empresas');
   if (buscador) {
     buscador.addEventListener('input', () => {
@@ -289,15 +410,31 @@ function initView(ctx) {
       const btnEditar = e.target.closest('.btn-editar-empresa');
       if (btnEditar) {
         const id = btnEditar.dataset.id;
-        const nombreActual = btnEditar.dataset.nombre;
-        const nuevoNombre = prompt('Nuevo nombre para la empresa:', nombreActual);
-        if (nuevoNombre && nuevoNombre.trim() && nuevoNombre.trim() !== nombreActual) {
-          try {
-            await EmpresaService.actualizarEmpresa(id, { nombreEmpresa: nuevoNombre.trim() });
-            cargarEmpresas(root);
-          } catch (err) {
-            alert(err.message);
+        try {
+          const empresa = await EmpresaService.getEmpresaPorId(id);
+          if (modalEditarEmpresa) {
+            document.querySelector('#editar-empresa-id').value = empresa.idEmpresa;
+            document.querySelector('#editar-empresa-id-usuario-admin').value = empresa.idUsuarioAdmin ?? '';
+            document.querySelector('#editar-empresa-id-rol-admin').value = empresa.idRolAdmin ?? '';
+            const inputNombre = document.querySelector('#editar-empresa-nombre');
+            inputNombre.value = empresa.nombreEmpresa ?? '';
+            inputNombre.dataset.valorOriginal = empresa.nombreEmpresa ?? '';
+            const inputAdminNombre = document.querySelector('#editar-empresa-admin-nombre');
+            inputAdminNombre.value = empresa.nombreUsuarioAdmin ?? '';
+            inputAdminNombre.dataset.valorOriginal = empresa.nombreUsuarioAdmin ?? '';
+            const inputAdminCorreo = document.querySelector('#editar-empresa-admin-correo');
+            inputAdminCorreo.value = empresa.correoUsuarioAdmin ?? '';
+            inputAdminCorreo.dataset.valorOriginal = empresa.correoUsuarioAdmin ?? '';
+            document.querySelector('#editar-empresa-admin-password').value = '';
+            document.querySelector('#editar-empresa-admin-password').dataset.valorOriginal = '';
+            await cargarCheckboxesPermisosEditarEmpresa(root, id);
           }
+          if (modalEditarEmpresa) {
+            modalEditarEmpresa.style.display = 'flex';
+            modalEditarEmpresa.setAttribute('aria-hidden', 'false');
+          }
+        } catch (err) {
+          await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
         }
         return;
       }
@@ -306,13 +443,19 @@ function initView(ctx) {
       if (btnEliminar) {
         const id = btnEliminar.dataset.id;
         const nombre = btnEliminar.dataset.nombre;
-        const confirmar = confirm(`¿Eliminar la empresa "${nombre}"? Esta acción desactivará también a todos sus usuarios y no se puede deshacer desde aquí.`);
+        const confirmar = await mostrarConfirmacion({
+          titulo: 'Eliminar Empresa',
+          mensaje: `¿Eliminar la empresa "${nombre}"? Esta acción desactivará también a todos sus usuarios y no se puede deshacer desde aquí.`,
+          textoConfirmar: 'Eliminar',
+          textoCancelar: 'Cancelar',
+          tipo: 'peligro'
+        });
         if (confirmar) {
           try {
             await EmpresaService.eliminarEmpresa(id);
             cargarEmpresas(root);
           } catch (err) {
-            alert(err.message);
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
           }
         }
         return;
@@ -327,15 +470,21 @@ function initView(ctx) {
         const mensajeConfirm = esDesactivar
           ? `¿Desactivar la empresa "${nombre}"? Sus usuarios no podrán acceder al sistema.`
           : `¿Activar la empresa "${nombre}"? Sus usuarios podrán volver a acceder.`;
-        const confirmar = confirm(mensajeConfirm);
-        if (confirmar) {
-          try {
-            await EmpresaService.cambiarEstadoEmpresa(id, { activo: !esDesactivar });
-            cargarEmpresas(root);
-          } catch (err) {
-            alert(err.message);
-          }
+        const confirmar = await mostrarConfirmacion({
+        titulo: esDesactivar ? 'Desactivar Empresa' : 'Activar Empresa',
+        mensaje: mensajeConfirm,
+        textoConfirmar: esDesactivar ? 'Desactivar' : 'Activar',
+        textoCancelar: 'Cancelar',
+        tipo: 'default'
+      });
+      if (confirmar) {
+        try {
+          await EmpresaService.cambiarEstadoEmpresa(id, { activo: !esDesactivar });
+          cargarEmpresas(root);
+        } catch (err) {
+          await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
         }
+      }
         return;
       }
     });
@@ -345,3 +494,4 @@ function initView(ctx) {
 }
 
 window.initView = initView;
+})();

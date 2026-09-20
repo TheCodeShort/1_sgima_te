@@ -1,3 +1,4 @@
+(function () {
 let todosLosUsuariosCache = [];
 let todosLosRolesCache = new Map();
 let todosLosRolesCacheTabla = [];
@@ -481,24 +482,26 @@ function initView(ctx) {
       const btnEliminarRol = e.target.closest('.btn-eliminar-rol');
       if (btnEliminarRol) {
         const { id } = btnEliminarRol.dataset;
-        mostrarPopoverConfirmar({
-          botonAncla: btnEliminarRol,
+        const confirmar = await mostrarConfirmacion({
+          titulo: 'Eliminar Rol',
           mensaje: '¿Eliminar este rol? Esta acción no se puede deshacer.',
-          onConfirmar: async () => {
-            try {
-              await RolService.actualizarRol(id, {
-                nombreRol: `Rol eliminado ${id}`,
-                descripcionRol: '',
-                estadoRol: false
-              });
-              showToast('Rol eliminado correctamente.', 'success');
-              cargarTablaRoles(root);
-              cargarFiltroRoles(root);
-            } catch (err) {
-              alert(err.message);
-            }
-          }
+          textoConfirmar: 'Eliminar',
+          tipo: 'peligro'
         });
+        if (confirmar) {
+          try {
+            await RolService.actualizarRol(id, {
+              nombreRol: `Rol eliminado ${id}`,
+              descripcionRol: '',
+              estadoRol: false
+            });
+            showToast('Rol eliminado correctamente.', 'success');
+            cargarTablaRoles(root);
+            cargarFiltroRoles(root);
+          } catch (err) {
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+          }
+        }
         return;
       }
 
@@ -510,7 +513,12 @@ function initView(ctx) {
           ? '¿Desactivar este rol? Ya no estará disponible para nuevas asignaciones.'
           : '¿Activar este rol? Volverá a estar disponible para nuevas asignaciones.';
 
-        const confirmacion = confirm(mensajeConfirm);
+        const confirmacion = await mostrarConfirmacion({
+          titulo: esDesactivar ? 'Desactivar Rol' : 'Activar Rol',
+          mensaje: mensajeConfirm,
+          textoConfirmar: esDesactivar ? 'Desactivar' : 'Activar',
+          tipo: esDesactivar ? 'peligro' : 'default'
+        });
         if (confirmacion) {
           try {
             await RolService.actualizarRol(id, {
@@ -521,7 +529,7 @@ function initView(ctx) {
             cargarTablaRoles(root);
             cargarFiltroRoles(root);
           } catch (err) {
-            alert(err.message);
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
           }
         }
       }
@@ -539,7 +547,11 @@ function initView(ctx) {
 
       try {
         if (rolEnEdicion !== null) {
-          const confirmar = confirm('¿Guardar los cambios en este rol?');
+          const confirmar = await mostrarConfirmacion({
+            titulo: 'Guardar Cambios',
+            mensaje: '¿Guardar los cambios en este rol?',
+            textoConfirmar: 'Guardar'
+          });
           if (!confirmar) return;
 
           await RolService.actualizarRol(rolEnEdicion, {
@@ -563,13 +575,13 @@ function initView(ctx) {
             const paraAsignar = marcados.filter((id) => !actuales.includes(id));
             const paraQuitar = actuales.filter((id) => !marcados.includes(id));
 
-            await Promise.all([
-              ...paraAsignar.map((idPermiso) => RolPermisoService.asignar(Number(rolEnEdicion), idPermiso)),
-              ...paraQuitar.map((idPermiso) => RolPermisoService.quitar(Number(rolEnEdicion), idPermiso))
-            ]);
-          } catch (err) {
-            alert('Los datos del rol se guardaron, pero hubo un error actualizando permisos: ' + err.message);
-          }
+await Promise.all([
+               ...paraAsignar.map((idPermiso) => RolPermisoService.asignar(Number(rolEnEdicion), idPermiso)),
+               ...paraQuitar.map((idPermiso) => RolPermisoService.quitar(Number(rolEnEdicion), idPermiso))
+             ]);
+           } catch (err) {
+             await mostrarAlerta({ titulo: 'Error', mensaje: 'Los datos del rol se guardaron, pero hubo un error actualizando permisos: ' + err.message });
+           }
 
           showToast('Rol actualizado correctamente.', 'success');
           cerrarModal();
@@ -585,12 +597,12 @@ function initView(ctx) {
             .map((cb) => Number(cb.dataset.idPermiso));
 
           try {
-            await Promise.all(
-              marcados.map((idPermiso) => RolPermisoService.asignar(Number(idRolNuevo), idPermiso))
-            );
-          } catch (err) {
-            alert('El rol se creó correctamente, pero hubo un error asignando permisos: ' + err.message);
-          }
+await Promise.all(
+               marcados.map((idPermiso) => RolPermisoService.asignar(Number(idRolNuevo), idPermiso))
+             );
+           } catch (err) {
+             await mostrarAlerta({ titulo: 'Error', mensaje: 'El rol se creó correctamente, pero hubo un error asignando permisos: ' + err.message });
+           }
 
           showToast('Rol creado correctamente.', 'success');
           cerrarModal();
@@ -598,7 +610,7 @@ function initView(ctx) {
           cargarFiltroRoles(root);
         }
       } catch (err) {
-        alert(err.message);
+        await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
       }
     },
     onPasoCambio: async (paso) => {
@@ -740,6 +752,8 @@ function initView(ctx) {
   if (formUsuario) {
     formUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const btnSubmit = formUsuario.querySelector('button[type="submit"]');
+      if (btnSubmit && btnSubmit.disabled) return;
       const inputNombre = root.querySelector('#usuario-nombre');
       const inputCorreo = root.querySelector('#usuario-correo');
       const selectRol = root.querySelector('#usuario-rol');
@@ -786,6 +800,10 @@ function initView(ctx) {
 
       if (hayErrores) return;
 
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+      }
+
       const datos = {
         nombreUsuario: inputNombre ? inputNombre.value.trim() : '',
         correoUsuario: inputCorreo ? inputCorreo.value.trim() : '',
@@ -803,7 +821,11 @@ function initView(ctx) {
 
       try {
         if (usuarioEnEdicion !== null) {
-          const confirmar = confirm('¿Guardar los cambios en este usuario?');
+          const confirmar = await mostrarConfirmacion({
+            titulo: 'Guardar Cambios',
+            mensaje: '¿Guardar los cambios en este usuario?',
+            textoConfirmar: 'Guardar'
+          });
           if (!confirmar) return;
 
           await UsuarioService.actualizarUsuario(usuarioEnEdicion, datos);
@@ -814,7 +836,11 @@ function initView(ctx) {
         cerrarModalUsuario();
         cargarTablaUsuarios(root);
       } catch (err) {
-        alert(err.message);
+        await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+        }
       }
     });
   }
@@ -858,25 +884,27 @@ function initView(ctx) {
       const btnEliminarUsuario = e.target.closest('.btn-eliminar-usuario');
       if (btnEliminarUsuario) {
         const { id, idrol } = btnEliminarUsuario.dataset;
-        mostrarPopoverConfirmar({
-          botonAncla: btnEliminarUsuario,
+        const confirmar = await mostrarConfirmacion({
+          titulo: 'Eliminar Usuario',
           mensaje: '¿Eliminar este usuario? Esta acción no se puede deshacer.',
-          onConfirmar: async () => {
-            try {
-              await UsuarioService.actualizarUsuario(id, {
-                nombreUsuario: 'Usuario eliminado',
-                correoUsuario: `eliminado_${id}@sistema.local`,
-                idRol: idrol ? parseInt(idrol, 10) : 0,
-                contrasenaHash: '',
-                cuentaActiva: false
-              });
-              showToast('Usuario eliminado correctamente.', 'success');
-              cargarTablaUsuarios(root);
-            } catch (err) {
-              alert(err.message);
-            }
-          }
+          textoConfirmar: 'Eliminar',
+          tipo: 'peligro'
         });
+        if (confirmar) {
+          try {
+            await UsuarioService.actualizarUsuario(id, {
+              nombreUsuario: 'Usuario eliminado',
+              correoUsuario: `eliminado_${id}@sistema.local`,
+              idRol: idrol ? parseInt(idrol, 10) : 0,
+              contrasenaHash: '',
+              cuentaActiva: false
+            });
+            showToast('Usuario eliminado correctamente.', 'success');
+            cargarTablaUsuarios(root);
+          } catch (err) {
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+          }
+        }
         return;
       }
 
@@ -888,7 +916,12 @@ function initView(ctx) {
           ? '¿Desactivar este usuario? Ya no podrá acceder al sistema.'
           : '¿Activar este usuario? Volverá a tener acceso al sistema.';
 
-        const confirmacion = confirm(mensajeConfirm);
+        const confirmacion = await mostrarConfirmacion({
+          titulo: esDesactivar ? 'Desactivar Usuario' : 'Activar Usuario',
+          mensaje: mensajeConfirm,
+          textoConfirmar: esDesactivar ? 'Desactivar' : 'Activar',
+          tipo: esDesactivar ? 'peligro' : 'default'
+        });
         if (confirmacion) {
           try {
             await UsuarioService.actualizarUsuario(id, {
@@ -900,7 +933,7 @@ function initView(ctx) {
             });
             cargarTablaUsuarios(root);
           } catch (err) {
-            alert(err.message);
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
           }
         }
       }
@@ -933,3 +966,4 @@ function initView(ctx) {
 }
 
 window.initView = initView;
+})();

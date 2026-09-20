@@ -56,15 +56,26 @@ function initWizard(config) {
     });
   }
 
-  if (btnFinalizar) {
+if (btnFinalizar) {
     btnFinalizar.addEventListener('click', async () => {
-      if (typeof validarPaso === 'function') {
-        const valido = await validarPaso(pasoActual);
-        if (!valido) return;
-      }
-      if (typeof onFinalizar === 'function') onFinalizar();
+        if (btnFinalizar.disabled) return;
+        if (typeof validarPaso === 'function') {
+            const valido = await validarPaso(pasoActual);
+            if (!valido) return;
+        }
+        if (typeof onFinalizar === 'function') {
+            btnFinalizar.disabled = true;
+            const textoOriginal = btnFinalizar.textContent;
+            btnFinalizar.textContent = 'Guardando...';
+            try {
+                await onFinalizar();
+            } finally {
+                btnFinalizar.disabled = false;
+                btnFinalizar.textContent = textoOriginal;
+            }
+        }
     });
-  }
+}
 
   function reiniciar() {
     pasoActual = 1;

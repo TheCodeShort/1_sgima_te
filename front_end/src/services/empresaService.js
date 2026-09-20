@@ -66,6 +66,19 @@ const EmpresaService = {
     }
     if (response.status === 204) { return; }
     return await response.json();
+  },
+
+  async actualizarPermisosEmpresa(id, permisosIds) {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/empresas/${id}/permisos`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ permisosIds })
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al actualizar permisos: ${response.status}`);
+    }
+    return await response.json();
   }
 };
 

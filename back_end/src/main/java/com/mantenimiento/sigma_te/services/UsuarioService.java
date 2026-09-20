@@ -94,6 +94,11 @@ public class UsuarioService {
                             HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
         }
 
+        String correoLimpio = request.correoUsuario() != null ? request.correoUsuario().trim() : null;
+        if (correoLimpio != null && usuarioRepository.existsByCorreoUsuario(correoLimpio)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
+        }
+
         Usuario usuario = Usuario.builder()
                 .empresa(empresa)
                 .nombreUsuario(request.nombreUsuario())
@@ -140,15 +145,16 @@ public class UsuarioService {
             if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
             }
-        } else {
+        } else if (!tenantContext.esAdminGlobalAutenticado(authentication)) {
             if (rol.getEmpresa() != null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado.");
             }
         }
 
-        if (request.correoUsuario() != null && !request.correoUsuario().isBlank()
-                && !request.correoUsuario().equals(usuario.getCorreoUsuario())
-                && usuarioRepository.existsByCorreoUsuario(request.correoUsuario())) {
+        String correoLimpio = request.correoUsuario() != null ? request.correoUsuario().trim() : null;
+        if (correoLimpio != null
+                && !correoLimpio.equals(usuario.getCorreoUsuario())
+                && usuarioRepository.existsByCorreoUsuario(correoLimpio)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
         }
 

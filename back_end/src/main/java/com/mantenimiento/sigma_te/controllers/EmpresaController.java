@@ -2,6 +2,7 @@ package com.mantenimiento.sigma_te.controllers;
 
 import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaListadoDTO;
+import com.mantenimiento.sigma_te.dto.empresa.EmpresaPermisosUpdateDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaRegistroDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaResponseDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaUpdateDTO;
@@ -85,6 +86,16 @@ public class EmpresaController {
             Authentication authentication) {
         validarUsuarioMain(authentication);
         EmpresaResponseDTO dto = empresaService.actualizar(id, request);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping("/{id}/permisos")
+    public ResponseEntity<EmpresaResponseDTO> actualizarPermisos(
+            @PathVariable Integer id,
+            @RequestBody EmpresaPermisosUpdateDTO request,
+            Authentication authentication) {
+        validarUsuarioMain(authentication);
+        EmpresaResponseDTO dto = empresaService.actualizarPermisos(id, request);
         return ResponseEntity.ok(dto);
     }
 

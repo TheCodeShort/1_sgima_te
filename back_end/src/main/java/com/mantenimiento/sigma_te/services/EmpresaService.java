@@ -2,6 +2,7 @@ package com.mantenimiento.sigma_te.services;
 
 import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaListadoDTO;
+import com.mantenimiento.sigma_te.dto.empresa.EmpresaPermisosUpdateDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaRegistroDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaResponseDTO;
 import com.mantenimiento.sigma_te.dto.empresa.EmpresaUpdateDTO;
@@ -35,6 +36,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -108,9 +110,8 @@ public class EmpresaService {
         }
 
         List<Permiso> permisosHabilitados = resolverPermisos(request);
-        if (permisosHabilitados.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Debe habilitar al menos un permiso para la empresa.");
-        }
+        // Se permite crear una empresa sin permisos habilitados — útil 
+        // para registrar clientes en negociación antes de confirmar su plan.
 
         Empresa empresa = Empresa.builder()
                 .nombreEmpresa(nombreEmpresaLimpio)
@@ -236,17 +237,40 @@ public class EmpresaService {
     public EmpresaResponseDTO buscarPorId(Integer id) {
         Empresa empresa = empresaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada."));
+
+        Integer idUsuarioAdmin = null;
+        String nombreUsuarioAdmin = null;
+        String correoUsuarioAdmin = null;
+        Integer idRolAdmin = null;
+        String nombreRolAdmin = null;
+
+        Optional<Rol> rolProtegido = rolRepository.findByEmpresa_IdEmpresaAndEsProtegidoTrue(id);
+        if (rolProtegido.isPresent()) {
+            Rol rol = rolProtegido.get();
+            idRolAdmin = rol.getIdRol();
+            nombreRolAdmin = rol.getNombreRol();
+
+            Optional<Usuario> admin = usuarioRepository.findByRol_IdRol(rol.getIdRol());
+            if (admin.isPresent()) {
+                idUsuarioAdmin = admin.get().getIdUsuario();
+                nombreUsuarioAdmin = admin.get().getNombreUsuario();
+                correoUsuarioAdmin = admin.get().getCorreoUsuario();
+            }
+        }
+
+        List<String> nombresPermisos = empresaPermisoRepository.findNombresPermisoByIdEmpresa(id);
+
         return new EmpresaResponseDTO(
                 empresa.getIdEmpresa(),
                 empresa.getNombreEmpresa(),
                 empresa.getEstadoEmpresa(),
                 empresa.getFechaCreacion(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                idUsuarioAdmin,
+                nombreUsuarioAdmin,
+                correoUsuarioAdmin,
+                idRolAdmin,
+                nombreRolAdmin,
+                nombresPermisos
         );
     }
 
@@ -321,6 +345,37 @@ public class EmpresaService {
                 empresaActualizada.getEstadoEmpresa(),
                 empresaActualizada.getFechaCreacion(),
                 null, null, null, null, null, null
+        );
+    }
+
+    @Transactional
+    public EmpresaResponseDTO actualizarPermisos(Integer id, EmpresaPermisosUpdateDTO request) {
+        Empresa empresa = buscarPorIdParaEntidad(id);
+
+        empresaPermisoRepository.deleteById_IdEmpresa(id);
+
+        List<Integer> idsNuevos = request.permisosIds() != null ? request.permisosIds() : List.of();
+        for (Integer idPermiso : idsNuevos) {
+            if (!permisoRepository.existsById(idPermiso)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permiso no encontrado con ID: " + idPermiso);
+            }
+            EmpresaPermisoId empresaPermisoId = new EmpresaPermisoId(id, idPermiso);
+            EmpresaPermiso empresaPermiso = EmpresaPermiso.builder()
+                    .id(empresaPermisoId)
+                    .fechaAsignacion(LocalDateTime.now())
+                    .build();
+            empresaPermisoRepository.save(empresaPermiso);
+        }
+
+        List<String> nombresPermisos = empresaPermisoRepository.findNombresPermisoByIdEmpresa(id);
+
+        return new EmpresaResponseDTO(
+                empresa.getIdEmpresa(),
+                empresa.getNombreEmpresa(),
+                empresa.getEstadoEmpresa(),
+                empresa.getFechaCreacion(),
+                null, null, null, null, null,
+                nombresPermisos
         );
     }
 }

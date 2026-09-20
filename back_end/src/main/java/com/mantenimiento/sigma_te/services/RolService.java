@@ -66,6 +66,15 @@ public class RolService {
             empresa = empresaRepository.findById(idEmpresaActual)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Empresa no encontrada con ID: " + idEmpresaActual));
+        } else {
+            boolean existeNombreGlobal = rolRepository.findByEmpresaIsNull().stream()
+                    .anyMatch(r -> r.getNombreRol() != null
+                            && r.getNombreRol().equalsIgnoreCase(request.nombreRol())
+                            && Boolean.TRUE.equals(r.getEstadoRol()));
+            if (existeNombreGlobal) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Ya existe un rol global activo con ese nombre.");
+            }
         }
 
         Rol rol = Rol.builder()

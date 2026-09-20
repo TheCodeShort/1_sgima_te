@@ -4,6 +4,7 @@ import com.mantenimiento.sigma_te.dto.usuario.MiPerfilRequestDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioCambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioDTO;
 import com.mantenimiento.sigma_te.dto.usuario.UsuarioRequestDTO;
+import com.mantenimiento.sigma_te.models.Rol;
 import com.mantenimiento.sigma_te.models.Usuario;
 import com.mantenimiento.sigma_te.services.RolPermisoService;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
@@ -153,7 +154,12 @@ public class UsuarioController {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correoActual)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado."));
 
-        return Map.of("nombreRol", usuario.getRol().getNombreRol());
+        Rol rol = usuario.getRol();
+        String nombreVisible = (Boolean.TRUE.equals(rol.getEsProtegido()) && rol.getEmpresa() != null)
+                ? "Admin - " + rol.getEmpresa().getNombreEmpresa()
+                : rol.getNombreRol();
+
+        return Map.of("nombreRol", nombreVisible);
     }
 
     @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'gestionar_usuarios')")

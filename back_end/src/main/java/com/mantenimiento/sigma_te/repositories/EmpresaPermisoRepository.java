@@ -12,6 +12,10 @@ import java.util.List;
 @Repository
 public interface EmpresaPermisoRepository extends JpaRepository<EmpresaPermiso, EmpresaPermisoId> {
 
+    List<EmpresaPermiso> findById_IdEmpresa(Integer idEmpresa);
+
+    void deleteById_IdEmpresa(Integer idEmpresa);
+
     @Query("SELECT p.nombrePermiso FROM EmpresaPermiso ep JOIN Permiso p ON p.idPermiso = ep.id.idPermiso WHERE ep.id.idEmpresa = :idEmpresa")
     List<String> findNombresPermisoByIdEmpresa(@Param("idEmpresa") Integer idEmpresa);
 }
