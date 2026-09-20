@@ -14,4 +14,6 @@ public interface RolPermisoRepository extends JpaRepository<RolPermiso, RolPermi
 
     @Query("SELECT p.nombrePermiso FROM RolPermiso rp JOIN Permiso p ON p.idPermiso = rp.id.idPermiso WHERE rp.id.idRol = :idRol")
     List<String> findNombresPermisoByIdRol(@Param("idRol") Integer idRol);
+
+    void deleteById_IdRol(Integer idRol);
 }

@@ -242,7 +242,8 @@ public class UsuarioService {
                 usuario.getRequiereCambioPassword(),
                 usuario.getIntentosFallidos(),
                 usuario.getBloqueadoHasta(),
-                usuario.getUltimoAcceso()
+                usuario.getUltimoAcceso(),
+                usuario.getEmpresa() != null ? usuario.getEmpresa().getIdEmpresa() : null
         );
     }
 }

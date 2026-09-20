@@ -13,6 +13,7 @@ public record UsuarioDTO(
     Boolean requiereCambioPassword,
     Integer intentosFallidos,
     LocalDateTime bloqueadoHasta,
-    LocalDateTime ultimoAcceso
+    LocalDateTime ultimoAcceso,
+    Integer idEmpresa
 ) {
 }

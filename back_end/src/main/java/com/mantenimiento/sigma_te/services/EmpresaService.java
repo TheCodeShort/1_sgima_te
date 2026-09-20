@@ -367,6 +367,22 @@ public class EmpresaService {
             empresaPermisoRepository.save(empresaPermiso);
         }
 
+        // NUEVO: sincronizar el rol protegido de esta empresa con el mismo
+        // conjunto de permisos, para que el sub-admin realmente los tenga.
+        Optional<Rol> rolProtegido = rolRepository.findByEmpresa_IdEmpresaAndEsProtegidoTrue(id);
+        if (rolProtegido.isPresent()) {
+            Integer idRol = rolProtegido.get().getIdRol();
+            rolPermisoRepository.deleteById_IdRol(idRol);
+            for (Integer idPermiso : idsNuevos) {
+                RolPermisoId rolPermisoId = new RolPermisoId(idRol, idPermiso);
+                RolPermiso rolPermiso = RolPermiso.builder()
+                        .id(rolPermisoId)
+                        .fechaAsignacion(LocalDateTime.now())
+                        .build();
+                rolPermisoRepository.save(rolPermiso);
+            }
+        }
+
         List<String> nombresPermisos = empresaPermisoRepository.findNombresPermisoByIdEmpresa(id);
 
         return new EmpresaResponseDTO(

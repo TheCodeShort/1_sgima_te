@@ -82,6 +82,7 @@ public class DataInitializer implements CommandLineRunner {
         if (permisoRepository.count() == 0) {
             String[][] permisosBase = {
                 {"ver_equipos", "Equipos"},
+                {"ver_detalle_equipo", "Equipos"},
                 {"registrar_falla", "Fallas"},
                 {"registrar_mantenimiento", "Mantenimiento"},
                 {"cargar_evidencia", "Evidencia"},
