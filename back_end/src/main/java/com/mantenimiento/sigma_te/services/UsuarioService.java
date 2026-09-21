@@ -47,7 +47,9 @@ public class UsuarioService {
                 ? usuarioRepository.findByEmpresaIsNull()
                 : usuarioRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
 
+        String correoActual = authentication != null ? authentication.getName() : null;
         return usuarios.stream()
+                .filter(u -> correoActual == null || !correoActual.equals(u.getCorreoUsuario()))
                 .map(this::convertirADto)
                 .toList();
     }
@@ -128,6 +130,12 @@ public class UsuarioService {
             }
         }
 
+        Usuario usuarioAutenticado = usuarioRepository.findByCorreoUsuario(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autenticado."));
+        if (usuario.getIdUsuario().equals(usuarioAutenticado.getIdUsuario())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes modificar tu propio usuario desde aquí. Usa Mi Perfil.");
+        }
+
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
             Integer idEmpresaDelRol = usuario.getRol().getEmpresa() != null
                     ? usuario.getRol().getEmpresa().getIdEmpresa() : null;
@@ -182,6 +190,12 @@ public class UsuarioService {
             if (!tenantContext.coincideEmpresa(idEmpresaUsuario, idEmpresaActual)) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado.");
             }
+        }
+
+        Usuario usuarioAutenticado = usuarioRepository.findByCorreoUsuario(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No autenticado."));
+        if (usuario.getIdUsuario().equals(usuarioAutenticado.getIdUsuario())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes eliminar tu propia cuenta.");
         }
 
         if (usuario.getRol() != null && Boolean.TRUE.equals(usuario.getRol().getEsProtegido())) {
