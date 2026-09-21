@@ -172,8 +172,6 @@ function pintarTablaUsuarios(root, usuarios, rolesMap, idsRolesProtegidos = new 
 
   usuarios = usuarios.filter((u) => !(u.correoUsuario || '').startsWith('eliminado_'));
 
-  usuarios = usuarios.filter((u) => u.idEmpresa === null || u.idEmpresa === undefined);
-
   let rowsHtml = '';
   usuarios.forEach((usuario, index) => {
     const idUsuario = usuario.idUsuario ?? usuario.id;
