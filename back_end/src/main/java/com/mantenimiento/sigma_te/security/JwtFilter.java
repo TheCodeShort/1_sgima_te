@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.security;
 
+import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +20,12 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public JwtFilter(JwtUtil jwtUtil) {
+    public JwtFilter(JwtUtil jwtUtil, UsuarioRepository usuarioRepository) {
         this.jwtUtil = jwtUtil;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -41,6 +44,19 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token)) {
                 String correo = jwtUtil.getCorreoFromToken(token);
                 Integer idRol = jwtUtil.getIdRolFromToken(token);
+
+                if (correo != null) {
+                    boolean cuentaActiva = usuarioRepository.existsByCorreoUsuarioAndCuentaActivaTrue(correo);
+                    boolean empresaDesactivada = usuarioRepository.existsByCorreoUsuarioAndEmpresa_EstadoEmpresaFalse(correo);
+                    if (!cuentaActiva || empresaDesactivada) {
+                        SecurityContextHolder.clearContext();
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write("{\"mensaje\":\"Tu sesión ya no es válida: la cuenta o la empresa fue desactivada.\"}");
+                        return;
+                    }
+                }
 
                 if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + idRol);
