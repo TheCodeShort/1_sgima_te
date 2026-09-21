@@ -33,7 +33,7 @@ public class RolService {
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
 
         List<Rol> roles = idEmpresaActual == null
-                ? rolRepository.findAll()
+                ? rolRepository.findByEmpresaIsNull()
                 : rolRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
 
         return roles.stream()

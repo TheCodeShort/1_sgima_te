@@ -119,7 +119,7 @@ const Router = {
   viewStyleEl: null,
   loadToken: 0,
 
-  init() {
+  async init() {
     this.initTheme();
     window.addEventListener('hashchange', () => this.handleHash());
     document.addEventListener('click', (e) => this.handleNavClick(e));
@@ -132,6 +132,9 @@ const Router = {
         await this.updateSidebarNavigation();
       }
     });
+    if (AppState.isAuthenticated() && (!AppState.permisos || AppState.permisos.length === 0)) {
+      await this.loadUserPermissions();
+    }
     this.handleHash();
   },
 
@@ -259,6 +262,15 @@ const Router = {
 
       // Restringir rutas de administración a administradores
       if (route.group === 'admin' && userRole !== 'admin' && userRole !== 'administrador') {
+        // Excepción: gestion-usuarios-roles permite acceso si tiene al menos uno de los permisos
+        if (routeKey === 'gestion-usuarios-roles') {
+          const permisoStr = 'gestionar_usuarios,gestionar_roles';
+          const requiredPerms = permisoStr.split(',').map(p => p.trim());
+          const hasAccess = requiredPerms.some(p => (AppState.permisos || []).includes(p));
+          if (hasAccess) {
+            return routeKey;
+          }
+        }
         if (typeof showToast === 'function') {
           showToast('Solo el Administrador puede acceder a esta sección.', 'error');
         }
@@ -340,23 +352,33 @@ const Router = {
     // Show/Hide admin section based on role
     const isAdmin = userRole === 'admin' || userRole === 'administrador';
     const adminSection = document.getElementById('nav-section-admin');
-    if (adminSection) adminSection.style.display = (isAuth && isAdmin) ? '' : 'none';
 
     const adminButtons = document.querySelectorAll('.sidebar-nav button[data-route="gestion-usuarios-roles"], .sidebar-nav button[data-route="estado-sincronizacion"], .sidebar-nav button[data-route="empresas"]');
+    let adminVisibleCount = 0;
     adminButtons.forEach(btn => {
-      btn.style.display = (isAuth && isAdmin) ? '' : 'none';
-    });
-
-    // Show/Hide operations section label based on auth
-    const navLabels = document.querySelectorAll('.sidebar-nav .nav-section-label');
-    navLabels.forEach(label => {
-      const text = label.textContent.trim().toLowerCase();
-      if (text === 'operaciones') {
-        label.style.display = isAuth ? '' : 'none';
+      const route = btn.getAttribute('data-route');
+      let show = false;
+      if (!isAuth) {
+        show = false;
+      } else if (route === 'empresas' || route === 'estado-sincronizacion') {
+        show = isAdmin;
+      } else if (route === 'gestion-usuarios-roles') {
+        const permisoStr = btn.getAttribute('data-modulo-permiso');
+        if (permisoStr) {
+          const requiredPerms = permisoStr.split(',').map(p => p.trim());
+          const hasAccess = requiredPerms.some(p => (AppState.permisos || []).includes(p));
+          show = isAdmin || hasAccess;
+        } else {
+          show = isAdmin;
+        }
       }
+      btn.style.display = show ? '' : 'none';
+      if (show) adminVisibleCount++;
     });
+    if (adminSection) adminSection.style.display = (isAuth && adminVisibleCount > 0) ? '' : 'none';
 
-    // Show/Hide operation buttons based on auth AND permissions
+    // Show/Hide operations section label based on visible operation buttons
+    let opsVisibleCount = 0;
     const operationsButtons = document.querySelectorAll('.sidebar-nav button[data-route="equipos"], .sidebar-nav button[data-route="detalle-equipo"], .sidebar-nav button[data-route="registrar-falla"], .sidebar-nav button[data-route="registrar-mantenimiento"], .sidebar-nav button[data-route="cargar-evidencia"]');
     operationsButtons.forEach(btn => {
       if (!isAuth) {
@@ -368,8 +390,18 @@ const Router = {
         const requiredPerms = permisoStr.split(',').map(p => p.trim());
         const hasAccess = requiredPerms.some(p => (AppState.permisos || []).includes(p));
         btn.style.display = hasAccess ? '' : 'none';
+        if (hasAccess) opsVisibleCount++;
       } else {
         btn.style.display = '';
+        opsVisibleCount++;
+      }
+    });
+
+    const navLabels = document.querySelectorAll('.sidebar-nav .nav-section-label');
+    navLabels.forEach(label => {
+      const text = label.textContent.trim().toLowerCase();
+      if (text === 'operaciones') {
+        label.style.display = (isAuth && opsVisibleCount > 0) ? '' : 'none';
       }
     });
 

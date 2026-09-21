@@ -142,21 +142,8 @@ async function cargarCheckboxesPermisos(root, idRol) {
 
     seccion.classList.remove('hidden');
 
-    if (Array.isArray(permisos)) {
-      let html = '';
-      permisos.forEach((permiso) => {
-        const idPermiso = permiso.idPermiso ?? permiso.id;
-        const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
-        const estaAsignado = asignadosSet.has(Number(idPermiso));
-        html += `
-          <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
-            <input type="checkbox" class="checkbox-permiso rounded border-outline-variant"
-                   data-id-permiso="${idPermiso}" ${estaAsignado ? 'checked' : ''}/>
-            ${nombrePermiso}
-          </label>
-        `;
-      });
-      contenedor.innerHTML = html;
+    if (Array.isArray(permisos) && window.PermisosAgrupados) {
+      window.PermisosAgrupados.renderizar(contenedor, permisos, asignadosSet, 'checkbox-permiso');
     }
   } catch (err) {
     console.error(err);
@@ -563,10 +550,9 @@ function initView(ctx) {
           });
 
           try {
-            const checkboxes = root.querySelectorAll('#permisos-checkboxes .checkbox-permiso');
-            const marcados = Array.from(checkboxes)
-              .filter((cb) => cb.checked)
-              .map((cb) => Number(cb.dataset.idPermiso));
+            const marcados = window.PermisosAgrupados
+              ? window.PermisosAgrupados.obtenerIdsMarcados(root.querySelector('#permisos-checkboxes'), 'checkbox-permiso')
+              : [];
 
             const asignaciones = await RolPermisoService.getAsignaciones();
             const asignacionesRol = Array.isArray(asignaciones)
@@ -593,10 +579,9 @@ await Promise.all([
           const respuesta = await RolService.crearRol({ nombreRol, descripcionRol });
           const idRolNuevo = respuesta?.idRol ?? respuesta?.id ?? respuesta;
 
-          const checkboxes = root.querySelectorAll('#permisos-checkboxes .checkbox-permiso');
-          const marcados = Array.from(checkboxes)
-            .filter((cb) => cb.checked)
-            .map((cb) => Number(cb.dataset.idPermiso));
+          const marcados = window.PermisosAgrupados
+            ? window.PermisosAgrupados.obtenerIdsMarcados(root.querySelector('#permisos-checkboxes'), 'checkbox-permiso')
+            : [];
 
           try {
 await Promise.all(

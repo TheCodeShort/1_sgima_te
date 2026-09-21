@@ -1,3 +1,11 @@
+
+
+# Local AI Agents / Skills
+.agents/
+.opencode/
+
+
+
 .idea/
 .vscode/
 .DS_Store

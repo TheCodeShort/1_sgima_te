@@ -124,20 +124,8 @@ async function cargarCheckboxesPermisosEmpresa(root) {
   if (!contenedor) return;
   try {
     const permisos = await PermisoService.getPermisos();
-    if (Array.isArray(permisos)) {
-      let html = '';
-      permisos.forEach((permiso) => {
-        const idPermiso = permiso.idPermiso ?? permiso.id;
-        const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
-        html += `
-          <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
-            <input type="checkbox" class="checkbox-permiso-empresa rounded border-outline-variant"
-                   data-id-permiso="${idPermiso}"/>
-            ${nombrePermiso}
-          </label>
-        `;
-      });
-      contenedor.innerHTML = html;
+    if (Array.isArray(permisos) && window.PermisosAgrupados) {
+      window.PermisosAgrupados.renderizar(contenedor, permisos, new Set(), 'checkbox-permiso-empresa');
     }
   } catch (err) {
     console.error(err);
@@ -152,21 +140,17 @@ async function cargarCheckboxesPermisosEditarEmpresa(root, idEmpresa) {
     const permisos = await PermisoService.getPermisos();
     const empresa = await EmpresaService.getEmpresaPorId(idEmpresa);
     const permisosHabilitados = Array.isArray(empresa.permisosHabilitados) ? empresa.permisosHabilitados : [];
+    const idsAsignados = new Set();
     if (Array.isArray(permisos)) {
-      let html = '';
       permisos.forEach((permiso) => {
-        const idPermiso = permiso.idPermiso ?? permiso.id;
-        const nombrePermiso = permiso.nombrePermiso ?? permiso.nombre;
-        const estaAsignado = permisosHabilitados.includes(nombrePermiso);
-        html += `
-          <label class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface cursor-pointer">
-            <input type="checkbox" class="checkbox-permiso-empresa rounded border-outline-variant"
-                   data-id-permiso="${idPermiso}" ${estaAsignado ? 'checked' : ''}/>
-            ${nombrePermiso}
-          </label>
-        `;
+        const nombre = permiso.nombrePermiso ?? permiso.nombre;
+        if (permisosHabilitados.includes(nombre)) {
+          idsAsignados.add(Number(permiso.idPermiso ?? permiso.id));
+        }
       });
-      contenedor.innerHTML = html;
+    }
+    if (Array.isArray(permisos) && window.PermisosAgrupados) {
+      window.PermisosAgrupados.renderizar(contenedor, permisos, idsAsignados, 'checkbox-permiso-empresa');
     }
   } catch (err) {
     console.error(err);
@@ -257,8 +241,10 @@ function initView(ctx) {
           }
 
 if (paso === 2) {
-            const checkboxes = root.querySelectorAll('#permisos-checkboxes-empresa .checkbox-permiso-empresa');
-            const algunoMarcado = Array.from(checkboxes).some((cb) => cb.checked);
+            const idsMarcados = window.PermisosAgrupados
+              ? window.PermisosAgrupados.obtenerIdsMarcados(root.querySelector('#permisos-checkboxes-empresa'), 'checkbox-permiso-empresa')
+              : [];
+            const algunoMarcado = idsMarcados.length > 0;
             const pErr = root.querySelector('#error-empresa-permisos');
             const btnFinalizarEl = root.querySelector('[data-wizard-finalizar]');
 
@@ -290,10 +276,9 @@ if (paso === 2) {
           const inputAdminCorreo = root.querySelector('#empresa-admin-correo');
           const inputAdminPassword = root.querySelector('#empresa-admin-password');
 
-          const checkboxes = root.querySelectorAll('#permisos-checkboxes-empresa .checkbox-permiso-empresa');
-          const idsPermisosMarcados = Array.from(checkboxes)
-            .filter((cb) => cb.checked)
-            .map((cb) => Number(cb.dataset.idPermiso));
+          const idsPermisosMarcados = window.PermisosAgrupados
+            ? window.PermisosAgrupados.obtenerIdsMarcados(root.querySelector('#permisos-checkboxes-empresa'), 'checkbox-permiso-empresa')
+            : [];
 
           try {
             await EmpresaService.crearEmpresa({
@@ -382,10 +367,9 @@ const btnGuardarEditar = root.querySelector('#btn-guardar-editar-empresa');
           }
         }
 
-        const checkboxesEditar = root.querySelectorAll('#permisos-checkboxes-editar-empresa .checkbox-permiso-empresa');
-        const idsPermisosMarcados = Array.from(checkboxesEditar)
-          .filter((cb) => cb.checked)
-          .map((cb) => Number(cb.dataset.idPermiso));
+        const idsPermisosMarcados = window.PermisosAgrupados
+          ? window.PermisosAgrupados.obtenerIdsMarcados(root.querySelector('#permisos-checkboxes-editar-empresa'), 'checkbox-permiso-empresa')
+          : [];
         await EmpresaService.actualizarPermisosEmpresa(idEmpresa, idsPermisosMarcados);
 
         cerrarModalEditarEmpresa();

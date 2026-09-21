@@ -44,7 +44,7 @@ public class UsuarioService {
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
 
         List<Usuario> usuarios = idEmpresaActual == null
-                ? usuarioRepository.findAll()
+                ? usuarioRepository.findByEmpresaIsNull()
                 : usuarioRepository.findByEmpresa_IdEmpresa(idEmpresaActual);
 
         return usuarios.stream()
