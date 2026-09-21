@@ -78,6 +78,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
 
+        if (Boolean.TRUE.equals(rol.getEsProtegido()) && !tenantContext.esAdminGlobalAutenticado(authentication)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes asignar un rol protegido.");
+        }
+
         if (idEmpresaActual != null) {
             Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
             if (!tenantContext.coincideEmpresa(idEmpresaRol, idEmpresaActual)) {
@@ -147,6 +151,10 @@ public class UsuarioService {
         Rol rol = rolRepository.findById(request.idRol())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Rol no encontrado con ID: " + request.idRol()));
+
+        if (Boolean.TRUE.equals(rol.getEsProtegido()) && !tenantContext.esAdminGlobalAutenticado(authentication)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes asignar un rol protegido.");
+        }
 
         if (idEmpresaActual != null) {
             Integer idEmpresaRol = rol.getEmpresa() != null ? rol.getEmpresa().getIdEmpresa() : null;
