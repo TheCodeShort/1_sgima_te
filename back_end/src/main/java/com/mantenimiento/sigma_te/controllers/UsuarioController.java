@@ -85,7 +85,7 @@ public class UsuarioController {
 
         if (request.contrasenaActual() == null || 
             !passwordEncoder.matches(request.contrasenaActual(), usuario.getContrasenaHash())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "La contraseña actual es incorrecta.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña actual es incorrecta.");
         }
 
         boolean huboCambios = false;

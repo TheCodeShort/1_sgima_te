@@ -111,7 +111,7 @@ function initView(ctx) {
     );
 
     ValidadorHelper.setupFieldValidation(
-      modalCorreo, 'mp-correo-password-actual', 'error-mp-password-actual',
+      modalCorreo, 'mp-correo-password-actual', 'error-mp-correo-password',
       (val) => (!val || val.trim() === '') ? 'La contraseña actual es obligatoria.' : null,
       () => { passwordValido = inputPasswordActual.value.trim() !== ''; actualizarEstadoBoton(); }
     );

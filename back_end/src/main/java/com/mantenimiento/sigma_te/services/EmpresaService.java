@@ -98,6 +98,9 @@ public class EmpresaService {
         if (request.contrasenaHash() == null || request.contrasenaHash().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña inicial es obligatoria.");
         }
+        if (request.contrasenaHash().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres.");
+        }
 
         String nombreEmpresaLimpio = request.nombreEmpresa().trim();
         String correoUsuarioLimpio = request.correoUsuario().trim();

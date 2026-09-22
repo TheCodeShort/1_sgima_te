@@ -105,6 +105,10 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
         }
 
+        if (request.contrasenaHash() == null || request.contrasenaHash().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres.");
+        }
+
         Usuario usuario = Usuario.builder()
                 .empresa(empresa)
                 .nombreUsuario(request.nombreUsuario())
