@@ -868,7 +868,7 @@ await Promise.all(
 
       const btnEliminarUsuario = e.target.closest('.btn-eliminar-usuario');
       if (btnEliminarUsuario) {
-        const { id, idrol } = btnEliminarUsuario.dataset;
+        const { id, idrol, correo } = btnEliminarUsuario.dataset;
         const confirmar = await mostrarConfirmacion({
           titulo: 'Eliminar Usuario',
           mensaje: '¿Eliminar este usuario? Esta acción no se puede deshacer.',
@@ -877,9 +877,13 @@ await Promise.all(
         });
         if (confirmar) {
           try {
+            const correoOriginal = correo || '';
+            const prefijo = `eliminado_${id}_`;
+            const disponibles = 150 - prefijo.length;
+            const correoAnonimizado = prefijo + correoOriginal.slice(0, Math.max(disponibles, 0));
             await UsuarioService.actualizarUsuario(id, {
               nombreUsuario: 'Usuario eliminado',
-              correoUsuario: `eliminado_${id}@sistema.local`,
+              correoUsuario: correoAnonimizado,
               idRol: idrol ? parseInt(idrol, 10) : 0,
               contrasenaHash: '',
               cuentaActiva: false
