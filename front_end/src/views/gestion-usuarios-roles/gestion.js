@@ -212,7 +212,7 @@ function pintarTablaUsuarios(root, usuarios, rolesMap, idsRolesProtegidos = new 
               <span class="material-symbols-outlined text-[18px]">edit</span>
             </button>
             <button class="btn-eliminar-usuario p-1.5 text-on-surface-variant hover:text-error hover:bg-surface-container-highest rounded transition-colors"
-                    data-id="${idUsuario}" data-idrol="${idRol ?? ''}" title="Eliminar">
+                    data-id="${idUsuario}" data-correo="${correo}" data-idrol="${idRol ?? ''}" title="Eliminar">
               <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
             ${esActivo ? `

@@ -1,5 +1,5 @@
 const REGEX_NOMBRE = /^[A-Za-zÀ-ÖØ-öø-ÿñÑ\s\-_]{3,100}$/;
-const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const REGEX_EMAIL = /^[^\s@.]+(\.[^\s@.]+)*@[^\s@.]+(\.[^\s@.]+)+$/;
 
 function mostrarErrorCampo(root, idMensaje, texto, tipo) {
   const el = root.querySelector(`#${idMensaje}`);
