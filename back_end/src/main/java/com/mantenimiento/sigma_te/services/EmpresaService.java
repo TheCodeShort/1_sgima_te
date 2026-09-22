@@ -42,6 +42,9 @@ import java.util.Set;
 @Service
 public class EmpresaService {
 
+    private static final java.util.regex.Pattern REGEX_EMAIL =
+            java.util.regex.Pattern.compile("^[^\\s@.]+(\\.[^\\s@.]+)*@[^\\s@.]+(\\.[^\\s@.]+)+$");
+
     private final EmpresaRepository empresaRepository;
     private final EmpresaPermisoRepository empresaPermisoRepository;
     private final RolRepository rolRepository;
@@ -94,6 +97,9 @@ public class EmpresaService {
         }
         if (request.correoUsuario() == null || request.correoUsuario().trim().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El correo del usuario administrador es obligatorio.");
+        }
+        if (!REGEX_EMAIL.matcher(request.correoUsuario().trim()).matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El formato del correo electrónico no es válido.");
         }
         if (request.contrasenaHash() == null || request.contrasenaHash().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña inicial es obligatoria.");

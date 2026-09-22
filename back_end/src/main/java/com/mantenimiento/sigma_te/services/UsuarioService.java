@@ -22,6 +22,9 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
+    private static final java.util.regex.Pattern REGEX_EMAIL =
+            java.util.regex.Pattern.compile("^[^\\s@.]+(\\.[^\\s@.]+)*@[^\\s@.]+(\\.[^\\s@.]+)+$");
+
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
@@ -101,6 +104,9 @@ public class UsuarioService {
         }
 
         String correoLimpio = request.correoUsuario() != null ? request.correoUsuario().trim() : null;
+        if (correoLimpio == null || !REGEX_EMAIL.matcher(correoLimpio).matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El formato del correo electrónico no es válido.");
+        }
         if (correoLimpio != null && usuarioRepository.existsByCorreoUsuario(correoLimpio)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este correo ya está registrado por otro usuario.");
         }
@@ -172,6 +178,9 @@ public class UsuarioService {
         }
 
         String correoLimpio = request.correoUsuario() != null ? request.correoUsuario().trim() : null;
+        if (correoLimpio == null || !REGEX_EMAIL.matcher(correoLimpio).matches()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El formato del correo electrónico no es válido.");
+        }
         if (correoLimpio != null
                 && !correoLimpio.equals(usuario.getCorreoUsuario())
                 && usuarioRepository.existsByCorreoUsuario(correoLimpio)) {
