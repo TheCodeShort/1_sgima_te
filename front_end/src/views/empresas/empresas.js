@@ -64,7 +64,7 @@ function pintarTablaEmpresas(root, empresas) {
     const bgClass = index % 2 === 0 ? 'bg-surface-base' : 'bg-surface-dim';
 
     rowsHtml += `
-      <tr class="h-row-height-dense ${bgClass} hover:bg-surface-container transition-colors group">
+      <tr class="h-row-height-dense ${bgClass} hover:bg-surface-container transition-colors group" data-id-empresa="${empresa.idEmpresa}" data-nombre-empresa="${nombre}">
         <td class="px-4 align-middle">
           <div class="font-semibold text-on-surface">${nombre}</div>
         </td>
@@ -391,6 +391,15 @@ const btnGuardarEditar = root.querySelector('#btn-guardar-editar-empresa');
   const tbody = root.querySelector('#tabla-empresas-body');
   if (tbody) {
     tbody.addEventListener('click', async (e) => {
+      if (!e.target.closest('button')) {
+        const fila = e.target.closest('tr[data-id-empresa]');
+        if (fila) {
+          EmpresaContext.set(fila.dataset.idEmpresa, fila.dataset.nombreEmpresa);
+          ctx.navigate('equipos');
+          return;
+        }
+      }
+
       const btnEditar = e.target.closest('.btn-editar-empresa');
       if (btnEditar) {
         const id = btnEditar.dataset.id;

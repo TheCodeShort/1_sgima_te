@@ -3,16 +3,24 @@
 
 <!-- Page Content Canvas -->
 <div class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 mb-6">
+<span data-nav="empresas" class="text-body-md font-body-md text-on-surface-variant cursor-pointer hover:text-primary">Empresas</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
+<span id="breadcrumb-nombre-empresa" class="text-body-md font-body-md text-on-surface-variant"></span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
+<span class="text-body-md font-body-md text-on-surface">Equipos</span>
+</div>
 <!-- Page Header -->
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
 <div>
 <h2 class="text-display-id font-display-id text-on-surface">Lista de Equipos</h2>
 <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Gestione y monitoree el estado de la maquinaria industrial.</p>
 </div>
-<button class="bg-primary text-on-primary rounded font-body-sm text-body-sm font-semibold px-4 py-2 hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-2 shadow-sm whitespace-nowrap">
-<span class="material-symbols-outlined text-[18px]">add_circle</span>
-                    Agregar Equipo
-                </button>
+<button class="bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="text-body-md font-body-md font-semibold">Nuevo Equipo</span>
+</button>
 </div>
 <!-- Filters Toolbar -->
 <div class="flex flex-col lg:flex-row gap-4 mb-4 bg-surface-card p-3 rounded border border-outline-variant shadow-sm">
@@ -63,123 +71,10 @@
 <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider text-right">Acciones</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/50">
-<!-- Row 1: Operativo -->
-<tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
-<td class="px-4 py-2">
-<div class="flex items-center">
-<div class="w-1 h-full absolute left-0 bg-success/0 group-hover:bg-success transition-colors"></div>
-<span class="text-data-table font-data-table font-bold text-on-surface font-mono">PMP-1024</span>
-</div>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface">Bomba Centrífuga Principal</td>
-<td class="px-4 py-2">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-status-micro font-status-micro bg-success/10 text-success border border-success/20 uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-success mr-1.5"></span>
-                                        Operativo
-                                    </span>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Planta Norte - Sec A</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Hace 5 min</td>
-<td class="px-4 py-2 text-right">
-<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Ver detalle" data-action="detalle-equipo">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 2: En Falla -->
-<tr class="h-row-height-dense bg-error/5 hover:bg-surface-container-highest transition-colors group">
-<td class="px-4 py-2">
-<div class="flex items-center relative h-full">
-<div class="w-1 h-[40px] absolute -left-4 top-1/2 -translate-y-1/2 bg-error"></div>
-<span class="text-data-table font-data-table font-bold text-on-surface font-mono">CMP-058</span>
-</div>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface">Compresor de Aire Alta Presión</td>
-<td class="px-4 py-2">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-status-micro font-status-micro bg-error/10 text-error border border-error/20 uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5 animate-pulse"></span>
-                                        En Falla
-                                    </span>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Taller Central</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Hace 2 horas</td>
-<td class="px-4 py-2 text-right">
-<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Ver detalle" data-action="detalle-equipo">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 3: Mantenimiento -->
-<tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
-<td class="px-4 py-2">
-<div class="flex items-center relative h-full">
-<div class="w-1 h-[40px] absolute -left-4 top-1/2 -translate-y-1/2 bg-warning/0 group-hover:bg-warning transition-colors"></div>
-<span class="text-data-table font-data-table font-bold text-on-surface font-mono">GEN-992</span>
-</div>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface">Generador Eléctrico Auxiliar</td>
-<td class="px-4 py-2">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-status-micro font-status-micro bg-warning/10 text-warning border border-warning/20 uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-warning mr-1.5"></span>
-                                        Mantenimiento
-                                    </span>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Planta Sur - Ext 2</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant text-sync-pending flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">cloud_off</span>
-                                    Desconectado
-                                </td>
-<td class="px-4 py-2 text-right">
-<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Ver detalle" data-action="detalle-equipo">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 4: Operativo -->
-<tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
-<td class="px-4 py-2">
-<div class="flex items-center">
-<div class="w-1 h-full absolute left-0 bg-success/0 group-hover:bg-success transition-colors"></div>
-<span class="text-data-table font-data-table font-bold text-on-surface font-mono">TRF-201</span>
-</div>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface">Transformador Principal 500kVA</td>
-<td class="px-4 py-2">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-status-micro font-status-micro bg-success/10 text-success border border-success/20 uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-success mr-1.5"></span>
-                                        Operativo
-                                    </span>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Subestación 1</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Hace 12 min</td>
-<td class="px-4 py-2 text-right">
-<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Ver detalle" data-action="detalle-equipo">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
-</td>
-</tr>
-<!-- Row 5: Operativo -->
-<tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
-<td class="px-4 py-2">
-<div class="flex items-center">
-<div class="w-1 h-full absolute left-0 bg-success/0 group-hover:bg-success transition-colors"></div>
-<span class="text-data-table font-data-table font-bold text-on-surface font-mono">MOT-505</span>
-</div>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface">Motor Cinta Transportadora B</td>
-<td class="px-4 py-2">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-status-micro font-status-micro bg-success/10 text-success border border-success/20 uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-success mr-1.5"></span>
-                                        Operativo
-                                    </span>
-</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Línea Ensamblaje</td>
-<td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">Hace 1 min</td>
-<td class="px-4 py-2 text-right">
-<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Ver detalle" data-action="detalle-equipo">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</button>
+<tbody id="tabla-equipos-body" class="divide-y divide-outline-variant/50">
+<tr>
+<td colspan="6" class="px-4 py-8 text-center text-on-surface-variant">
+Cargando equipos...
 </td>
 </tr>
 </tbody>
