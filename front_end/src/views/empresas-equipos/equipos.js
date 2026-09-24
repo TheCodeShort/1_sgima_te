@@ -154,13 +154,13 @@ function obtenerDatosFormulario(root) {
   const nombreEquipo = root.querySelector('#nombre-equipo').value.trim();
   const selectTipo = root.querySelector('#tipo-equipo');
   const tipoEquipo = selectTipo.options[selectTipo.selectedIndex]?.text || '';
+  const tipoEquipoFinal = tipoEquipo === 'Otros' ? (root.querySelector('#tipo-otro-texto')?.value.trim() || '') : tipoEquipo;
   const marca = root.querySelector('#marca-equipo').value.trim();
   const modelo = root.querySelector('#modelo-equipo').value.trim();
   const serial = root.querySelector('#serial-equipo').value.trim();
   const pesoMaximo = root.querySelector('#peso-maximo').value;
   const unidadPeso = root.querySelector('#unidad-peso').value;
   const unidadOtraTexto = root.querySelector('#unidad-otra-texto')?.value.trim() || '';
-  const frecuenciaCalibracion = root.querySelector('#frecuencia-calibracion').value;
   const selectEstado = root.querySelector('#estado-equipo');
   const idEstadoEquipo = selectEstado.options[selectEstado.selectedIndex]?.value || '';
   const ubicacion = root.querySelector('#ubicacion-equipo').value.trim();
@@ -183,13 +183,12 @@ function obtenerDatosFormulario(root) {
   return {
     codigoEquipo,
     nombreEquipo,
-    tipoEquipo: tipoEquipo || undefined,
+    tipoEquipo: tipoEquipoFinal || undefined,
     marca,
     modelo,
     serial,
     pesoMaximo: pesoFinal,
     unidadPeso: unidadFinal,
-    frecuenciaCalibracionDias: frecuenciaCalibracion ? parseInt(frecuenciaCalibracion) : undefined,
     idEstadoEquipo: idEstadoEquipo ? Number(idEstadoEquipo) : undefined,
     ubicacion,
     codigoQr,
@@ -237,6 +236,14 @@ function validarFormulario(root) {
   if (!inputTipo.value) {
     ValidadorHelper.mostrarErrorCampo(root, 'error-tipo-equipo', 'Debe seleccionar un tipo de equipo.', 'bloqueante');
     valido = false;
+  } else if ((inputTipo.options[inputTipo.selectedIndex]?.text || '').trim() === 'Otros') {
+    const tipoOtroTexto = root.querySelector('#tipo-otro-texto')?.value.trim() || '';
+    if (!tipoOtroTexto) {
+      ValidadorHelper.mostrarErrorCampo(root, 'error-tipo-equipo', 'Debe especificar el tipo de equipo en el campo de texto.', 'bloqueante');
+      valido = false;
+    } else {
+      ValidadorHelper.limpiarErrorCampo(root, 'error-tipo-equipo');
+    }
   } else {
     ValidadorHelper.limpiarErrorCampo(root, 'error-tipo-equipo');
   }
@@ -278,11 +285,15 @@ function setupModalListeners(root) {
   const inputPeso = root.querySelector('#peso-maximo');
   if (btnPeso && inputPeso) {
     btnPeso.addEventListener('click', () => {
-      btnPesoNoAplicaActivo = true;
-      inputPeso.disabled = true;
+    btnPesoNoAplicaActivo = !btnPesoNoAplicaActivo;
+    inputPeso.disabled = btnPesoNoAplicaActivo;
+    if (btnPesoNoAplicaActivo) {
       inputPeso.value = '';
       btnPeso.classList.add('bg-primary/10', 'text-primary', 'border-primary');
-    });
+    } else {
+      btnPeso.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
+    }
+  });
 
     inputPeso.addEventListener('input', () => {
       if (btnPesoNoAplicaActivo && inputPeso.value.trim() !== '') {
@@ -293,18 +304,38 @@ function setupModalListeners(root) {
     });
   }
 
+  // Listener para mostrar/ocultar campo de texto de tipo "Otros"
+  const selectTipoEl = root.querySelector('#tipo-equipo');
+  if (selectTipoEl) {
+    selectTipoEl.addEventListener('change', () => {
+      const campoTipoOtro = root.querySelector('#campo-tipo-otro');
+      const textoTipoSeleccionado = selectTipoEl.options[selectTipoEl.selectedIndex]?.text || '';
+      if (campoTipoOtro) {
+        campoTipoOtro.style.display = textoTipoSeleccionado.trim() === 'Otros' ? 'block' : 'none';
+        if (textoTipoSeleccionado.trim() === 'Otros') {
+          const inputTipoOtro = root.querySelector('#tipo-otro-texto');
+          if (inputTipoOtro) inputTipoOtro.focus();
+        }
+      }
+    });
+  }
+
   // Botón "No aplica" para unidad
   const btnUnidad = root.querySelector('#btn-unidad-no-aplica');
   const inputUnidad = root.querySelector('#unidad-peso');
   const campoOtraUnidad = root.querySelector('#campo-unidad-otra');
   if (btnUnidad && inputUnidad) {
     btnUnidad.addEventListener('click', () => {
-      btnUnidadNoAplicaActivo = true;
-      inputUnidad.disabled = true;
+    btnUnidadNoAplicaActivo = !btnUnidadNoAplicaActivo;
+    inputUnidad.disabled = btnUnidadNoAplicaActivo;
+    if (btnUnidadNoAplicaActivo) {
       inputUnidad.value = '';
       btnUnidad.classList.add('bg-primary/10', 'text-primary', 'border-primary');
       if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
-    });
+    } else {
+      btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
+    }
+  });
 
     inputUnidad.addEventListener('change', () => {
       if (btnUnidadNoAplicaActivo) {

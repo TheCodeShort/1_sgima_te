@@ -100,6 +100,9 @@ Cargando equipos...
             <select id="tipo-equipo" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
               <option value="">Seleccione un tipo...</option>
             </select>
+            <div id="campo-tipo-otro" style="display:none;" class="space-y-1.5">
+              <input id="tipo-otro-texto" type="text" placeholder="Especifique el tipo de equipo..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+            </div>
             <p id="error-tipo-equipo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
           </div>
 
@@ -158,11 +161,6 @@ Cargando equipos...
               <input id="unidad-otra-texto" type="text" placeholder="Especifique la unidad..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
             </div>
             <p id="error-unidad-peso" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
-          </div>
-
-          <div class="space-y-1.5">
-            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="frecuencia-calibracion">FRECUENCIA DE CALIBRACIÓN (DÍAS)</label>
-            <input id="frecuencia-calibracion" type="number" placeholder="Ej: 30" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
           </div>
         </div>
 
