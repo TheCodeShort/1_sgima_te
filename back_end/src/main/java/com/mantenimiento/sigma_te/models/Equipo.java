@@ -88,4 +88,8 @@ public class Equipo {
     @Column(name = "fecha_registro_equipo", nullable = false)
     @Builder.Default
     private LocalDateTime fechaRegistroEquipo = LocalDateTime.now();
+
+    @Column(name = "activo", nullable = false)
+    @Builder.Default
+    private Boolean activo = true;
 }

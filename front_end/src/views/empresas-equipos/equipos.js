@@ -4,7 +4,10 @@
  */
 
 (function () {
+let equipoEditandoId = null;
+
 function pintarTablaEquipos(root, equipos) {
+  equipos = equipos.filter((eq) => !(eq.nombreEquipo || '').startsWith('Eliminado - '));
   const tbody = root.querySelector('#tabla-equipos-body');
   if (!tbody) return;
   if (!Array.isArray(equipos) || equipos.length === 0) {
@@ -25,6 +28,13 @@ function pintarTablaEquipos(root, equipos) {
     const peso = (equipo.pesoMaximo !== null && equipo.pesoMaximo !== undefined)
       ? `${equipo.pesoMaximo} ${equipo.unidadPeso ?? ''}`.trim()
       : 'No aplica';
+    const activo = equipo.activo !== false;
+    const badgeActivo = activo
+      ? '<span class="text-success text-status-micro font-status-micro border border-success/30 bg-success/10 px-1.5 py-0.5 rounded">ACTIVO</span>'
+      : '<span class="text-on-surface-variant text-status-micro font-status-micro border border-outline-variant bg-surface-container px-1.5 py-0.5 rounded">INACTIVO</span>';
+    const toggleIcon = activo ? 'block' : 'check_circle';
+    const toggleAction = activo ? 'desactivar' : 'activar';
+    const toggleTitle = activo ? 'Desactivar' : 'Activar';
     rowsHtml += `
       <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
         <td class="px-4 py-2">
@@ -32,17 +42,17 @@ function pintarTablaEquipos(root, equipos) {
         </td>
         <td class="px-4 py-2 text-data-table font-data-table text-on-surface">${nombre}</td>
         <td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">${peso}</td>
-        <td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">—</td>
+        <td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">${badgeActivo}</td>
         <td class="px-4 py-2 text-data-table font-data-table text-on-surface-variant">${ubicacion}</td>
         <td class="px-4 py-2 text-right">
-          <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Editar" data-action="editar-equipo">
+          <button class="btn-editar-equipo text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Editar" data-action="editar-equipo" data-id="${equipo.idEquipo}" data-nombre="${nombre}">
             <span class="material-symbols-outlined text-[18px]">edit</span>
           </button>
-          <button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded hover:bg-error/10" title="Eliminar" data-action="eliminar-equipo">
+          <button class="btn-eliminar-equipo text-on-surface-variant hover:text-error transition-colors p-1 rounded hover:bg-error/10" title="Eliminar" data-action="eliminar-equipo" data-id="${equipo.idEquipo}" data-nombre="${nombre}">
             <span class="material-symbols-outlined text-[18px]">delete</span>
           </button>
-          <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="Desactivar" data-action="toggle-equipo">
-            <span class="material-symbols-outlined text-[18px]">block</span>
+          <button class="btn-toggle-equipo text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-primary/10" title="${toggleTitle}" data-action="${toggleAction}" data-id="${equipo.idEquipo}" data-nombre="${nombre}">
+            <span class="material-symbols-outlined text-[18px]">${toggleIcon}</span>
           </button>
         </td>
       </tr>
@@ -107,23 +117,23 @@ async function cargarTiposEstados(root) {
 }
 
 function abrirModalNuevoEquipo(root) {
+  equipoEditandoId = null;
   modalNuevoEquipo = root.querySelector('#modal-nuevo-equipo');
   formNuevoEquipo = root.querySelector('#form-nuevo-equipo');
   if (!modalNuevoEquipo || !formNuevoEquipo) return;
 
-  // Limpiar formulario y errores
+  const titulo = modalNuevoEquipo.querySelector('#modal-nuevo-equipo-titulo');
+  if (titulo) titulo.textContent = 'Nuevo Equipo';
+
   formNuevoEquipo.reset();
   const errores = root.querySelectorAll('[id^="error-"]');
   errores.forEach((p) => { p.style.display = 'none'; });
 
-  // Mostrar modal
   modalNuevoEquipo.style.display = 'flex';
   modalNuevoEquipo.setAttribute('aria-hidden', 'false');
 
-  // Cargar selects de tipo y estado
   cargarTiposEstados(root);
 
-  // Resetear estado de botones "No aplica"
   btnPesoNoAplicaActivo = false;
   btnUnidadNoAplicaActivo = false;
   const inputPeso = root.querySelector('#peso-maximo');
@@ -131,12 +141,129 @@ function abrirModalNuevoEquipo(root) {
   const btnPeso = root.querySelector('#btn-peso-no-aplica');
   const btnUnidad = root.querySelector('#btn-unidad-no-aplica');
   const campoOtraUnidad = root.querySelector('#campo-unidad-otra');
+  const campoTipoOtro = root.querySelector('#campo-tipo-otro');
 
   if (inputPeso) { inputPeso.disabled = false; inputPeso.value = ''; }
   if (btnPeso) { btnPeso.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
   if (inputUnidad) { inputUnidad.disabled = false; inputUnidad.value = ''; }
   if (btnUnidad) { btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
   if (campoOtraUnidad) { campoOtraUnidad.style.display = 'none'; }
+  if (campoTipoOtro) { campoTipoOtro.style.display = 'none'; }
+}
+
+async function abrirModalEdicion(root, equipo) {
+  equipoEditandoId = equipo.idEquipo;
+  modalNuevoEquipo = root.querySelector('#modal-nuevo-equipo');
+  formNuevoEquipo = root.querySelector('#form-nuevo-equipo');
+  if (!modalNuevoEquipo || !formNuevoEquipo) return;
+
+  formNuevoEquipo.reset();
+  await cargarTiposEstados(root);
+  const errores = root.querySelectorAll('[id^="error-"]');
+  errores.forEach((p) => { p.style.display = 'none'; });
+
+  const titulo = modalNuevoEquipo.querySelector('#modal-nuevo-equipo-titulo');
+  if (titulo) titulo.textContent = 'Editar Equipo';
+
+  const selectTipo = root.querySelector('#tipo-equipo');
+  const selectEstado = root.querySelector('#estado-equipo');
+  const inputPeso = root.querySelector('#peso-maximo');
+  const inputUnidad = root.querySelector('#unidad-peso');
+  const btnPeso = root.querySelector('#btn-peso-no-aplica');
+  const btnUnidad = root.querySelector('#btn-unidad-no-aplica');
+  const campoOtraUnidad = root.querySelector('#campo-unidad-otra');
+  const campoTipoOtro = root.querySelector('#campo-tipo-otro');
+
+  // Precarga de campos
+  const codigo = root.querySelector('#codigo-equipo');
+  const nombre = root.querySelector('#nombre-equipo');
+  const marca = root.querySelector('#marca-equipo');
+  const modelo = root.querySelector('#modelo-equipo');
+  const serial = root.querySelector('#serial-equipo');
+  const ubicacion = root.querySelector('#ubicacion-equipo');
+  const codigoQr = root.querySelector('#codigo-qr-equipo');
+  const observaciones = root.querySelector('#observaciones-equipo');
+
+  if (codigo) codigo.value = equipo.codigoEquipo ?? '';
+  if (nombre) nombre.value = equipo.nombreEquipo ?? '';
+  if (marca) marca.value = equipo.marca ?? '';
+  if (modelo) modelo.value = equipo.modelo ?? '';
+  if (serial) serial.value = equipo.serial ?? '';
+  if (ubicacion) ubicacion.value = equipo.ubicacion ?? '';
+  if (codigoQr) codigoQr.value = equipo.codigoQr ?? '';
+  if (observaciones) observaciones.value = equipo.observacionesEquipo ?? '';
+
+  // Peso
+  const peso = equipo.pesoMaximo;
+  const unidadPeso = equipo.unidadPeso;
+  if (peso === null || peso === undefined || peso === '') {
+    if (inputPeso) { inputPeso.value = ''; inputPeso.disabled = true; }
+    if (btnPeso) { btnPeso.classList.add('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnPesoNoAplicaActivo = true;
+  } else {
+    if (inputPeso) { inputPeso.value = peso; inputPeso.disabled = false; }
+    if (btnPeso) { btnPeso.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnPesoNoAplicaActivo = false;
+  }
+
+  // Unidad
+  const UNIDADES_CATALOGO = ['kg', 'g', 'ton', 'lb'];
+  if (unidadPeso === null || unidadPeso === undefined || unidadPeso === '') {
+    if (inputUnidad) { inputUnidad.value = ''; inputUnidad.disabled = false; }
+    if (btnUnidad) { btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnUnidadNoAplicaActivo = false;
+    if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
+  } else if (unidadPeso === 'No aplica') {
+    if (inputUnidad) { inputUnidad.disabled = true; inputUnidad.value = ''; }
+    if (btnUnidad) { btnUnidad.classList.add('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnUnidadNoAplicaActivo = true;
+    if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
+  } else if (UNIDADES_CATALOGO.includes(unidadPeso)) {
+    if (inputUnidad) { inputUnidad.value = unidadPeso; inputUnidad.disabled = false; }
+    if (btnUnidad) { btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnUnidadNoAplicaActivo = false;
+    if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
+  } else {
+    // No es "No aplica" ni una unidad fija del catálogo → fue texto libre de "Otra"
+    if (inputUnidad) { inputUnidad.value = 'Otra'; inputUnidad.disabled = false; }
+    if (btnUnidad) { btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary'); }
+    btnUnidadNoAplicaActivo = false;
+    if (campoOtraUnidad) {
+      campoOtraUnidad.style.display = 'block';
+      const inputOtra = root.querySelector('#unidad-otra-texto');
+      if (inputOtra) inputOtra.value = unidadPeso;
+    }
+  }
+
+  // Tipo
+  if (selectTipo) {
+    const tipoGuardado = equipo.tipoEquipo ?? '';
+    const optTipo = Array.from(selectTipo.options).find(o => o.text.trim() === tipoGuardado);
+    const campoTipoOtroEl = root.querySelector('#campo-tipo-otro');
+    if (optTipo) {
+      selectTipo.value = optTipo.value;
+      if (campoTipoOtroEl) campoTipoOtroEl.style.display = 'none';
+    } else if (tipoGuardado) {
+      const optOtros = Array.from(selectTipo.options).find(o => o.text.trim() === 'Otros');
+      selectTipo.value = optOtros ? optOtros.value : '';
+      if (campoTipoOtroEl) {
+        campoTipoOtroEl.style.display = 'block';
+        const inputTipoOtro = root.querySelector('#tipo-otro-texto');
+        if (inputTipoOtro) inputTipoOtro.value = tipoGuardado;
+      }
+    } else {
+      selectTipo.value = '';
+      if (campoTipoOtroEl) campoTipoOtroEl.style.display = 'none';
+    }
+  }
+
+  // Estado
+  if (selectEstado && equipo.idEstadoEquipo) {
+    selectEstado.value = equipo.idEstadoEquipo;
+  }
+
+  modalNuevoEquipo.style.display = 'flex';
+  modalNuevoEquipo.setAttribute('aria-hidden', 'false');
 }
 
 function cerrarModalNuevoEquipo(root) {
@@ -167,7 +294,6 @@ function obtenerDatosFormulario(root) {
   const codigoQr = root.querySelector('#codigo-qr-equipo').value.trim();
   const observacionesEquipo = root.querySelector('#observaciones-equipo').value.trim();
 
-  // Determinar valor final de unidadPeso
   let unidadFinal;
   if (btnUnidadNoAplicaActivo) {
     unidadFinal = 'No aplica';
@@ -177,7 +303,6 @@ function obtenerDatosFormulario(root) {
     unidadFinal = unidadPeso;
   }
 
-  // Determinar pesoMaximo: null si está vacío o el botón "No aplica" estaba activo
   const pesoFinal = pesoMaximo && !btnPesoNoAplicaActivo ? parseFloat(pesoMaximo) : null;
 
   return {
@@ -201,26 +326,17 @@ function obtenerDatosFormulario(root) {
 function validarFormulario(root) {
   let valido = true;
 
-  // Validar campos requeridos con Required HTML5 fallback + ValidadorHelper
   const rootWrapper = root.querySelector('#form-nuevo-equipo');
 
-  // Nombre del equipo con ValidadorHelper si aplica
   const inputNombre = root.querySelector('#nombre-equipo');
   const errorNombre = root.querySelector('#error-nombre-equipo');
-  if (inputNombre && inputNombre.value.trim()) {
-    const error = ValidadorHelper.validarNombre(inputNombre.value);
-    if (error) {
-      ValidadorHelper.mostrarErrorCampo(root, 'error-nombre-equipo', error, 'bloqueante');
-      valido = false;
-    } else {
-      ValidadorHelper.limpiarErrorCampo(root, 'error-nombre-equipo');
-    }
-  } else if (inputNombre && !inputNombre.value.trim()) {
+  if (inputNombre && !inputNombre.value.trim()) {
     ValidadorHelper.mostrarErrorCampo(root, 'error-nombre-equipo', 'El nombre del equipo es obligatorio.', 'bloqueante');
     valido = false;
+  } else {
+    ValidadorHelper.limpiarErrorCampo(root, 'error-nombre-equipo');
   }
 
-  // Código obligatorio
   const inputCodigo = root.querySelector('#codigo-equipo');
   const errorCodigo = root.querySelector('#error-codigo-equipo');
   if (!inputCodigo.value.trim()) {
@@ -230,7 +346,6 @@ function validarFormulario(root) {
     ValidadorHelper.limpiarErrorCampo(root, 'error-codigo-equipo');
   }
 
-  // Tipo obligatorio
   const inputTipo = root.querySelector('#tipo-equipo');
   const errorTipo = root.querySelector('#error-tipo-equipo');
   if (!inputTipo.value) {
@@ -248,7 +363,6 @@ function validarFormulario(root) {
     ValidadorHelper.limpiarErrorCampo(root, 'error-tipo-equipo');
   }
 
-  // Estado obligatorio
   const inputEstado = root.querySelector('#estado-equipo');
   const errorEstado = root.querySelector('#error-estado-equipo');
   if (!inputEstado.value) {
@@ -258,7 +372,6 @@ function validarFormulario(root) {
     ValidadorHelper.limpiarErrorCampo(root, 'error-estado-equipo');
   }
 
-  // Validación cruzada: si peso tiene valor Y unidad está en "No aplica"
   const inputPeso = root.querySelector('#peso-maximo');
   const inputUnidad = root.querySelector('#unidad-peso');
   const unidadOtraTexto = root.querySelector('#unidad-otra-texto')?.value.trim() || '';
@@ -280,20 +393,19 @@ function validarFormulario(root) {
 }
 
 function setupModalListeners(root) {
-  // Botón "No aplica" para peso
   const btnPeso = root.querySelector('#btn-peso-no-aplica');
   const inputPeso = root.querySelector('#peso-maximo');
   if (btnPeso && inputPeso) {
     btnPeso.addEventListener('click', () => {
-    btnPesoNoAplicaActivo = !btnPesoNoAplicaActivo;
-    inputPeso.disabled = btnPesoNoAplicaActivo;
-    if (btnPesoNoAplicaActivo) {
-      inputPeso.value = '';
-      btnPeso.classList.add('bg-primary/10', 'text-primary', 'border-primary');
-    } else {
-      btnPeso.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
-    }
-  });
+      btnPesoNoAplicaActivo = !btnPesoNoAplicaActivo;
+      inputPeso.disabled = btnPesoNoAplicaActivo;
+      if (btnPesoNoAplicaActivo) {
+        inputPeso.value = '';
+        btnPeso.classList.add('bg-primary/10', 'text-primary', 'border-primary');
+      } else {
+        btnPeso.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
+      }
+    });
 
     inputPeso.addEventListener('input', () => {
       if (btnPesoNoAplicaActivo && inputPeso.value.trim() !== '') {
@@ -304,7 +416,6 @@ function setupModalListeners(root) {
     });
   }
 
-  // Listener para mostrar/ocultar campo de texto de tipo "Otros"
   const selectTipoEl = root.querySelector('#tipo-equipo');
   if (selectTipoEl) {
     selectTipoEl.addEventListener('change', () => {
@@ -320,22 +431,21 @@ function setupModalListeners(root) {
     });
   }
 
-  // Botón "No aplica" para unidad
   const btnUnidad = root.querySelector('#btn-unidad-no-aplica');
   const inputUnidad = root.querySelector('#unidad-peso');
   const campoOtraUnidad = root.querySelector('#campo-unidad-otra');
   if (btnUnidad && inputUnidad) {
     btnUnidad.addEventListener('click', () => {
-    btnUnidadNoAplicaActivo = !btnUnidadNoAplicaActivo;
-    inputUnidad.disabled = btnUnidadNoAplicaActivo;
-    if (btnUnidadNoAplicaActivo) {
-      inputUnidad.value = '';
-      btnUnidad.classList.add('bg-primary/10', 'text-primary', 'border-primary');
-      if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
-    } else {
-      btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
-    }
-  });
+      btnUnidadNoAplicaActivo = !btnUnidadNoAplicaActivo;
+      inputUnidad.disabled = btnUnidadNoAplicaActivo;
+      if (btnUnidadNoAplicaActivo) {
+        inputUnidad.value = '';
+        btnUnidad.classList.add('bg-primary/10', 'text-primary', 'border-primary');
+        if (campoOtraUnidad) campoOtraUnidad.style.display = 'none';
+      } else {
+        btnUnidad.classList.remove('bg-primary/10', 'text-primary', 'border-primary');
+      }
+    });
 
     inputUnidad.addEventListener('change', () => {
       if (btnUnidadNoAplicaActivo) {
@@ -364,24 +474,35 @@ function setupModalListeners(root) {
     btnCancelar.addEventListener('click', () => { cerrarModalNuevoEquipo(root); });
   }
 
-  // Guardar equipo
+  // Guardar equipo (crear o actualizar)
   const btnGuardar = root.querySelector('#btn-guardar-nuevo-equipo');
   if (btnGuardar) {
     btnGuardar.addEventListener('click', async () => {
-      // Validación frontend
+      if (btnGuardar.disabled) return;
       if (!validarFormulario(root)) return;
 
       const datos = obtenerDatosFormulario(root);
+      const textoOriginal = btnGuardar.textContent;
+      btnGuardar.disabled = true;
+      btnGuardar.textContent = 'Guardando...';
 
       try {
-        await EquipoService.crearEquipo(datos);
+        if (equipoEditandoId) {
+          await EquipoService.actualizarEquipo(equipoEditandoId, datos);
+          await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Equipo actualizado correctamente.' });
+        } else {
+          await EquipoService.crearEquipo(datos);
+          await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Equipo registrado correctamente.' });
+        }
         cerrarModalNuevoEquipo(root);
         const { idEmpresa } = EmpresaContext.get();
         await cargarEquipos(root, idEmpresa);
         limpiarFormulario(root);
-        await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Equipo registrado correctamente.' });
       } catch (err) {
         await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+      } finally {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
       }
     });
   }
@@ -422,6 +543,81 @@ async function initView(ctx) {
 
   // Setup de listeners del modal
   setupModalListeners(root);
+
+  // Listener de clic en tabla para editar, eliminar y toggle
+  const tbody = root.querySelector('#tabla-equipos-body');
+  if (tbody) {
+    tbody.addEventListener('click', async (e) => {
+      const btnEditar = e.target.closest('.btn-editar-equipo');
+      if (btnEditar) {
+        const id = btnEditar.dataset.id;
+        const nombre = btnEditar.dataset.nombre;
+        try {
+          const equipo = await EquipoService.getEquipoDetalle(id);
+          await abrirModalEdicion(root, equipo);
+        } catch (err) {
+          await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+        }
+        return;
+      }
+
+      const btnEliminar = e.target.closest('.btn-eliminar-equipo');
+      if (btnEliminar) {
+        const id = btnEliminar.dataset.id;
+        const nombre = btnEliminar.dataset.nombre;
+        const confirmar = await mostrarConfirmacion({
+          titulo: 'Eliminar Equipo',
+          mensaje: `¿Eliminar el equipo "${nombre}"? Esta acción no se puede deshacer desde aquí.`,
+          textoConfirmar: 'Eliminar',
+          textoCancelar: 'Cancelar',
+          tipo: 'peligro'
+        });
+        if (confirmar) {
+          try {
+            await EquipoService.eliminarEquipo(id);
+            await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Equipo eliminado correctamente.' });
+            await cargarEquipos(root, idEmpresa);
+          } catch (err) {
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+          }
+        }
+        return;
+      }
+
+      const btnToggle = e.target.closest('.btn-toggle-equipo');
+      if (btnToggle) {
+        const id = btnToggle.dataset.id;
+        const nombre = btnToggle.dataset.nombre;
+        const action = btnToggle.dataset.action;
+        const esActivar = action === 'activar';
+        const mensajeConfirm = esActivar
+          ? `¿Activar el equipo "${nombre}"?`
+          : `¿Desactivar el equipo "${nombre}"?`;
+        const confirmar = await mostrarConfirmacion({
+          titulo: esActivar ? 'Activar Equipo' : 'Desactivar Equipo',
+          mensaje: mensajeConfirm,
+          textoConfirmar: esActivar ? 'Activar' : 'Desactivar',
+          textoCancelar: 'Cancelar',
+          tipo: 'default'
+        });
+        if (confirmar) {
+          try {
+            await EquipoService.cambiarEstadoEquipo(id, esActivar);
+            await mostrarAlerta({
+              titulo: 'Éxito',
+              mensaje: esActivar
+                ? 'Equipo activado correctamente.'
+                : 'Equipo desactivado correctamente.'
+            });
+            await cargarEquipos(root, idEmpresa);
+          } catch (err) {
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+          }
+        }
+        return;
+      }
+    });
+  }
 }
 
 window.initView = initView;

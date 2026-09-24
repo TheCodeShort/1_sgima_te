@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.services;
 
+import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
 import com.mantenimiento.sigma_te.models.Empresa;
@@ -14,6 +15,7 @@ import com.mantenimiento.sigma_te.security.TenantContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -72,12 +74,13 @@ public class EquipoService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Equipo no encontrado."));
 
-        Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
-
-        if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+        if (idEmpresaActual != null) {
+            Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+            }
         }
 
         return convertirADto(equipo);
@@ -232,6 +235,7 @@ public class EquipoService {
         return convertirADto(actualizado);
     }
 
+    @Transactional
     public void eliminar(Integer id, Authentication authentication) {
         Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
         if (idEmpresaActual != null) {
@@ -243,15 +247,50 @@ public class EquipoService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Equipo no encontrado."));
 
-        if (idEmpresaActual != null) {
-            Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
-            if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Equipo no encontrado.");
-            }
+        if (equipo.getNombreEquipo() != null && equipo.getNombreEquipo().startsWith("Eliminado - ")) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Este equipo ya fue eliminado anteriormente.");
         }
 
-        equipoRepository.delete(equipo);
+        String nombreOriginal = equipo.getNombreEquipo();
+        equipo.setNombreEquipo("Eliminado - " + nombreOriginal + "-" + equipo.getIdEquipo());
+        equipo.setActivo(false);
+        // Libera codigo_equipo, serial y codigo_qr para que puedan reutilizarse
+        // en un equipo nuevo (mismo criterio ya usado con el correo de empresa).
+        if (equipo.getCodigoEquipo() != null) {
+            equipo.setCodigoEquipo("Eliminado - " + equipo.getCodigoEquipo() + "-" + equipo.getIdEquipo());
+        }
+        if (equipo.getSerial() != null) {
+            equipo.setSerial("Eliminado - " + equipo.getSerial() + "-" + equipo.getIdEquipo());
+        }
+        if (equipo.getCodigoQr() != null) {
+            equipo.setCodigoQr("Eliminado - " + equipo.getCodigoQr() + "-" + equipo.getIdEquipo());
+        }
+
+        equipoRepository.save(equipo);
+    }
+
+    @Transactional
+    public EquipoDTO cambiarEstado(Integer id, CambiarEstadoDTO request, Authentication authentication) {
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        if (idEmpresaActual != null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Las empresas no pueden activar ni desactivar equipos. Esta accion es exclusiva del administrador global.");
+        }
+
+        Equipo equipo = equipoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        if (equipo.getNombreEquipo() != null && equipo.getNombreEquipo().startsWith("Eliminado - ")) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Este equipo fue eliminado y no puede reactivarse desde aquí.");
+        }
+
+        equipo.setActivo(request.activo());
+        Equipo equipoActualizado = equipoRepository.save(equipo);
+
+        return convertirADto(equipoActualizado);
     }
 
     private EquipoDTO convertirADto(Equipo equipo) {
@@ -277,7 +316,8 @@ public class EquipoService {
                 equipo.getUsuarioRegistro() != null ? equipo.getUsuarioRegistro().getIdUsuario() : null,
                 equipo.getFechaRegistroEquipo(),
                 idEmpresa,
-                nombreEmpresa
+                nombreEmpresa,
+                equipo.getActivo()
         );
     }
 }

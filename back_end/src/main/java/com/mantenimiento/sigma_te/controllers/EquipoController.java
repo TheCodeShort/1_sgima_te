@@ -1,5 +1,6 @@
 package com.mantenimiento.sigma_te.controllers;
 
+import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
 import com.mantenimiento.sigma_te.services.EquipoService;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -67,6 +69,16 @@ public class EquipoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Integer id, Authentication authentication) {
         equipoService.eliminar(id, authentication);
+    }
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<EquipoDTO> cambiarEstado(
+            @PathVariable Integer id,
+            @RequestBody CambiarEstadoDTO request,
+            Authentication authentication) {
+        EquipoDTO dto = equipoService.cambiarEstado(id, request, authentication);
+        return ResponseEntity.ok(dto);
     }
 }
 

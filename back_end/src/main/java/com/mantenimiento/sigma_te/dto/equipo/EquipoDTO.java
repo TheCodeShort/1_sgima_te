@@ -21,6 +21,7 @@ public record EquipoDTO(
     Integer idUsuarioRegistro,
     LocalDateTime fechaRegistroEquipo,
     Integer idEmpresa,
-    String nombreEmpresa
+    String nombreEmpresa,
+    Boolean activo
 ) {
 }
