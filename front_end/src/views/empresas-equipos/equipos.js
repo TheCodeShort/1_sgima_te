@@ -5,6 +5,7 @@
 
 (function () {
 let equipoEditandoId = null;
+let equiposCache = [];
 
 function pintarTablaEquipos(root, equipos) {
   equipos = equipos.filter((eq) => !(eq.nombreEquipo || '').startsWith('Eliminado - '));
@@ -66,6 +67,7 @@ async function cargarEquipos(root, idEmpresa) {
   if (!tbody) return;
   try {
     const equipos = await EquipoService.getEquiposPorEmpresa(idEmpresa);
+    equiposCache = equipos;
     pintarTablaEquipos(root, equipos);
   } catch (err) {
     console.error(err);
@@ -77,6 +79,28 @@ async function cargarEquipos(root, idEmpresa) {
       </tr>
     `;
   }
+}
+
+function aplicarFiltroEquipos(root) {
+  const inputBuscador = root.querySelector('#buscador-equipos');
+  const selectEstado = root.querySelector('#filtro-estado-equipos');
+  const textoBusqueda = inputBuscador ? inputBuscador.value.trim().toLowerCase() : '';
+  const filtroEstado = selectEstado ? selectEstado.value : '';
+
+  const equiposFiltrados = equiposCache.filter((eq) => {
+    const nombre = (eq.nombreEquipo ?? '').toLowerCase();
+    const codigo = (eq.codigoEquipo ?? '').toLowerCase();
+    const coincideTexto = !textoBusqueda || nombre.includes(textoBusqueda) || codigo.includes(textoBusqueda);
+
+    const activo = eq.activo !== false;
+    const coincideEstado = !filtroEstado
+      || (filtroEstado === 'activo' && activo)
+      || (filtroEstado === 'inactivo' && !activo);
+
+    return coincideTexto && coincideEstado;
+  });
+
+  pintarTablaEquipos(root, equiposFiltrados);
 }
 
 let modalNuevoEquipo = null;
@@ -538,6 +562,19 @@ async function initView(ctx) {
   if (btnNuevo) {
     btnNuevo.addEventListener('click', () => {
       abrirModalNuevoEquipo(root);
+    });
+  }
+
+  const inputBuscadorEquipos = root.querySelector('#buscador-equipos');
+  if (inputBuscadorEquipos) {
+    inputBuscadorEquipos.addEventListener('input', () => {
+      aplicarFiltroEquipos(root);
+    });
+  }
+  const selectFiltroEstado = root.querySelector('#filtro-estado-equipos');
+  if (selectFiltroEstado) {
+    selectFiltroEstado.addEventListener('change', () => {
+      aplicarFiltroEquipos(root);
     });
   }
 
