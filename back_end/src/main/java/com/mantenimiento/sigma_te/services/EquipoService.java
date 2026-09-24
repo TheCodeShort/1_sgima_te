@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -113,9 +114,21 @@ public class EquipoService {
                         HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + request.idUsuarioRegistro()));
 
         Integer idEmpresaDelUsuarioRegistro = usuarioRegistro.getEmpresa() != null ? usuarioRegistro.getEmpresa().getIdEmpresa() : null;
-        if (request.idEmpresa() != null) {
-            if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, request.idEmpresa())) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no pertenece a la empresa indicada.");
+        Integer idEmpresaDelQueLlama = tenantContext.obtenerIdEmpresaActual(authentication);
+        if (idEmpresaDelQueLlama != null) {
+            if (request.idEmpresa() != null) {
+                if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, request.idEmpresa())) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no pertenece a la empresa indicada.");
+                }
+            }
+        }
+
+        // Validación de consistencia: si se especifica peso máximo, unidad debe ser válida (no "No aplica")
+        if (request.pesoMaximo() != null) {
+            String unidad = request.unidadPeso();
+            if (unidad == null || unidad.trim().isEmpty() || unidad.trim().equalsIgnoreCase("No aplica")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Si se especifica peso máximo, debe indicarse una unidad válida.");
             }
         }
 
@@ -126,6 +139,8 @@ public class EquipoService {
                 .tipoEquipo(request.tipoEquipo())
                 .marca(request.marca())
                 .modelo(request.modelo())
+                .pesoMaximo(request.pesoMaximo())
+                .unidadPeso(request.unidadPeso())
                 .serial(request.serial())
                 .ubicacion(request.ubicacion())
                 .estadoEquipo(estadoEquipo)
@@ -179,11 +194,32 @@ public class EquipoService {
             }
         }
 
+        Integer idEmpresaDelQueLlama = tenantContext.obtenerIdEmpresaActual(authentication);
+        if (idEmpresaDelQueLlama != null) {
+            if (request.idEmpresa() != null) {
+                Integer idEmpresaDelUsuarioRegistro = usuarioRegistro.getEmpresa() != null ? usuarioRegistro.getEmpresa().getIdEmpresa() : null;
+                if (!tenantContext.coincideEmpresa(idEmpresaDelUsuarioRegistro, request.idEmpresa())) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario de registro no pertenece a la empresa indicada.");
+                }
+            }
+        }
+
+        // Validación de consistencia: si se especifica peso máximo, unidad debe ser válida (no "No aplica")
+        if (request.pesoMaximo() != null) {
+            String unidad = request.unidadPeso();
+            if (unidad == null || unidad.trim().isEmpty() || unidad.trim().equalsIgnoreCase("No aplica")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Si se especifica peso máximo, debe indicarse una unidad válida.");
+            }
+        }
+
         equipo.setCodigoEquipo(request.codigoEquipo());
         equipo.setNombreEquipo(request.nombreEquipo());
         equipo.setTipoEquipo(request.tipoEquipo());
         equipo.setMarca(request.marca());
         equipo.setModelo(request.modelo());
+        equipo.setPesoMaximo(request.pesoMaximo());
+        equipo.setUnidadPeso(request.unidadPeso());
         equipo.setSerial(request.serial());
         equipo.setUbicacion(request.ubicacion());
         equipo.setEstadoEquipo(estadoEquipo);
@@ -230,6 +266,8 @@ public class EquipoService {
                 equipo.getTipoEquipo(),
                 equipo.getMarca(),
                 equipo.getModelo(),
+                equipo.getPesoMaximo(),
+                equipo.getUnidadPeso(),
                 equipo.getSerial(),
                 equipo.getUbicacion(),
                 equipo.getEstadoEquipo() != null ? equipo.getEstadoEquipo().getIdEstadoEquipo() : null,

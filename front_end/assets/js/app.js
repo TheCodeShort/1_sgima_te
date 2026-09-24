@@ -95,6 +95,13 @@ const ROUTES = {
     js: 'empresas.js',
     css: 'empresas.css',
   },
+  'empresas-equipos': {
+    path: 'src/views/empresas-equipos',
+    title: 'Equipos',
+    group: 'admin',
+    js: 'equipos.js',
+    css: 'equipos.css',
+  },
   'estado-sincronizacion': {
     path: 'src/views/estado-sincronizacion',
     title: 'Estado de Sincronización',

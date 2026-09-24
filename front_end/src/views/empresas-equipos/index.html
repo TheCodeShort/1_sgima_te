@@ -1,0 +1,220 @@
+<div class="view-page" data-view="empresas-equipos">
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+<div class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 mb-6">
+<span data-nav="empresas" class="text-body-md font-body-md text-on-surface-variant cursor-pointer hover:text-primary">Empresas</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
+<span class="text-body-md font-body-md text-on-surface">Equipos: <span id="breadcrumb-nombre-empresa"></span></span>
+</div>
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div>
+<h2 class="text-display-id font-display-id text-on-surface">Lista de Equipos</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Gestione y monitoree el estado de la maquinaria industrial.</p>
+</div>
+<button id="btn-nuevo-equipo" class="bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="text-body-md font-body-md font-semibold">Nuevo Equipo</span>
+</button>
+</div>
+<!-- Filters Toolbar -->
+<div class="flex flex-col lg:flex-row gap-4 mb-4 bg-surface-card p-3 rounded border border-outline-variant shadow-sm">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 bg-surface border border-outline-variant rounded text-body-sm font-body-sm text-on-surface placeholder-on-surface-variant focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-colors" placeholder="Buscar por código o nombre..." type="text"/>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-card rounded border border-outline-variant overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left whitespace-nowrap">
+<thead class="bg-surface-container border-b border-outline-variant sticky top-0 z-10">
+<tr>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider w-32">Código</th>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Nombre del Equipo</th>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Peso Máximo</th>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Estado</th>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Ubicación</th>
+<th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody id="tabla-equipos-body" class="divide-y divide-outline-variant/50">
+<tr>
+<td colspan="6" class="px-4 py-8 text-center text-on-surface-variant">
+Cargando equipos...
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-4 py-3 border-t border-outline-variant bg-surface-container flex items-center justify-between text-body-sm text-on-surface-variant">
+<div id="pie-equipos">Mostrando resultados</div>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Modal: Nuevo Equipo -->
+<div id="modal-nuevo-equipo" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" aria-hidden="true" role="dialog" aria-labelledby="modal-nuevo-equipo-titulo">
+  <div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden">
+    <div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[22px]">add_box</span>
+        <h3 id="modal-nuevo-equipo-titulo" class="text-headline-sm font-headline-sm font-semibold text-on-surface">Nuevo Equipo</h3>
+      </div>
+      <button id="btn-cerrar-modal-nuevo-equipo" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors" aria-label="Cerrar modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <form id="form-nuevo-equipo" class="p-6 space-y-4">
+
+      <!-- Form Grid: grid grid-cols-1 md:grid-cols-2 gap-5 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Sección 1: Identificación -->
+        <div class="md:col-span-2 space-y-4">
+          <h3 class="text-headline-md font-headline-md text-on-surface mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]" data-icon="info">info</span>
+            Identificación
+          </h3>
+          <div class="border-b border-outline-variant pb-4"></div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="codigo-equipo">CÓDIGO <span class="text-error">*</span></label>
+            <input id="codigo-equipo" type="text" required placeholder="Ej: EQ-001" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+            <p id="error-codigo-equipo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="nombre-equipo">NOMBRE DEL EQUIPO <span class="text-error">*</span></label>
+            <input id="nombre-equipo" type="text" required placeholder="Ej: Bomba Centrífuga Principal" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+            <p id="error-nombre-equipo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="tipo-equipo">TIPO DE EQUIPO <span class="text-error">*</span></label>
+            <select id="tipo-equipo" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+              <option value="">Seleccione un tipo...</option>
+            </select>
+            <p id="error-tipo-equipo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="marca-equipo">MARCA</label>
+            <input id="marca-equipo" type="text" placeholder="Ej: Siemens" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="modelo-equipo">MODELO</label>
+            <input id="modelo-equipo" type="text" placeholder="Ej: Model-X200" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="serial-equipo">SERIAL</label>
+            <input id="serial-equipo" type="text" placeholder="Ej: SN-123456" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+        </div>
+
+        <!-- Separador entre sección 1 y 2 -->
+        <div class="md:col-span-2">
+          <div class="border-t border-outline-variant my-2"></div>
+        </div>
+
+        <!-- Sección 2: Características Físicas -->
+        <div class="md:col-span-2 space-y-4">
+          <h3 class="text-headline-md font-headline-md text-on-surface mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]" data-icon="scale">scale</span>
+            Características Físicas
+          </h3>
+          <div class="border-b border-outline-variant pb-4"></div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="peso-maximo">PESO MÁXIMO</label>
+            <div class="flex gap-2">
+              <input id="peso-maximo" type="number" step="0.001" placeholder="0.000" class="flex-1 bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+              <button type="button" id="btn-peso-no-aplica" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-sm font-body-md font-medium">No aplica</button>
+            </div>
+            <p id="error-peso-maximo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="unidad-peso">UNIDAD DE PESO <span class="text-error">*</span></label>
+            <div class="flex gap-2">
+              <select id="unidad-peso" required class="flex-1 bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                <option value="">Seleccione...</option>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="ton">ton</option>
+                <option value="lb">lb</option>
+                <option value="Otra">Otra</option>
+              </select>
+              <button type="button" id="btn-unidad-no-aplica" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-sm font-body-md font-medium">No aplica</button>
+            </div>
+            <div id="campo-unidad-otra" style="display:none;" class="space-y-1.5">
+              <input id="unidad-otra-texto" type="text" placeholder="Especifique la unidad..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+            </div>
+            <p id="error-unidad-peso" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="frecuencia-calibracion">FRECUENCIA DE CALIBRACIÓN (DÍAS)</label>
+            <input id="frecuencia-calibracion" type="number" placeholder="Ej: 30" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+        </div>
+
+        <!-- Separador entre sección 2 y 3 -->
+        <div class="md:col-span-2">
+          <div class="border-t border-outline-variant my-2"></div>
+        </div>
+
+        <!-- Sección 3: Estado y Ubicación -->
+        <div class="md:col-span-2 space-y-4">
+          <h3 class="text-headline-md font-headline-md text-on-surface mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]" data-icon="location_on">location_on</span>
+            Estado y Ubicación
+          </h3>
+          <div class="border-b border-outline-variant pb-4"></div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="estado-equipo">ESTADO DEL EQUIPO <span class="text-error">*</span></label>
+            <select id="estado-equipo" required class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+              <option value="">Seleccione un estado...</option>
+            </select>
+            <p id="error-estado-equipo" style="display:none;" class="text-status-micro font-status-micro mt-1 text-error"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="ubicacion-equipo">UBICACIÓN</label>
+            <input id="ubicacion-equipo" type="text" placeholder="Ej: Planta Norte - Sec A" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="codigo-qr-equipo">CÓDIGO QR</label>
+            <input id="codigo-qr-equipo" type="text" placeholder="Ej: QR-789012" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-label-caps font-label-caps text-on-surface-variant" for="observaciones-equipo">OBSERVACIONES</label>
+            <textarea id="observaciones-equipo" rows="3" placeholder="Notas sobre el equipo..." class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-y"></textarea>
+          </div>
+        </div>
+
+      </div><!-- fin grid grid-cols-1 md:grid-cols-2 gap-5 -->
+
+      <!-- Pie del formulario -->
+      <div class="flex items-center justify-between gap-3 pt-4 border-t border-outline-variant/50">
+        <button id="btn-cancelar-modal-nuevo-equipo" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors text-body-md font-body-md font-medium">Cancelar</button>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-guardar-nuevo-equipo" class="px-4 py-2 rounded-lg bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-body-md font-body-md font-semibold shadow-sm">Guardar Equipo</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+</div>

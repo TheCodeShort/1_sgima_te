@@ -394,8 +394,13 @@ const btnGuardarEditar = root.querySelector('#btn-guardar-editar-empresa');
       if (!e.target.closest('button')) {
         const fila = e.target.closest('tr[data-id-empresa]');
         if (fila) {
-          EmpresaContext.set(fila.dataset.idEmpresa, fila.dataset.nombreEmpresa);
-          ctx.navigate('equipos');
+          try {
+            const empresa = await EmpresaService.getEmpresaPorId(fila.dataset.idEmpresa);
+            EmpresaContext.set(fila.dataset.idEmpresa, fila.dataset.nombreEmpresa, empresa.idUsuarioAdmin);
+            ctx.navigate('empresas-equipos');
+          } catch (err) {
+            await mostrarAlerta({ titulo: 'Error', mensaje: err.message });
+          }
           return;
         }
       }

@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -54,6 +55,12 @@ public class Equipo {
 
     @Column(name = "modelo", length = 80)
     private String modelo;
+
+    @Column(name = "peso_maximo", precision = 10, scale = 3)
+    private BigDecimal pesoMaximo;
+
+    @Column(name = "unidad_peso", length = 10)
+    private String unidadPeso;
 
     @Column(name = "serial", length = 80)
     private String serial;

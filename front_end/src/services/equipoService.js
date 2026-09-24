@@ -20,6 +20,34 @@ const EquipoService = {
       throw new Error(error.mensaje || `Error al obtener equipos: ${response.status}`);
     }
     return await response.json();
+  },
+  async crearEquipo(datos) {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/equipos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al crear equipo: ${response.status}`);
+    }
+    return await response.json();
+  },
+  async getTiposEquipo() {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/tipos-equipo`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al obtener tipos de equipo: ${response.status}`);
+    }
+    return await response.json();
+  },
+  async getEstadosEquipo() {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/estados-equipo`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al obtener estados de equipo: ${response.status}`);
+    }
+    return await response.json();
   }
 };
 
