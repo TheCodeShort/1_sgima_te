@@ -1,6 +1,7 @@
 <div class="view-page" data-view="hoja-vida-equipo">
 <main class="flex-1 flex flex-col min-w-0">
 
+<div class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-surface-base">
 <!-- Breadcrumb -->
 <div class="flex items-center gap-2 mb-6">
   <span data-nav="empresas" class="text-body-md font-body-md text-on-surface-variant cursor-pointer hover:text-primary">Empresas</span>
@@ -9,19 +10,60 @@
   <span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
   <span class="text-body-md font-body-md text-on-surface" id="breadcrumb-nombre-equipo"></span>
 </div>
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-display-id font-display-id text-on-surface">Hoja de Vida del Equipo</h2>
+    <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Información general, especificaciones técnicas y documentación del activo industrial.</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
+      <span class="material-symbols-outlined text-[18px]">print</span>
+      Imprimir
+    </button>
+    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
+      <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+      Exportar PDF
+    </button>
+    <button class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+      <span class="material-symbols-outlined text-[18px]">edit</span>
+      <span class="text-body-md font-body-md font-semibold">Editar</span>
+    </button>
+  </div>
+</div>
 
-<!-- PAGE CONTENT -->
-<div class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-surface-base">
-<div class="max-w-7xl mx-auto space-y-6">
+<!-- Tabs Navigation -->
+<div class="flex gap-2 border-b border-outline-variant mb-6 items-center justify-center">
+  <button id="tab-equipo" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-primary text-primary">Equipo</button>
+  <button id="tab-info-basica" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Información básica</button>
+  <button id="tab-reporte" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Reporte</button>
+  <button id="tab-certificado" class="px-4 py-2 text-body-md font-body-md font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Certificado</button>
+</div>
 
-<!-- Placeholder -->
+<!-- Tab Content -->
+<div id="panel-equipo">
 <div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
   <span class="material-symbols-outlined text-[64px] text-on-surface-variant/30">construction</span>
   <h2 class="text-display-id font-display-id text-on-surface mt-4">Hoja de Vida del Equipo</h2>
   <p class="text-body-md font-body-md text-on-surface-variant mt-2">En construcción</p>
 </div>
-
 </div>
+<div id="panel-info-basica" style="display:none;">
+<div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
+  <p class="text-body-md font-body-md text-on-surface-variant mt-2">Contenido en construcción</p>
+</div>
+</div>
+<div id="panel-reporte" style="display:none;">
+<div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
+  <p class="text-body-md font-body-md text-on-surface-variant mt-2">Contenido en construcción</p>
+</div>
+</div>
+<div id="panel-certificado" style="display:none;">
+<div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
+  <p class="text-body-md font-body-md text-on-surface-variant mt-2">Contenido en construcción</p>
+</div>
+</div>
+
 </div>
 </main>
 </div>

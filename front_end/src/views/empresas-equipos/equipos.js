@@ -543,7 +543,15 @@ function limpiarFormulario(root) {
 async function initView(ctx) {
   const root = document.querySelector('[data-view="empresas-equipos"]') || document.getElementById('app-root');
   if (!root) return;
-  const contexto = EmpresaContext.get();
+  let contexto = EmpresaContext.get();
+  if (!contexto || !contexto.idEmpresa) {
+    const storedId = sessionStorage.getItem('sigma_equipo_seleccionado_empresa_id');
+    const storedNombre = sessionStorage.getItem('sigma_equipo_seleccionado_empresa_nombre');
+    if (storedId && storedNombre) {
+      EmpresaContext.set(storedId, storedNombre, null);
+      contexto = EmpresaContext.get();
+    }
+  }
   if (!contexto || !contexto.idEmpresa) {
     ctx.navigate('empresas');
     return;
@@ -659,10 +667,13 @@ async function initView(ctx) {
       if (row) {
         const equipoId = row.dataset.equipoId;
         const equipoNombre = row.dataset.equipoNombre;
+        const contexto = EmpresaContext.get();
+        const empresaId = contexto?.idEmpresa ?? '';
+        const empresaNombre = contexto?.nombreEmpresa ?? '';
         sessionStorage.setItem('sigma_equipo_seleccionado_id', equipoId);
         sessionStorage.setItem('sigma_equipo_seleccionado_nombre', equipoNombre);
-        const { idEmpresa: ctxIdEmpresa, nombreEmpresa: ctxNombreEmpresa } = EmpresaContext.get() || {};
-        sessionStorage.setItem('sigma_equipo_seleccionado_empresa_nombre', ctxNombreEmpresa ?? '');
+        sessionStorage.setItem('sigma_equipo_seleccionado_empresa_id', empresaId);
+        sessionStorage.setItem('sigma_equipo_seleccionado_empresa_nombre', empresaNombre);
         ctx.navigate('hoja-vida-equipo');
       }
     });
