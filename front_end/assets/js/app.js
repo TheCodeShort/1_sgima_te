@@ -53,6 +53,13 @@ const ROUTES = {
     js: 'equipos.js',
     css: 'equipos.css',
   },
+  'hoja-vida-equipo': {
+    path: 'src/views/hoja-vida-equipo',
+    title: 'Hoja de Vida del Equipo',
+    group: 'admin',
+    js: 'hoja-vida.js',
+    css: 'hoja-vida.css',
+  },
   'detalle-equipo': {
     path: 'src/views/detalle-equipo',
     title: 'Detalle del Equipo',
@@ -303,7 +310,8 @@ const Router = {
 
   updateActiveNav(routeKey) {
     document.querySelectorAll('[data-route]').forEach((el) => {
-      el.classList.toggle('active', el.getAttribute('data-route') === routeKey);
+      const route = el.getAttribute('data-route');
+      el.classList.toggle('active', route === routeKey || (routeKey === 'hoja-vida-equipo' && route === 'empresas'));
     });
   },
 

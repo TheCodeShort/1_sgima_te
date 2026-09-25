@@ -37,7 +37,7 @@ function pintarTablaEquipos(root, equipos) {
     const toggleAction = activo ? 'desactivar' : 'activar';
     const toggleTitle = activo ? 'Desactivar' : 'Activar';
     rowsHtml += `
-      <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+      <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group cursor-pointer" data-equipo-id="${equipo.idEquipo}" data-equipo-nombre="${nombre}">
         <td class="px-4 py-2">
           <span class="text-data-table font-data-table font-bold text-on-surface font-mono">${codigo}</span>
         </td>
@@ -652,6 +652,18 @@ async function initView(ctx) {
           }
         }
         return;
+      }
+
+      // Navegación a Hoja de Vida del Equipo al hacer clic en la fila (no en botones de acción)
+      const row = e.target.closest('tr[data-equipo-id]');
+      if (row) {
+        const equipoId = row.dataset.equipoId;
+        const equipoNombre = row.dataset.equipoNombre;
+        sessionStorage.setItem('sigma_equipo_seleccionado_id', equipoId);
+        sessionStorage.setItem('sigma_equipo_seleccionado_nombre', equipoNombre);
+        const { idEmpresa: ctxIdEmpresa, nombreEmpresa: ctxNombreEmpresa } = EmpresaContext.get() || {};
+        sessionStorage.setItem('sigma_equipo_seleccionado_empresa_nombre', ctxNombreEmpresa ?? '');
+        ctx.navigate('hoja-vida-equipo');
       }
     });
   }
