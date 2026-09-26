@@ -41,11 +41,265 @@
 </div>
 
 <!-- Tab Content -->
-<div id="panel-equipo">
-<div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
-  <span class="material-symbols-outlined text-[64px] text-on-surface-variant/30">construction</span>
-  <h2 class="text-display-id font-display-id text-on-surface mt-4">Hoja de Vida del Equipo</h2>
-  <p class="text-body-md font-body-md text-on-surface-variant mt-2">En construcción</p>
+<div id="panel-equipo" class="space-y-6">
+<div class="bg-surface-card rounded-lg border border-outline-variant/40 p-5 flex flex-col gap-4">
+  <div class="flex justify-between">
+    <span class="text-lg font-bold text-on-surface">TEQINOFT</span>
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center gap-2"><span class="text-on-surface-variant">Código:</span> <span class="text-on-surface font-medium">FO-MT-01</span></div>
+      <div class="flex items-center gap-2"><span class="text-on-surface-variant">Versión:</span> <span class="text-on-surface font-medium">01</span></div>
+      <div class="flex items-center gap-2"><span class="text-on-surface-variant">Fecha:</span> <span class="text-on-surface font-medium">2025-08-01</span></div>
+      <div class="flex items-center gap-2"><span class="text-on-surface-variant">Página:</span> <span class="text-on-surface font-medium">1 de 1</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Block 1: Información General -->
+<div class="grid grid-cols-4 gap-4">
+  <div class="col-span-2">
+    <div class="bg-surface-card rounded-lg border border-outline-variant/40 flex flex-col gap-0 text-body-sm font-body-sm">
+      <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+        <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[18px]">info</span>
+          </div>
+          1. INFORMACIÓN GENERAL
+        </h3>
+      </div>
+      <div class="p-5 flex flex-col gap-0">
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 pb-2"><span class="text-on-surface-variant">Nombre del equipo:</span> <span class="text-on-surface font-medium">Balanza de plataforma</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Marca:</span> <span class="text-on-surface font-medium">METTLER TOLEDO</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Modelo:</span> <span class="text-on-surface font-medium">IND560 + PBA429</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Serie:</span> <span class="text-on-surface font-medium">B123456789</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Código interno:</span> <span class="text-on-surface font-medium">EQ-001</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Ubicación:</span> <span class="text-on-surface font-medium">Planta de producción</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Área:</span> <span class="text-on-surface font-medium">Pesaje y empaque</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Responsable:</span> <span class="text-on-surface font-medium">Juan Pérez</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Fecha de puesta en servicio:</span> <span class="text-on-surface font-medium">2023-06-15</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-1">
+    <div class="bg-surface-card rounded-lg border border-outline-variant/40 p-5 flex flex-col items-center justify-center h-full">
+      <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30">image</span>
+      <p class="text-body-sm font-body-sm text-on-surface-variant mt-2">Sin fotos registradas</p>
+    </div>
+  </div>
+  <div class="col-span-1">
+    <div class="bg-surface-card rounded-lg border border-outline-variant/40 p-5 flex flex-col h-full">
+      <h4 class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/30 pb-2 mb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[16px]">qr_code</span>
+        CÓDIGO QR
+      </h4>
+      <div class="flex-1 flex items-center justify-center">
+        <p class="text-body-sm font-body-sm text-on-surface-variant text-center">El código QR se generará automáticamente al guardar el equipo</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-2">
+    <div class="bg-surface-card rounded-lg border border-outline-variant/40 flex flex-col gap-0 text-body-sm font-body-sm">
+      <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+        <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[18px]">settings</span>
+          </div>
+          2. CARACTERÍSTICAS TÉCNICAS
+        </h3>
+      </div>
+      <div class="p-5 flex flex-col gap-0">
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 pb-2"><span class="text-on-surface-variant">Capacidad máxima:</span> <span class="text-on-surface font-medium">300 kg</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">División de escala:</span> <span class="text-on-surface font-medium">0,05 kg</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Clase:</span> <span class="text-on-surface font-medium">III</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Tipo de equipo:</span> <span class="text-on-surface font-medium">Balanza electrónica</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Alimentación:</span> <span class="text-on-surface font-medium">110 – 240 V / 50-60 Hz</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Condiciones de operación:</span> <span class="text-on-surface font-medium">0 °C a 40 °C / Humedad < 85 %</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-2">
+    <div class="bg-surface-card rounded-lg border border-outline-variant/40 flex flex-col gap-0 text-body-sm font-body-sm">
+      <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+        <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[18px]">description</span>
+          </div>
+          3. DOCUMENTACIÓN ASOCIADA
+        </h3>
+      </div>
+      <div class="p-5 flex flex-col gap-0">
+        <div class="flex items-center gap-2 py-2">
+          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <label class="text-body-sm font-body-sm text-on-surface">Manual de operación</label>
+        </div>
+        <div class="flex items-center gap-2 py-2">
+          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <label class="text-body-sm font-body-sm text-on-surface">División de servicio</label>
+        </div>
+        <div class="flex items-center gap-2 py-2">
+          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <label class="text-body-sm font-body-sm text-on-surface">Certificado de calibración</label>
+        </div>
+        <div class="flex items-center gap-2 py-2">
+          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <label class="text-body-sm font-body-sm text-on-surface">Ficha técnica</label>
+        </div>
+        <div class="flex items-center gap-2 py-2">
+          <input type="checkbox" class="rounded border-outline-variant"/>
+          <label class="text-body-sm font-body-sm text-on-surface">Otros:</label>
+        </div>
+        <div class="py-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Block 4: Historial de Mantenimiento -->
+<div>
+  <div class="bg-surface-card rounded border border-outline-variant overflow-hidden shadow-sm">
+    <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+      <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-[18px]">history</span>
+        </div>
+        4. HISTORIAL DE MANTENIMIENTO
+      </h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left whitespace-nowrap">
+        <thead class="bg-surface-container border-b border-outline-variant">
+          <tr>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Fecha</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Tipo de mantenimiento</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Descripción de la actividad</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Responsable</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Próximo mantenimiento</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/50">
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2024-02-15</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Preventivo</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Limpieza, ajuste y verificación.</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2024-08-15</td>
+          </tr>
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2024-08-20</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Preventivo</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Revisión de celda de carga y pruebas.</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-02-20</td>
+          </tr>
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-02-18</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Preventivo</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Limpieza, verificación y ajuste.</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-08-18</td>
+          </tr>
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-08-19</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Correctivo</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Reemplazo de conector.</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2026-02-19</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Block 5: Historial de Calibración -->
+<div>
+  <div class="bg-surface-card rounded border border-outline-variant overflow-hidden shadow-sm">
+    <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+      <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+        </div>
+        5. HISTORIAL DE CALIBRACIÓN
+      </h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left whitespace-nowrap">
+        <thead class="bg-surface-container border-b border-outline-variant">
+          <tr>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Fecha</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Resultado</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Certificado No.</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Entidad</th>
+            <th class="px-4 py-3 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Próxima calibración</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/50">
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2024-03-01</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Conforme</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">CM-2024-0156</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-03-01</td>
+          </tr>
+          <tr class="h-row-height-dense hover:bg-surface-container-highest transition-colors group">
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2025-03-05</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">Conforme</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">CM-2025-0287</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">TEQINOFT</td>
+            <td class="px-4 py-2 text-data-table font-data-table text-on-surface">2026-03-05</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Block 6: Observaciones -->
+<div>
+  <div class="bg-surface-card rounded-lg border border-outline-variant/40 flex flex-col gap-0 text-body-sm font-body-sm text-on-surface">
+    <div class="bg-surface-container px-5 py-3 rounded-t-lg">
+      <h3 class="text-headline-md font-headline-md text-on-surface mb-0 flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-[18px]">note</span>
+        </div>
+        6. OBSERVACIONES
+      </h3>
+    </div>
+    <div class="p-5">
+      Equipo en condiciones óptimas de funcionamiento.
+    </div>
+  </div>
+</div>
+
+<!-- Footer de Marca -->
+<div class="border-t border-outline-variant/40 pt-4">
+  <div class="flex flex-col md:flex-row md:items-center gap-6">
+    <!-- Izquierda: Logo textual -->
+    <div class="flex flex-col">
+      <span class="text-lg font-bold text-on-surface">TEQINOFT</span>
+      <span class="text-body-sm text-on-surface-variant">Soluciones que mueven tu industria</span>
+    </div>
+    <!-- Centro: 3 columnas de iconos + texto -->
+    <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[18px]">trending_up</span>
+        <span class="text-body-sm text-on-surface">Confiabilidad en tus procesos</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[18px]">construction</span>
+        <span class="text-body-sm text-on-surface">Experiencia en cada servicio</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[18px]">people</span>
+        <span class="text-body-sm text-on-surface">Un aliado en tu operación</span>
+      </div>
+    </div>
+    <!-- Derecha: URL -->
+    <div class="text-right">
+      <span class="text-body-sm text-primary font-medium">www.teqinoft.com</span>
+    </div>
+  </div>
+</div>
+
 </div>
 </div>
 <div id="panel-info-basica" style="display:none;">
