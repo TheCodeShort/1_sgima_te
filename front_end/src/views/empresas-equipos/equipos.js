@@ -5,6 +5,7 @@
 
 (function () {
 let equipoEditandoId = null;
+let equipoEditandoIdUsuarioRegistro = null;
 let equiposCache = [];
 
 function pintarTablaEquipos(root, equipos) {
@@ -142,6 +143,7 @@ async function cargarTiposEstados(root) {
 
 function abrirModalNuevoEquipo(root) {
   equipoEditandoId = null;
+  equipoEditandoIdUsuarioRegistro = null;
   modalNuevoEquipo = root.querySelector('#modal-nuevo-equipo');
   formNuevoEquipo = root.querySelector('#form-nuevo-equipo');
   if (!modalNuevoEquipo || !formNuevoEquipo) return;
@@ -177,6 +179,7 @@ function abrirModalNuevoEquipo(root) {
 
 async function abrirModalEdicion(root, equipo) {
   equipoEditandoId = equipo.idEquipo;
+  equipoEditandoIdUsuarioRegistro = equipo.idUsuarioRegistro;
   modalNuevoEquipo = root.querySelector('#modal-nuevo-equipo');
   formNuevoEquipo = root.querySelector('#form-nuevo-equipo');
   if (!modalNuevoEquipo || !formNuevoEquipo) return;
@@ -343,7 +346,7 @@ function obtenerDatosFormulario(root) {
     codigoQr,
     observacionesEquipo,
     idEmpresa,
-    idUsuarioRegistro: idUsuarioAdmin
+    idUsuarioRegistro: equipoEditandoId ? equipoEditandoIdUsuarioRegistro : idUsuarioAdmin
   };
 }
 
@@ -547,8 +550,9 @@ async function initView(ctx) {
   if (!contexto || !contexto.idEmpresa) {
     const storedId = sessionStorage.getItem('sigma_equipo_seleccionado_empresa_id');
     const storedNombre = sessionStorage.getItem('sigma_equipo_seleccionado_empresa_nombre');
+    const storedAdminId = sessionStorage.getItem('sigma_equipo_seleccionado_admin_id');
     if (storedId && storedNombre) {
-      EmpresaContext.set(storedId, storedNombre, null);
+      EmpresaContext.set(storedId, storedNombre, storedAdminId || undefined);
       contexto = EmpresaContext.get();
     }
   }
@@ -674,6 +678,7 @@ async function initView(ctx) {
         sessionStorage.setItem('sigma_equipo_seleccionado_nombre', equipoNombre);
         sessionStorage.setItem('sigma_equipo_seleccionado_empresa_id', empresaId);
         sessionStorage.setItem('sigma_equipo_seleccionado_empresa_nombre', empresaNombre);
+        sessionStorage.setItem('sigma_equipo_seleccionado_admin_id', EmpresaContext.get()?.idUsuarioAdmin ?? '');
         ctx.navigate('hoja-vida-equipo');
       }
     });

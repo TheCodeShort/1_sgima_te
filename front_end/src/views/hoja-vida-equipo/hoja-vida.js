@@ -69,8 +69,7 @@ function initView(ctx) {
   const camposTexto = [
     { lectura: 'campo-area-lectura', edicion: 'campo-area-edicion' },
     { lectura: 'campo-responsable-lectura', edicion: 'campo-responsable-edicion' },
-    { lectura: 'campo-fecha-lectura', edicion: 'campo-fecha-edicion' },
-    { lectura: 'campo-observaciones-lectura', edicion: 'campo-observaciones-edicion' }
+    { lectura: 'campo-fecha-lectura', edicion: 'campo-fecha-edicion' }
   ];
 
   const camposEquipo = [
@@ -79,7 +78,8 @@ function initView(ctx) {
     { lectura: 'campo-modelo-lectura', edicion: 'campo-modelo-edicion', dto: 'modelo' },
     { lectura: 'campo-serial-lectura', edicion: 'campo-serial-edicion', dto: 'serial' },
     { lectura: 'campo-codigo-lectura', edicion: 'campo-codigo-edicion', dto: 'codigoEquipo' },
-    { lectura: 'campo-ubicacion-lectura', edicion: 'campo-ubicacion-edicion', dto: 'ubicacion' }
+    { lectura: 'campo-ubicacion-lectura', edicion: 'campo-ubicacion-edicion', dto: 'ubicacion' },
+    { lectura: 'campo-observaciones-lectura', edicion: 'campo-observaciones-edicion', dto: 'observacionesEquipo' }
   ];
 
   const checkboxes = [
@@ -283,8 +283,7 @@ function initView(ctx) {
     const mapaTexto = {
       'campo-area-lectura': dto.area,
       'campo-responsable-lectura': dto.responsable,
-      'campo-fecha-lectura': dto.fechaPuestaServicio,
-      'campo-observaciones-lectura': dto.observaciones
+      'campo-fecha-lectura': dto.fechaPuestaServicio
     };
     Object.entries(mapaTexto).forEach(([id, valor]) => {
       const el = root.querySelector(`#${id}`);
@@ -402,15 +401,12 @@ function initView(ctx) {
     const areaEl = root.querySelector('#campo-area-edicion');
     const responsableEl = root.querySelector('#campo-responsable-edicion');
     const fechaEl = root.querySelector('#campo-fecha-edicion');
-    const observacionesEl = root.querySelector('#campo-observaciones-edicion');
-
     const payloadHojaVida = {
       area: areaEl ? areaEl.value.trim() : null,
       responsable: responsableEl ? responsableEl.value.trim() : null,
       fechaPuestaServicio: fechaEl ? fechaEl.value : null,
       caracteristicasTecnicas,
-      documentos,
-      observaciones: observacionesEl ? observacionesEl.value.trim() : null
+      documentos
     };
 
     // Arma el objeto COMPLETO de equipo, fusionando los 6 campos editables
@@ -429,7 +425,7 @@ function initView(ctx) {
       idEstadoEquipo: datosOriginales.idEstadoEquipo,
       frecuenciaCalibracionDias: datosOriginales.frecuenciaCalibracionDias,
       codigoQr: datosOriginales.codigoQr,
-      observacionesEquipo: datosOriginales.observacionesEquipo,
+      observacionesEquipo: root.querySelector('#campo-observaciones-edicion')?.value.trim() ?? datosOriginales.observacionesEquipo,
       idUsuarioRegistro: datosOriginales.idUsuarioRegistro,
       idEmpresa: datosOriginales.idEmpresa
     };
@@ -440,7 +436,8 @@ function initView(ctx) {
       payloadEquipo.marca !== datosOriginales.marca ||
       payloadEquipo.modelo !== datosOriginales.modelo ||
       payloadEquipo.serial !== datosOriginales.serial ||
-      payloadEquipo.ubicacion !== datosOriginales.ubicacion;
+      payloadEquipo.ubicacion !== datosOriginales.ubicacion ||
+      payloadEquipo.observacionesEquipo !== datosOriginales.observacionesEquipo;
 
     try {
       if (cambioAlgoDeEquipo) {
