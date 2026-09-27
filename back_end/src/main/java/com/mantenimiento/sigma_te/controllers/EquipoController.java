@@ -3,6 +3,8 @@ package com.mantenimiento.sigma_te.controllers;
 import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
+import com.mantenimiento.sigma_te.dto.hojavidaequipo.EquipoHojaVidaDTO;
+import com.mantenimiento.sigma_te.dto.hojavidaequipo.HojaVidaEquipoRequestDTO;
 import com.mantenimiento.sigma_te.services.EquipoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +80,25 @@ public class EquipoController {
             @RequestBody CambiarEstadoDTO request,
             Authentication authentication) {
         EquipoDTO dto = equipoService.cambiarEstado(id, request, authentication);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'ver_equipos')")
+    @GetMapping("/{id}/hoja-vida")
+    public ResponseEntity<EquipoHojaVidaDTO> obtenerHojaVida(
+            @PathVariable Integer id,
+            Authentication authentication) {
+        EquipoHojaVidaDTO dto = equipoService.obtenerHojaVida(id, authentication);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PreAuthorize("@permisoChecker.tienePermiso(authentication, 'editar_equipos')")
+    @PutMapping("/{id}/hoja-vida")
+    public ResponseEntity<EquipoHojaVidaDTO> guardarHojaVida(
+            @PathVariable Integer id,
+            @RequestBody HojaVidaEquipoRequestDTO request,
+            Authentication authentication) {
+        EquipoHojaVidaDTO dto = equipoService.guardarHojaVida(id, request, authentication);
         return ResponseEntity.ok(dto);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -46,6 +47,19 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        sembrarEstadosEquipoSiFalta();
+
+        if (rolRepository.count() == 0) {
+            bootstrapInicial();
+        }
+
+        // Se ejecuta SIEMPRE, en cada arranque, sin depender de recrear
+        // la base de datos desde cero. Asi se agregan permisos nuevos
+        // en el futuro sin repetir este mismo problema.
+        sembrarPermisoEditarEquiposSiFalta();
+    }
+
+    private void sembrarEstadosEquipoSiFalta() {
         if (estadoEquipoRepository.count() == 0) {
             Object[][] estadosBase = {
                 {"Operativo", "Equipo funcionando con normalidad", true},
@@ -62,14 +76,9 @@ public class DataInitializer implements CommandLineRunner {
                 estadoEquipoRepository.save(estado);
             }
         }
+    }
 
-        if (rolRepository.count() > 0) {
-            return;
-        }
-
-        // 2. Si la tabla rol está vacía:
-        // a. Crear rol Administrador protegido
-        // El usuario main y su rol Administrador son globales, sin empresa asociada
+    private void bootstrapInicial() {
         Rol rolAdmin = Rol.builder()
                 .empresa(null)
                 .nombreRol("Administrador")
@@ -83,6 +92,7 @@ public class DataInitializer implements CommandLineRunner {
             String[][] permisosBase = {
                 {"ver_equipos", "Equipos"},
                 {"ver_detalle_equipo", "Equipos"},
+                {"editar_equipos", "Equipos"},
                 {"registrar_falla", "Fallas"},
                 {"registrar_mantenimiento", "Mantenimiento"},
                 {"cargar_evidencia", "Evidencia"},
@@ -100,10 +110,8 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        // b. Obtener todos los permisos existentes
         List<Permiso> permisos = permisoRepository.findAll();
 
-        // c. Asignar todos los permisos encontrados al nuevo rol
         if (permisos != null && !permisos.isEmpty()) {
             for (Permiso permiso : permisos) {
                 RolPermisoId rolPermisoId = new RolPermisoId(rolAdmin.getIdRol(), permiso.getIdPermiso());
@@ -115,10 +123,6 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        // d. Crear usuario Administrador inicial
-        // El usuario main y su rol Administrador son globales, sin empresa asociada.
-        // En el servidor real, configurar ADMIN_EMAIL y ADMIN_PASSWORD como variables
-        // de entorno reales; estos valores por defecto solo se usan en desarrollo local.
         String correoAdmin = System.getenv().getOrDefault("ADMIN_EMAIL", "admin@sistema.local");
         String passwordAdmin = System.getenv().getOrDefault("ADMIN_PASSWORD", "Admin12345");
 
@@ -135,7 +139,33 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
         usuarioRepository.save(admin);
 
-        // e. Notificación visible en consola
         System.out.println("=== Sistema inicializado: usuario admin@sistema.local creado con contraseña temporal. Cámbiala de inmediato. ===");
+    }
+
+    private void sembrarPermisoEditarEquiposSiFalta() {
+        Permiso permisoEditarEquipos = permisoRepository.findByNombrePermiso("editar_equipos")
+                .orElseGet(() -> {
+                    Permiso nuevo = Permiso.builder()
+                            .nombrePermiso("editar_equipos")
+                            .modulo("Equipos")
+                            .build();
+                    return permisoRepository.save(nuevo);
+                });
+
+        Optional<Rol> rolAdminOpt = rolRepository.findByEmpresaIsNullAndEsProtegidoTrue();
+
+        if (rolAdminOpt.isPresent()) {
+            Rol rolAdmin = rolAdminOpt.get();
+            RolPermisoId id = new RolPermisoId(rolAdmin.getIdRol(), permisoEditarEquipos.getIdPermiso());
+
+            if (!rolPermisoRepository.existsById(id)) {
+                RolPermiso asignacion = RolPermiso.builder()
+                        .id(id)
+                        .fechaAsignacion(LocalDateTime.now())
+                        .build();
+                rolPermisoRepository.save(asignacion);
+                System.out.println("=== Permiso 'editar_equipos' creado y asignado al rol Administrador. ===");
+            }
+        }
     }
 }

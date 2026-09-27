@@ -3,12 +3,16 @@ package com.mantenimiento.sigma_te.services;
 import com.mantenimiento.sigma_te.dto.empresa.CambiarEstadoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoDTO;
 import com.mantenimiento.sigma_te.dto.equipo.EquipoRequestDTO;
+import com.mantenimiento.sigma_te.dto.hojavidaequipo.EquipoHojaVidaDTO;
+import com.mantenimiento.sigma_te.dto.hojavidaequipo.HojaVidaEquipoRequestDTO;
 import com.mantenimiento.sigma_te.models.Empresa;
 import com.mantenimiento.sigma_te.models.Equipo;
 import com.mantenimiento.sigma_te.models.EstadoEquipo;
+import com.mantenimiento.sigma_te.models.HojaVidaEquipo;
 import com.mantenimiento.sigma_te.models.Usuario;
 import com.mantenimiento.sigma_te.repositories.EmpresaRepository;
 import com.mantenimiento.sigma_te.repositories.EquipoRepository;
+import com.mantenimiento.sigma_te.repositories.HojaVidaEquipoRepository;
 import com.mantenimiento.sigma_te.repositories.EstadoEquipoRepository;
 import com.mantenimiento.sigma_te.repositories.UsuarioRepository;
 import com.mantenimiento.sigma_te.security.TenantContext;
@@ -21,23 +25,27 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EquipoService {
 
     private final EquipoRepository equipoRepository;
     private final EstadoEquipoRepository estadoEquipoRepository;
+    private final HojaVidaEquipoRepository hojaVidaEquipoRepository;
     private final UsuarioRepository usuarioRepository;
     private final EmpresaRepository empresaRepository;
     private final TenantContext tenantContext;
 
     public EquipoService(EquipoRepository equipoRepository,
                          EstadoEquipoRepository estadoEquipoRepository,
+                         HojaVidaEquipoRepository hojaVidaEquipoRepository,
                          UsuarioRepository usuarioRepository,
                          EmpresaRepository empresaRepository,
                          TenantContext tenantContext) {
         this.equipoRepository = equipoRepository;
         this.estadoEquipoRepository = estadoEquipoRepository;
+        this.hojaVidaEquipoRepository = hojaVidaEquipoRepository;
         this.usuarioRepository = usuarioRepository;
         this.empresaRepository = empresaRepository;
         this.tenantContext = tenantContext;
@@ -319,6 +327,102 @@ public class EquipoService {
                 nombreEmpresa,
                 equipo.getActivo()
         );
+    }
+
+    private EquipoHojaVidaDTO convertirAHojaVidaDTO(Equipo equipo, HojaVidaEquipo hojaVida) {
+        Integer idEmpresa = equipo.getEmpresa() != null
+                ? equipo.getEmpresa().getIdEmpresa() : null;
+        String nombreEmpresa = equipo.getEmpresa() != null
+                ? equipo.getEmpresa().getNombreEmpresa() : null;
+
+        return new EquipoHojaVidaDTO(
+                equipo.getIdEquipo(),
+                equipo.getCodigoEquipo(),
+                equipo.getNombreEquipo(),
+                equipo.getTipoEquipo(),
+                equipo.getMarca(),
+                equipo.getModelo(),
+                equipo.getPesoMaximo(),
+                equipo.getUnidadPeso(),
+                equipo.getSerial(),
+                equipo.getUbicacion(),
+                equipo.getEstadoEquipo() != null ? equipo.getEstadoEquipo().getIdEstadoEquipo() : null,
+                equipo.getFrecuenciaCalibracionDias(),
+                equipo.getCodigoQr(),
+                equipo.getObservacionesEquipo(),
+                equipo.getUsuarioRegistro() != null ? equipo.getUsuarioRegistro().getIdUsuario() : null,
+                equipo.getFechaRegistroEquipo(),
+                idEmpresa,
+                nombreEmpresa,
+                equipo.getActivo(),
+                hojaVida != null ? hojaVida.getArea() : null,
+                hojaVida != null ? hojaVida.getResponsable() : null,
+                hojaVida != null ? hojaVida.getFechaPuestaServicio() : null,
+                hojaVida != null ? hojaVida.getCaracteristicasTecnicas() : null,
+                hojaVida != null ? hojaVida.getDocumentos() : null,
+                hojaVida != null ? hojaVida.getObservaciones() : null,
+                hojaVida != null ? hojaVida.getFechaCreacion() : null,
+                hojaVida != null ? hojaVida.getFechaActualizacion() : null
+        );
+    }
+
+    public EquipoHojaVidaDTO obtenerHojaVida(Integer id, Authentication authentication) {
+        Equipo equipo = equipoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        if (idEmpresaActual != null) {
+            Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+            }
+        }
+
+        // Buscar hoja de vida (puede no existir)
+        Optional<HojaVidaEquipo> hojaVidaOpt = hojaVidaEquipoRepository.findByIdEquipo(id);
+
+        return convertirAHojaVidaDTO(equipo, hojaVidaOpt.orElse(null));
+    }
+
+    @Transactional
+    public EquipoHojaVidaDTO guardarHojaVida(Integer id, HojaVidaEquipoRequestDTO request, Authentication authentication) {
+        Equipo equipo = equipoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado."));
+
+        Integer idEmpresaActual = tenantContext.obtenerIdEmpresaActual(authentication);
+        if (idEmpresaActual != null) {
+            Integer idEmpresaEquipo = equipo.getEmpresa() != null ? equipo.getEmpresa().getIdEmpresa() : null;
+            if (!tenantContext.coincideEmpresa(idEmpresaEquipo, idEmpresaActual)) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Equipo no encontrado.");
+            }
+        }
+
+        // Buscar hoja de vida existente o crear nueva (upsert)
+        HojaVidaEquipo hojaVida = hojaVidaEquipoRepository.findByIdEquipo(id)
+                .orElseGet(() -> {
+                    HojaVidaEquipo nueva = new HojaVidaEquipo();
+                    nueva.setEquipo(equipo);  // @MapsId derive id automáticamente, NO usar setIdEquipo()
+                    return nueva;
+                });
+
+        // Actualizar campos editables
+        hojaVida.setArea(request.area());
+        hojaVida.setResponsable(request.responsable());
+        hojaVida.setFechaPuestaServicio(request.fechaPuestaServicio());
+        hojaVida.setCaracteristicasTecnicas(request.caracteristicasTecnicas());
+        hojaVida.setDocumentos(request.documentos());
+        hojaVida.setObservaciones(request.observaciones());
+
+        // Siempre actualizar fecha_actualizacion al modificar
+        hojaVida.setFechaActualizacion(LocalDateTime.now());
+
+        HojaVidaEquipo guardada = hojaVidaEquipoRepository.save(hojaVida);
+
+        return convertirAHojaVidaDTO(equipo, guardada);
     }
 }
 

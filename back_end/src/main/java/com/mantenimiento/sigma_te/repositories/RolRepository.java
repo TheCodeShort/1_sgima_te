@@ -20,4 +20,6 @@ public interface RolRepository extends JpaRepository<Rol, Integer> {
     List<Rol> findByEmpresa_IdEmpresa(Integer idEmpresa);
 
     Optional<Rol> findByEmpresa_IdEmpresaAndEsProtegidoTrue(Integer idEmpresa);
+
+    Optional<Rol> findByEmpresaIsNullAndEsProtegidoTrue();
 }
