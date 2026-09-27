@@ -17,18 +17,28 @@
     <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Información general, especificaciones técnicas y documentación del activo industrial.</p>
   </div>
   <div class="flex flex-wrap items-center gap-3">
-    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
-      <span class="material-symbols-outlined text-[18px]">print</span>
-      Imprimir
-    </button>
-    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
-      <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
-      Exportar PDF
-    </button>
-    <button class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
-      <span class="material-symbols-outlined text-[18px]">edit</span>
-      <span class="text-body-md font-body-md font-semibold">Editar</span>
-    </button>
+    <div id="botones-modo-lectura" class="flex flex-wrap items-center gap-3">
+      <button id="btn-imprimir" class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
+        <span class="material-symbols-outlined text-[18px]">print</span>
+        Imprimir
+      </button>
+      <button id="btn-exportar-pdf" class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
+        <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+        Exportar PDF
+      </button>
+      <button id="btn-editar" class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        <span class="text-body-md font-body-md font-semibold">Editar</span>
+      </button>
+    </div>
+    <div id="botones-modo-edicion" class="flex flex-wrap items-center gap-3" style="display:none;">
+      <button id="btn-cancelar-edicion" type="button" class="flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">
+        Cancelar
+      </button>
+      <button id="btn-guardar-edicion" type="button" disabled class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface-variant rounded-lg text-body-sm font-body-sm cursor-not-allowed" style="opacity:0.5;">
+        Guardar
+      </button>
+    </div>
   </div>
 </div>
 
@@ -67,15 +77,58 @@
         </h3>
       </div>
       <div class="p-5 flex flex-col gap-0">
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 pb-2"><span class="text-on-surface-variant">Nombre del equipo:</span> <span class="text-on-surface font-medium">Balanza de plataforma</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Marca:</span> <span class="text-on-surface font-medium">METTLER TOLEDO</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Modelo:</span> <span class="text-on-surface font-medium">IND560 + PBA429</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Serie:</span> <span class="text-on-surface font-medium">B123456789</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Código interno:</span> <span class="text-on-surface font-medium">EQ-001</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Ubicación:</span> <span class="text-on-surface font-medium">Planta de producción</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Área:</span> <span class="text-on-surface font-medium">Pesaje y empaque</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Responsable:</span> <span class="text-on-surface font-medium">Juan Pérez</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Fecha de puesta en servicio:</span> <span class="text-on-surface font-medium">2023-06-15</span></div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 pb-2">
+  <span class="text-on-surface-variant">Nombre del equipo:</span>
+  <span id="campo-nombre-lectura" class="text-on-surface font-medium">Balanza de plataforma</span>
+  <input id="campo-nombre-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Marca:</span>
+  <span id="campo-marca-lectura" class="text-on-surface font-medium">METTLER TOLEDO</span>
+  <input id="campo-marca-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Modelo:</span>
+  <span id="campo-modelo-lectura" class="text-on-surface font-medium">IND560 + PBA429</span>
+  <input id="campo-modelo-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Serie:</span>
+  <span id="campo-serial-lectura" class="text-on-surface font-medium">B123456789</span>
+  <input id="campo-serial-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Código interno:</span>
+  <span id="campo-codigo-lectura" class="text-on-surface font-medium">EQ-001</span>
+  <input id="campo-codigo-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Ubicación:</span>
+  <span id="campo-ubicacion-lectura" class="text-on-surface font-medium">Planta de producción</span>
+  <input id="campo-ubicacion-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Área:</span>
+  <span id="campo-area-lectura" class="text-on-surface font-medium">Pesaje y empaque</span>
+  <input id="campo-area-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2">
+  <span class="text-on-surface-variant">Responsable:</span>
+  <span id="campo-responsable-lectura" class="text-on-surface font-medium">Juan Pérez</span>
+  <input id="campo-responsable-edicion" type="text" style="display:none;" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2">
+  <span class="text-on-surface-variant">Fecha de puesta en servicio:</span>
+  <span id="campo-fecha-lectura" class="text-on-surface font-medium">2023-06-15</span>
+  <input id="campo-fecha-edicion" type="date" style="display:none;" class="px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/>
+</div>
+<div id="info-general-extra-lectura" class="flex flex-col gap-0"></div>
+<div id="info-general-extra-edicion" style="display:none;" class="flex flex-col gap-2 mt-2">
+  <div id="filas-informacion-extra" class="flex flex-col gap-2"></div>
+  <button id="btn-agregar-campo-info" type="button" class="text-body-sm font-body-sm text-primary hover:underline mt-1 text-left">
+    + Agregar campo
+  </button>
+</div>
       </div>
     </div>
   </div>
@@ -106,14 +159,27 @@
           2. CARACTERÍSTICAS TÉCNICAS
         </h3>
       </div>
-      <div class="p-5 flex flex-col gap-0">
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 pb-2"><span class="text-on-surface-variant">Capacidad máxima:</span> <span class="text-on-surface font-medium">300 kg</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">División de escala:</span> <span class="text-on-surface font-medium">0,05 kg</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Clase:</span> <span class="text-on-surface font-medium">III</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Tipo de equipo:</span> <span class="text-on-surface font-medium">Balanza electrónica</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Alimentación:</span> <span class="text-on-surface font-medium">110 – 240 V / 50-60 Hz</span></div>
-        <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Condiciones de operación:</span> <span class="text-on-surface font-medium">0 °C a 40 °C / Humedad < 85 %</span></div>
-      </div>
+      <div id="caracteristicas-tecnicas-lectura" class="p-5 flex flex-col gap-0">
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Capacidad máxima:</span> <span id="ct-capacidad_maxima-lectura" class="text-on-surface font-medium">—</span></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">División de escala:</span> <span id="ct-division_escala-lectura" class="text-on-surface font-medium">—</span></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Clase:</span> <span id="ct-clase-lectura" class="text-on-surface font-medium">—</span></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Tipo de equipo:</span> <span id="ct-tipo_equipo_detalle-lectura" class="text-on-surface font-medium">—</span></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Alimentación:</span> <span id="ct-alimentacion-lectura" class="text-on-surface font-medium">—</span></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Condiciones de operación:</span> <span id="ct-condiciones_operacion-lectura" class="text-on-surface font-medium">—</span></div>
+  <div id="ct-extra-lectura" class="flex flex-col gap-0"></div>
+</div>
+<div id="caracteristicas-tecnicas-edicion" style="display:none;" class="p-5 flex flex-col gap-0">
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Capacidad máxima:</span> <input id="ct-capacidad_maxima-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">División de escala:</span> <input id="ct-division_escala-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Clase:</span> <input id="ct-clase-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Tipo de equipo:</span> <input id="ct-tipo_equipo_detalle-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center border-b border-outline-variant/30 py-2"><span class="text-on-surface-variant">Alimentación:</span> <input id="ct-alimentacion-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div class="grid grid-cols-[150px_1fr] gap-4 items-center py-2"><span class="text-on-surface-variant">Condiciones de operación:</span> <input id="ct-condiciones_operacion-edicion" type="text" class="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm"/></div>
+  <div id="filas-caracteristicas-extra" class="flex flex-col gap-2 mt-3"></div>
+  <button id="btn-agregar-campo-tecnico" type="button" class="text-body-sm font-body-sm text-primary hover:underline mt-2 text-left">
+    + Agregar campo
+  </button>
+</div>
     </div>
   </div>
   <div class="col-span-2">
@@ -128,19 +194,19 @@
       </div>
       <div class="p-5 flex flex-col gap-0">
         <div class="flex items-center gap-2 py-2">
-          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <input id="doc-manual-operacion" type="checkbox" checked disabled class="rounded border-outline-variant"/>
           <label class="text-body-sm font-body-sm text-on-surface">Manual de operación</label>
         </div>
         <div class="flex items-center gap-2 py-2">
-          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <input id="doc-division-servicio" type="checkbox" checked disabled class="rounded border-outline-variant"/>
           <label class="text-body-sm font-body-sm text-on-surface">División de servicio</label>
         </div>
         <div class="flex items-center gap-2 py-2">
-          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <input id="doc-certificado-calibracion" type="checkbox" checked disabled class="rounded border-outline-variant"/>
           <label class="text-body-sm font-body-sm text-on-surface">Certificado de calibración</label>
         </div>
         <div class="flex items-center gap-2 py-2">
-          <input type="checkbox" checked class="rounded border-outline-variant"/>
+          <input id="doc-ficha-tecnica" type="checkbox" checked disabled class="rounded border-outline-variant"/>
           <label class="text-body-sm font-body-sm text-on-surface">Ficha técnica</label>
         </div>
         <div class="flex items-center gap-2 py-2">
@@ -264,9 +330,12 @@
         6. OBSERVACIONES
       </h3>
     </div>
-    <div class="p-5">
-      Equipo en condiciones óptimas de funcionamiento.
-    </div>
+    <div id="campo-observaciones-lectura" class="p-5">
+  Equipo en condiciones óptimas de funcionamiento.
+</div>
+<div class="px-5 pb-5">
+  <textarea id="campo-observaciones-edicion" style="display:none;" class="w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-base text-on-surface text-body-sm" rows="3"></textarea>
+</div>
   </div>
 </div>
 
@@ -300,8 +369,6 @@
   </div>
 </div>
 
-</div>
-</div>
 <div id="panel-info-basica" style="display:none;">
 <div class="bg-surface-card rounded-lg border border-outline-variant/40 p-8 text-center">
   <p class="text-body-md font-body-md text-on-surface-variant mt-2">Contenido en construcción</p>
@@ -318,6 +385,7 @@
 </div>
 </div>
 
+</div>
 </div>
 </main>
 </div>

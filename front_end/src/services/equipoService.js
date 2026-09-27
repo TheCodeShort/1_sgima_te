@@ -86,6 +86,26 @@ const EquipoService = {
       throw new Error(error.mensaje || `Error al cambiar estado del equipo: ${response.status}`);
     }
     return await response.json();
+  },
+  async getHojaVida(id) {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/equipos/${id}/hoja-vida`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al obtener hoja de vida: ${response.status}`);
+    }
+    return await response.json();
+  },
+  async guardarHojaVida(id, datos) {
+    const response = await fetchConAuth(`${window.API_BASE_URL}/equipos/${id}/hoja-vida`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.mensaje || `Error al guardar hoja de vida: ${response.status}`);
+    }
+    return await response.json();
   }
 };
 
