@@ -382,7 +382,7 @@
       <div class="min-w-0 flex-1" title="Listado Hojas de vida de equipos">
         <p class="text-body-sm font-body-sm text-on-surface-variant truncate">Listado Hojas de vida de equipos</p>
       </div>
-      <button type="button" class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm shrink-0" title="Nueva Hojas de vida de equipos">
+      <button type="button" id="btn-nueva-hv" class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm shrink-0" title="Nueva Hojas de vida de equipos">
         <span>+</span>
         <span class="hidden sm:inline">Nueva Hojas de vida de equipos</span>
         <span class="sm:hidden">Nueva</span>
@@ -421,77 +421,16 @@
             </tr>
           </thead>
           <tbody id="tabla-hv-cuerpo">
-            <tr class="border-b border-outline-variant/30">
-              <td class="px-4 py-3 text-body-sm text-on-surface flex items-center gap-2 truncate max-w-xs">
-                <span class="material-symbols-outlined text-[18px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">picture_as_pdf</span>
-                Hoja de vida - Báscula 500 kg
-              </td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant whitespace-nowrap">14/03/2026</td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant truncate max-w-sm" title="Actualizada tras calibración anual">Actualizada tras calibración anual</td>
-              <td class="px-4 py-3 text-right whitespace-nowrap">
-                <button type="button" title="Editar" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                <button type="button" title="Borrar" class="text-on-surface-variant hover:text-red-400"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-              </td>
-            </tr>
-            <tr class="border-b border-outline-variant/30">
-              <td class="px-4 py-3 text-body-sm text-on-surface flex items-center gap-2 truncate max-w-xs">
-                <span class="material-symbols-outlined text-[18px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">picture_as_pdf</span>
-                Hoja de vida - Báscula 500 kg
-              </td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant whitespace-nowrap">02/11/2023</td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant truncate max-w-sm" title="Versión anterior, formato antiguo">Versión anterior, formato antiguo</td>
-              <td class="px-4 py-3 text-right whitespace-nowrap">
-                <button type="button" title="Editar" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                <button type="button" title="Borrar" class="text-on-surface-variant hover:text-red-400"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-              </td>
-            </tr>
-            <tr class="border-b border-outline-variant/30">
-              <td class="px-4 py-3 text-body-sm text-on-surface flex items-center gap-2 truncate max-w-xs">
-                <span class="material-symbols-outlined text-[18px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">picture_as_pdf</span>
-                Hoja de vida - Balanza analítica
-              </td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant whitespace-nowrap">20/06/2021</td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant truncate max-w-sm" title="">—</td>
-              <td class="px-4 py-3 text-right whitespace-nowrap">
-                <button type="button" title="Editar" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                <button type="button" title="Borrar" class="text-on-surface-variant hover:text-red-400"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-              </td>
-            </tr>
-            <tr class="border-b border-outline-variant/30">
-              <td class="px-4 py-3 text-body-sm text-on-surface flex items-center gap-2 truncate max-w-xs">
-                <span class="material-symbols-outlined text-[18px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">picture_as_pdf</span>
-                Hoja de vida - Báscula 500 kg
-              </td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant whitespace-nowrap">09/01/2020</td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant truncate max-w-sm" title="Primer registro del equipo con todos los datos técnicos del fabricante y las observaciones iniciales de puesta en servicio">Primer registro del equipo con todos los datos técnicos del fabricante y las observaciones iniciales de puesta en servicio</td>
-              <td class="px-4 py-3 text-right whitespace-nowrap">
-                <button type="button" title="Editar" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                <button type="button" title="Borrar" class="text-on-surface-variant hover:text-red-400"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-              </td>
-            </tr>
-            <tr class="border-b border-outline-variant/30">
-              <td class="px-4 py-3 text-body-sm text-on-surface flex items-center gap-2 truncate max-w-xs">
-                <span class="material-symbols-outlined text-[18px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">picture_as_pdf</span>
-                Hoja de vida - Compresor de tornillo
-              </td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant whitespace-nowrap">27/08/2019</td>
-              <td class="px-4 py-3 text-body-sm text-on-surface-variant truncate max-w-sm" title="Documento digitalizado desde archivo físico">Documento digitalizado desde archivo físico</td>
-              <td class="px-4 py-3 text-right whitespace-nowrap">
-                <button type="button" title="Editar" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                <button type="button" title="Borrar" class="text-on-surface-variant hover:text-red-400"><span class="material-symbols-outlined text-[18px]">delete</span></button>
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
+      <div id="hv-vacio" class="p-8 text-center" style="display:none;">
+        <p id="hv-vacio-texto" class="text-body-md font-body-md text-on-surface-variant"></p>
+      </div>
       <div class="border-t border-outline-variant/30 flex justify-between items-center gap-3 flex-wrap px-4 py-3">
-        <span class="text-body-sm text-on-surface">Mostrando <span class="font-semibold text-on-surface">1-5</span> de <span class="font-semibold text-on-surface">14</span> documentos</span>
+        <p id="hv-contador" class="text-body-sm text-on-surface"></p>
+        <span id="hv-badge-prueba" class="text-xs text-on-surface-variant border border-outline-variant/40 rounded px-2 py-0.5" style="display:none;">Datos de ejemplo</span>
         <div id="hv-paginacion" class="flex items-center gap-2">
-          <button type="button" class="px-3 py-1 bg-surface-container border border-outline-variant text-on-surface-variant rounded-lg text-body-sm opacity-50 cursor-not-allowed">Anterior</button>
-          <button type="button" class="px-3 py-1 bg-inverse-primary text-on-primary border border-outline-variant rounded-lg text-body-sm">1</button>
-          <button type="button" class="px-3 py-1 bg-surface-container border border-outline-variant text-on-surface rounded-lg text-body-sm">2</button>
-          <button type="button" class="px-3 py-1 bg-surface-container border border-outline-variant text-on-surface rounded-lg text-body-sm">3</button>
-          <button type="button" class="px-3 py-1 bg-surface-container border border-outline-variant text-on-surface rounded-lg text-body-sm">Siguiente</button>
         </div>
       </div>
     </div>
@@ -541,4 +480,39 @@
 
 </div>
 </main>
+
+<div id="modal-hv" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" aria-hidden="true" role="dialog" aria-labelledby="modal-hv-titulo">
+  <div class="bg-surface-card border border-outline-variant rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
+    <div class="bg-surface-container-high border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[22px]">add_box</span>
+        <h3 id="modal-hv-titulo" class="text-headline-sm font-headline-sm font-semibold text-on-surface">Nueva hoja de vida de equipo</h3>
+      </div>
+      <button id="btn-cerrar-modal-hv" type="button" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-highest transition-colors" aria-label="Cerrar modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <form id="form-hv" novalidate class="p-6 space-y-4 overflow-y-auto flex-1">
+      <div>
+        <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Nombre del documento *</label>
+        <input id="hv-nombre" type="text" maxlength="120" placeholder="Ej: Hoja de vida - Báscula 500 kg - 2026" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+        <p id="error-hv-nombre" style="display:none;" class="text-body-sm font-body-sm text-error mt-1"></p>
+      </div>
+      <div>
+        <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Fecha *</label>
+        <input id="hv-fecha" type="date" min="1900-01-01" max="2100-12-31" class="w-full bg-surface-container border border-outline-variant text-on-surface rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"/>
+        <p id="error-hv-fecha" style="display:none;" class="text-body-sm font-body-sm text-error mt-1"></p>
+      </div>
+      <div>
+        <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Observaciones</label>
+        <textarea id="hv-observaciones" rows="3" maxlength="500" placeholder="Ej: Creada, pendiente de diligenciar" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-y"></textarea>
+      </div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" id="btn-cancelar-hv" class="px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">Cancelar</button>
+        <button type="button" id="btn-guardar-hv" class="px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>
