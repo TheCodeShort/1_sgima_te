@@ -19,6 +19,13 @@ function initView(ctx) {
   const panelReporte = root.querySelector('#panel-reporte');
   const panelCertificado = root.querySelector('#panel-certificado');
 
+  const subtabHojaVida = root.querySelector('#subtab-hoja-vida');
+  const subtabManual = root.querySelector('#subtab-manual');
+  const subtabFactura = root.querySelector('#subtab-factura');
+  const subpanelHojaVida = root.querySelector('#subpanel-hoja-vida');
+  const subpanelManual = root.querySelector('#subpanel-manual');
+  const subpanelFactura = root.querySelector('#subpanel-factura');
+
   function activarTab(tab) {
     const esEquipo = tab === 'equipo';
     const esInfoBasica = tab === 'info-basica';
@@ -33,11 +40,26 @@ function initView(ctx) {
     if (tabReporte) { tabReporte.classList.toggle('border-primary', esReporte); tabReporte.classList.toggle('text-primary', esReporte); tabReporte.classList.toggle('border-transparent', !esReporte); tabReporte.classList.toggle('text-on-surface-variant', !esReporte); }
     if (tabCertificado) { tabCertificado.classList.toggle('border-primary', esCertificado); tabCertificado.classList.toggle('text-primary', esCertificado); tabCertificado.classList.toggle('border-transparent', !esCertificado); tabCertificado.classList.toggle('text-on-surface-variant', !esCertificado); }
   }
+  function activarSubTab(sub) {
+    const esHojaVida = sub === 'hoja-vida';
+    const esManual = sub === 'manual';
+    const esFactura = sub === 'factura';
+    if (subpanelHojaVida) subpanelHojaVida.style.display = esHojaVida ? 'block' : 'none';
+    if (subpanelManual) subpanelManual.style.display = esManual ? 'block' : 'none';
+    if (subpanelFactura) subpanelFactura.style.display = esFactura ? 'block' : 'none';
+    if (subtabHojaVida) { subtabHojaVida.classList.toggle('border-primary', esHojaVida); subtabHojaVida.classList.toggle('text-primary', esHojaVida); subtabHojaVida.classList.toggle('border-transparent', !esHojaVida); subtabHojaVida.classList.toggle('text-on-surface-variant', !esHojaVida); }
+    if (subtabManual) { subtabManual.classList.toggle('border-primary', esManual); subtabManual.classList.toggle('text-primary', esManual); subtabManual.classList.toggle('border-transparent', !esManual); subtabManual.classList.toggle('text-on-surface-variant', !esManual); }
+    if (subtabFactura) { subtabFactura.classList.toggle('border-primary', esFactura); subtabFactura.classList.toggle('text-primary', esFactura); subtabFactura.classList.toggle('border-transparent', !esFactura); subtabFactura.classList.toggle('text-on-surface-variant', !esFactura); }
+  }
+  if (subtabHojaVida) subtabHojaVida.addEventListener('click', () => activarSubTab('hoja-vida'));
+  if (subtabManual) subtabManual.addEventListener('click', () => activarSubTab('manual'));
+  if (subtabFactura) subtabFactura.addEventListener('click', () => activarSubTab('factura'));
   if (tabEquipo) tabEquipo.addEventListener('click', () => activarTab('equipo'));
   if (tabInfoBasica) tabInfoBasica.addEventListener('click', () => activarTab('info-basica'));
   if (tabReporte) tabReporte.addEventListener('click', () => activarTab('reporte'));
   if (tabCertificado) tabCertificado.addEventListener('click', () => activarTab('certificado'));
   activarTab('equipo');
+  activarSubTab('hoja-vida');
 
   if (!idEquipo) return;
 
