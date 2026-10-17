@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  ? 'http://localhost:8080/api'
+  : 'https://sigma-te-back.up.railway.app/api';
 window.API_BASE_URL = API_BASE_URL;
 
 let cerrandoSesionPor401 = false;

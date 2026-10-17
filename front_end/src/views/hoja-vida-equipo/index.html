@@ -373,19 +373,610 @@
 <div id="panel-info-basica" style="display:none;">
 <div class="flex flex-col gap-4">
   <div class="flex gap-2 border-b border-outline-variant mb-2 items-center justify-start">
-    <button id="subtab-hoja-vida" class="px-4 py-2 text-body-sm font-body-sm font-semibold border-b-2 border-primary text-primary">Hoja de vida del equipo</button>
+    <button id="subtab-hv-completa" class="px-4 py-2 text-body-sm font-body-sm font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Hoja de vida del equipo</button>
+    <button id="subtab-hoja-vida" class="px-4 py-2 text-body-sm font-body-sm font-semibold border-b-2 border-primary text-primary">Control de Componentes</button>
     <button id="subtab-manual" class="px-4 py-2 text-body-sm font-body-sm font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Manual del Equipo</button>
     <button id="subtab-factura" class="px-4 py-2 text-body-sm font-body-sm font-semibold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Factura del equipo</button>
   </div>
+  <div id="subpanel-hv-completa" style="display:none;">
+    <div class="flex flex-col gap-4">
+      <!-- A) ENCABEZADO -->
+      <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-4 border-b border-outline-variant/40">
+        <!-- Izquierda: Logo + Texto -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-lg bg-inverse-primary flex items-center justify-center flex-shrink-0">
+            <span class="text-on-primary font-bold text-lg">TQ</span>
+          </div>
+          <div>
+            <p class="text-on-surface font-bold text-base">TEQINOFT</p>
+            <p class="text-on-surface-variant text-sm">Soluciones que generan confianza</p>
+          </div>
+        </div>
+        <!-- Centro: Título -->
+        <div class="text-center md:flex-1">
+          <h1 class="text-on-surface font-bold text-xl md:text-2xl">HOJA DE VIDA DEL EQUIPO</h1>
+          <p class="text-on-surface-variant text-sm mt-1">Control, trazabilidad y confiabilidad</p>
+        </div>
+        <!-- Derecha: Mini-tabla -->
+        <div class="text-right md:flex-shrink-0">
+          <table class="text-sm text-on-surface">
+            <tbody>
+              <tr><td class="text-on-surface-variant pr-3">Código del formato:</td><td class="font-semibold">FO-MT-01</td></tr>
+              <tr><td class="text-on-surface-variant pr-3">Versión:</td><td class="font-semibold">01</td></tr>
+              <tr><td class="text-on-surface-variant pr-3">Fecha de emisión:</td><td class="font-semibold">2026-08-01</td></tr>
+              <tr><td class="text-on-surface-variant pr-3">Página:</td><td class="font-semibold">1 de 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- B) FILA DE 3 COLUMNAS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 p-4">
+        <!-- COLUMNA 1: 1. INFORMACIÓN GENERAL (5fr ~ 5/12) -->
+        <div class="lg:col-span-5">
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">info</span>
+                1. INFORMACIÓN GENERAL
+              </h2>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Código interno:</span><span class="text-on-surface font-semibold text-sm">EQ-BAL-001</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Nombre del equipo:</span><span class="text-on-surface font-semibold text-sm">Balanza electrónica</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Tipo de equipo:</span><span class="text-on-surface font-semibold text-sm">Instrumento de pesaje</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Marca:</span><span class="text-on-surface font-semibold text-sm">OHAUS</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Modelo:</span><span class="text-on-surface font-semibold text-sm">Defender 3000</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Número de serie:</span><span class="text-on-surface font-semibold text-sm">B832114567</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Fabricante:</span><span class="text-on-surface font-semibold text-sm">OHAUS Corporation</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Referencia:</span><span class="text-on-surface font-semibold text-sm">D31P30BR</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Año de fabricación:</span><span class="text-on-surface font-semibold text-sm">2023</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Fecha de adquisición:</span><span class="text-on-surface font-semibold text-sm">2023-06-15</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Fecha de puesta en servicio:</span><span class="text-on-surface font-semibold text-sm">2023-06-20</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1">
+                <span class="text-on-surface-variant text-sm">Estado:</span>
+                <span class="flex items-center gap-3 text-sm">
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" checked disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Operativo</span></label>
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Fuera de servicio</span></label>
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">En mantenimiento</span></label>
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Retirado</span></label>
+                </span>
+              </div>
+              <div class="flex justify-between py-1">
+                <span class="text-on-surface-variant text-sm">Criticidad:</span>
+                <span class="flex items-center gap-3 text-sm">
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Alta</span></label>
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" checked disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Media</span></label>
+                  <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface">Baja</span></label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA 2: 2. UBICACIÓN Y RESPONSABLE + 3. CARACTERÍSTICAS TÉCNICAS (4fr ~ 4/12) -->
+        <div class="lg:col-span-4 space-y-4">
+          <!-- 2. UBICACIÓN Y RESPONSABLE -->
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">location_on</span>
+                2. UBICACIÓN Y RESPONSABLE
+              </h2>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Empresa / Cliente:</span><span class="text-on-surface font-semibold text-sm">Alimentos del Valle S.A.S.</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Sede:</span><span class="text-on-surface font-semibold text-sm">Planta de producción</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Área / Proceso:</span><span class="text-on-surface font-semibold text-sm">Control de calidad</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Ubicación específica:</span><span class="text-on-surface font-semibold text-sm">Laboratorio de recepción</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Responsable del equipo:</span><span class="text-on-surface font-semibold text-sm">Juan Pérez</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Cargo:</span><span class="text-on-surface font-semibold text-sm">Coordinador de calidad</span></div>
+              <div class="flex justify-between py-1"><span class="text-on-surface-variant text-sm">Teléfono / Extensión:</span><span class="text-on-surface font-semibold text-sm">601 234 5678 Ext. 123</span></div>
+            </div>
+          </div>
+
+          <!-- 3. CARACTERÍSTICAS TÉCNICAS -->
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                3. CARACTERÍSTICAS TÉCNICAS
+              </h2>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Rango / Capacidad:</span><span class="text-on-surface font-semibold text-sm">0 – 30 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Resolución / División:</span><span class="text-on-surface font-semibold text-sm">0,001 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Clase de exactitud:</span><span class="text-on-surface font-semibold text-sm">III</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Unidad de medida:</span><span class="text-on-surface font-semibold text-sm">kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Alimentación:</span><span class="text-on-surface font-semibold text-sm">100 – 240 V AC / 50–60 Hz</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Condiciones de operación:</span><span class="text-on-surface font-semibold text-sm">10–40 °C / 20–85 % HR</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Dimensiones:</span><span class="text-on-surface font-semibold text-sm">300 x 300 x 120 mm</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Accesorios:</span><span class="text-on-surface font-semibold text-sm">Plataforma, indicador, cable de alimentación</span></div>
+              <div class="flex justify-between py-1"><span class="text-on-surface-variant text-sm">Otros datos técnicos:</span><span class="text-on-surface font-semibold text-sm">Comunicación RS232</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA 3: FOTOGRAFÍA DEL EQUIPO (3fr ~ 3/12) -->
+        <div class="lg:col-span-3">
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden h-full">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+                FOTOGRAFÍA DEL EQUIPO
+              </h2>
+            </div>
+            <div class="p-4 h-[300px] flex flex-col items-center justify-center">
+              <div class="w-full h-full border-2 border-dashed border-outline-variant/40 rounded-lg flex flex-col items-center justify-center bg-surface-container">
+                <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30">image</span>
+                <p class="text-on-surface-variant text-sm mt-2 text-center">Sin fotos registradas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILA A: 4. REQUISITOS METROLÓGICOS + 5. HISTORIAL DE CALIBRACIONES + 6. HISTORIAL DE MANTENIMIENTO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <!-- COLUMNA IZQUIERDA: 4. REQUISITOS METROLÓGICOS (~35%) -->
+        <div class="lg:col-span-4">
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">straighten</span>
+                4. REQUISITOS METROLÓGICOS
+              </h2>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Magnitud:</span><span class="text-on-surface font-semibold text-sm">Masa</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Instrumento / Equipo de medición:</span><span class="text-on-surface font-semibold text-sm">Balanza electrónica</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Intervalo de medición:</span><span class="text-on-surface font-semibold text-sm">0 – 30 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Error máximo permitido (EMP):</span><span class="text-on-surface font-semibold text-sm">± 0,01 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Tolerancia establecida:</span><span class="text-on-surface font-semibold text-sm">± 0,01 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Carga mínima:</span><span class="text-on-surface font-semibold text-sm">0,02 kg</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Frecuencia de calibración:</span><span class="text-on-surface font-semibold text-sm">12 meses</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Frecuencia de verificación:</span><span class="text-on-surface font-semibold text-sm">6 meses</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Método de verificación:</span><span class="text-on-surface font-semibold text-sm">Según procedimiento interno PI-AM-01</span></div>
+              <div class="flex justify-between border-b border-outline-variant/30 py-1"><span class="text-on-surface-variant text-sm">Patrón utilizado:</span><span class="text-on-surface font-semibold text-sm">Pesas patrón clase E2</span></div>
+              <div class="flex justify-between py-1"><span class="text-on-surface-variant text-sm">Código del patrón:</span><span class="text-on-surface font-semibold text-sm">PP-001</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: 5. HISTORIAL DE CALIBRACIONES + 6. HISTORIAL DE MANTENIMIENTO (~65%) -->
+        <div class="lg:col-span-8 space-y-4">
+          <!-- 5. HISTORIAL DE CALIBRACIONES -->
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">verified</span>
+                5. HISTORIAL DE CALIBRACIONES
+              </h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-surface-container border-b border-outline-variant/30">
+                  <tr>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Fecha</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Tipo de servicio</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Laboratorio/Proveedor</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Certificado No.</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Resultado</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Próxima fecha</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Responsable</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30">
+                  <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2024-06-10</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Calibración</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">LABMET</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">C-2024-1256</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-06-10</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">A. Gómez</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-06-12</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Calibración</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">LABMET</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">C-2025-0987</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2026-06-12</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">A. Gómez</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 6. HISTORIAL DE MANTENIMIENTO -->
+          <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+            <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+              <h2 class="font-semibold text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">build</span>
+                6. HISTORIAL DE MANTENIMIENTO
+              </h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-surface-container border-b border-outline-variant/30">
+                  <tr>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Fecha</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Tipo</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Descripción del trabajo</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Repuestos utilizados</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Resultado</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Técnico</th>
+                    <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Próximo mantenimiento</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30">
+                  <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2024-01-15</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Preventivo</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">Limpieza, ajuste y verificación</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface-variant whitespace-nowrap">N/A</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">M. Ruiz</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-01-15</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-01-20</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Preventivo</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">Limpieza, ajuste y verificación</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface-variant whitespace-nowrap">N/A</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">M. Ruiz</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2026-01-20</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-09-05</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Correctivo</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface">Cambio de celda de carga</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface-variant whitespace-nowrap">Celda de carga</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">L. Torres</td>
+                    <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2026-03-05</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILA B: 7. HISTORIAL DE VERIFICACIONES -->
+      <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+        <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+          <h2 class="font-semibold text-base flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">fact_check</span>
+            7. HISTORIAL DE VERIFICACIONES
+          </h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-surface-container border-b border-outline-variant/30">
+              <tr>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Fecha</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Procedimiento</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Patrón utilizado</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Resultado</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Error encontrado</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Cumple</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Responsable</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/30">
+              <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2024-12-10</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">PI-AM-01</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Pesas clase E2</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">0,000 kg</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">
+                  <span class="flex items-center gap-3">
+                    <label class="flex items-center gap-1 cursor-default"><input type="checkbox" checked disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface text-sm">Sí</span></label>
+                    <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface text-sm">No</span></label>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">J. Pérez</td>
+              </tr>
+              <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-06-05</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">PI-AM-01</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Pesas clase E2</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Conforme</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">0,001 kg</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">
+                  <span class="flex items-center gap-3">
+                    <label class="flex items-center gap-1 cursor-default"><input type="checkbox" checked disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface text-sm">Sí</span></label>
+                    <label class="flex items-center gap-1 cursor-default"><input type="checkbox" disabled class="rounded border-outline-variant text-primary"><span class="text-on-surface text-sm">No</span></label>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">J. Pérez</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FILA C: 8. INCIDENTES / REPARACIONES / AJUSTES -->
+      <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+        <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+          <h2 class="font-semibold text-base flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">report_problem</span>
+            8. INCIDENTES / REPARACIONES / AJUSTES
+          </h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-surface-container border-b border-outline-variant/30">
+              <tr>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Fecha</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Evento</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Descripción</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Acción realizada</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Repuesto</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Responsable</th>
+                <th class="px-4 py-2.5 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/30">
+              <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">2025-09-05</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Falla</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">Lectura inestable</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">Cambio de celda de carga y ajuste</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Celda de carga</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">L. Torres</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface whitespace-nowrap">Cerrado</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+                <td class="px-4 py-2 text-body-sm text-on-surface">&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FILA A: 9. DOCUMENTACIÓN ASOCIADA + 10. ESTADO ACTUAL DEL EQUIPO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- COLUMNA IZQUIERDA: 9. DOCUMENTACIÓN ASOCIADA -->
+        <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+          <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+            <h2 class="font-semibold text-base flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">folder</span>
+              9. DOCUMENTACIÓN ASOCIADA
+            </h2>
+          </div>
+          <div class="p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-sm">
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Manual de operación</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Registro de mantenimiento</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Manual de servicio</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Procedimiento de verificación</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Certificado de calibración</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Fotografías</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Certificado de conformidad</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Otros: ______________</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Ficha técnica</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: 10. ESTADO ACTUAL DEL EQUIPO -->
+        <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden flex flex-col justify-between">
+          <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+            <h2 class="font-semibold text-base flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">health_and_safety</span>
+              10. ESTADO ACTUAL DEL EQUIPO
+            </h2>
+          </div>
+          <div class="p-4 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-sm">
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" checked disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Conforme</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Pendiente de mantenimiento</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Conforme con restricciones</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Pendiente de calibración</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">No conforme</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Pendiente de verificación</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Fuera de servicio</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-default">
+                <input type="checkbox" disabled class="rounded border-outline-variant text-primary">
+                <span class="text-on-surface">Retirado</span>
+              </label>
+            </div>
+
+            <div>
+              <label class="block text-on-surface-variant text-sm font-medium mb-1.5">Observaciones:</label>
+              <div class="p-3 bg-surface-container/50 border border-outline-variant/30 rounded-lg text-sm text-on-surface">
+                Equipo en correcto estado de funcionamiento.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILA B: 11. APROBACIONES -->
+      <div class="bg-surface-card border border-outline-variant/40 rounded-lg overflow-hidden">
+        <div class="bg-surface-container border-b border-primary text-primary px-4 py-2">
+          <h2 class="font-semibold text-base flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+            11. APROBACIONES
+          </h2>
+        </div>
+        <div class="p-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Columna Elaboró -->
+            <div class="bg-surface-container/30 border border-outline-variant/30 rounded-lg p-4 space-y-3">
+              <div class="text-center border-b border-outline-variant/30 pb-2">
+                <span class="font-semibold text-sm text-primary uppercase tracking-wide">Elaboró</span>
+              </div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Nombre:</span>
+                  <span class="text-on-surface font-semibold">Juan Pérez</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Cargo:</span>
+                  <span class="text-on-surface font-semibold">Coordinador de calidad</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Fecha:</span>
+                  <span class="text-on-surface font-semibold">2026-08-01</span>
+                </div>
+                <div class="pt-2">
+                  <span class="text-on-surface-variant text-sm block mb-6">Firma:</span>
+                  <div class="border-b border-outline-variant/40"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Revisó -->
+            <div class="bg-surface-container/30 border border-outline-variant/30 rounded-lg p-4 space-y-3">
+              <div class="text-center border-b border-outline-variant/30 pb-2">
+                <span class="font-semibold text-sm text-primary uppercase tracking-wide">Revisó</span>
+              </div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Nombre:</span>
+                  <span class="text-on-surface font-semibold">María López</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Cargo:</span>
+                  <span class="text-on-surface font-semibold">Líder metrología</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Fecha:</span>
+                  <span class="text-on-surface font-semibold">2026-08-01</span>
+                </div>
+                <div class="pt-2">
+                  <span class="text-on-surface-variant text-sm block mb-6">Firma:</span>
+                  <div class="border-b border-outline-variant/40"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Aprobó -->
+            <div class="bg-surface-container/30 border border-outline-variant/30 rounded-lg p-4 space-y-3">
+              <div class="text-center border-b border-outline-variant/30 pb-2">
+                <span class="font-semibold text-sm text-primary uppercase tracking-wide">Aprobó</span>
+              </div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Nombre:</span>
+                  <span class="text-on-surface font-semibold">Carlos Ramírez</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Cargo:</span>
+                  <span class="text-on-surface font-semibold">Gerente técnico</span>
+                </div>
+                <div class="flex justify-between border-b border-outline-variant/20 py-1">
+                  <span class="text-on-surface-variant">Fecha:</span>
+                  <span class="text-on-surface font-semibold">2026-08-01</span>
+                </div>
+                <div class="pt-2">
+                  <span class="text-on-surface-variant text-sm block mb-6">Firma:</span>
+                  <div class="border-b border-outline-variant/40"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="subpanel-hoja-vida">
     <div class="flex items-center justify-between gap-4 mb-3">
-      <div class="min-w-0 flex-1" title="Listado Hojas de vida de equipos">
-        <p class="text-body-sm font-body-sm text-on-surface-variant truncate">Listado Hojas de vida de equipos</p>
+      <div class="min-w-0 flex-1" title="Listado de Control de Componentes">
+        <p class="text-body-sm font-body-sm text-on-surface-variant truncate">Listado de Control de Componentes</p>
       </div>
-      <button type="button" id="btn-nueva-hv" class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm shrink-0" title="Nueva Hojas de vida de equipos">
+      <button type="button" id="btn-nueva-hv" class="flex items-center gap-2 px-4 py-2 bg-inverse-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-colors py-2 px-4 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-sm shrink-0" title="Nuevo Componente">
         <span>+</span>
-        <span class="hidden sm:inline">Nueva Hojas de vida de equipos</span>
-        <span class="sm:hidden">Nueva</span>
+        <span class="hidden sm:inline">Nuevo Componente</span>
+        <span class="sm:hidden">Nuevo</span>
       </button>
     </div>
     <div class="flex flex-wrap items-end gap-3 mb-3">
@@ -414,7 +1005,7 @@
         <table class="w-full text-left">
           <thead>
             <tr class="border-b border-outline-variant/30">
-              <th class="px-4 py-3 text-body-sm font-body-sm text-on-surface-variant">Nombre del documento</th>
+              <th class="px-4 py-3 text-body-sm font-body-sm text-on-surface-variant">Nombre del componente</th>
               <th class="px-4 py-3 text-body-sm font-body-sm text-on-surface-variant whitespace-nowrap">Fecha de registro</th>
               <th class="px-4 py-3 text-body-sm font-body-sm text-on-surface-variant">Observaciones</th>
               <th class="px-4 py-3 text-body-sm font-body-sm text-on-surface-variant text-right whitespace-nowrap">Acciones</th>
@@ -495,8 +1086,8 @@
 
     <form id="form-hv" novalidate class="p-6 space-y-4 overflow-y-auto flex-1">
       <div>
-        <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Nombre del documento *</label>
-        <input id="hv-nombre" type="text" maxlength="120" placeholder="Ej: Hoja de vida - Báscula 500 kg - 2026" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
+        <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Nombre del componente *</label>
+        <input id="hv-nombre" type="text" maxlength="120" placeholder="Ej: Batería principal" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40"/>
         <p id="error-hv-nombre" style="display:none;" class="text-body-sm font-body-sm text-error mt-1"></p>
       </div>
       <div>
@@ -506,7 +1097,7 @@
       </div>
       <div>
         <label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">Observaciones</label>
-        <textarea id="hv-observaciones" rows="3" maxlength="500" placeholder="Ej: Creada, pendiente de diligenciar" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-y"></textarea>
+        <textarea id="hv-observaciones" rows="3" maxlength="500" placeholder="Ej: Cambiada por desgaste" class="w-full bg-surface-base border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-on-surface-variant/40 resize-y"></textarea>
       </div>
       <div class="flex justify-end gap-3 pt-2">
         <button type="button" id="btn-cancelar-hv" class="px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-lg transition-colors text-body-sm font-body-sm">Cancelar</button>

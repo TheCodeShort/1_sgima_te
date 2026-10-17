@@ -22,9 +22,11 @@ function initView(ctx) {
   const subtabHojaVida = root.querySelector('#subtab-hoja-vida');
   const subtabManual = root.querySelector('#subtab-manual');
   const subtabFactura = root.querySelector('#subtab-factura');
+  const subtabHvCompleta = root.querySelector('#subtab-hv-completa');
   const subpanelHojaVida = root.querySelector('#subpanel-hoja-vida');
   const subpanelManual = root.querySelector('#subpanel-manual');
   const subpanelFactura = root.querySelector('#subpanel-factura');
+  const subpanelHvCompleta = root.querySelector('#subpanel-hv-completa');
 
   function activarTab(tab) {
     const esEquipo = tab === 'equipo';
@@ -44,16 +46,20 @@ function initView(ctx) {
     const esHojaVida = sub === 'hoja-vida';
     const esManual = sub === 'manual';
     const esFactura = sub === 'factura';
+    const esCompleta = sub === 'completa';
     if (subpanelHojaVida) subpanelHojaVida.style.display = esHojaVida ? 'block' : 'none';
     if (subpanelManual) subpanelManual.style.display = esManual ? 'block' : 'none';
     if (subpanelFactura) subpanelFactura.style.display = esFactura ? 'block' : 'none';
+    if (subpanelHvCompleta) subpanelHvCompleta.style.display = esCompleta ? 'block' : 'none';
     if (subtabHojaVida) { subtabHojaVida.classList.toggle('border-primary', esHojaVida); subtabHojaVida.classList.toggle('text-primary', esHojaVida); subtabHojaVida.classList.toggle('border-transparent', !esHojaVida); subtabHojaVida.classList.toggle('text-on-surface-variant', !esHojaVida); }
     if (subtabManual) { subtabManual.classList.toggle('border-primary', esManual); subtabManual.classList.toggle('text-primary', esManual); subtabManual.classList.toggle('border-transparent', !esManual); subtabManual.classList.toggle('text-on-surface-variant', !esManual); }
     if (subtabFactura) { subtabFactura.classList.toggle('border-primary', esFactura); subtabFactura.classList.toggle('text-primary', esFactura); subtabFactura.classList.toggle('border-transparent', !esFactura); subtabFactura.classList.toggle('text-on-surface-variant', !esFactura); }
+    if (subtabHvCompleta) { subtabHvCompleta.classList.toggle('border-primary', esCompleta); subtabHvCompleta.classList.toggle('text-primary', esCompleta); subtabHvCompleta.classList.toggle('border-transparent', !esCompleta); subtabHvCompleta.classList.toggle('text-on-surface-variant', !esCompleta); }
   }
   if (subtabHojaVida) subtabHojaVida.addEventListener('click', () => activarSubTab('hoja-vida'));
   if (subtabManual) subtabManual.addEventListener('click', () => activarSubTab('manual'));
   if (subtabFactura) subtabFactura.addEventListener('click', () => activarSubTab('factura'));
+  if (subtabHvCompleta) subtabHvCompleta.addEventListener('click', () => activarSubTab('completa'));
   if (tabEquipo) tabEquipo.addEventListener('click', () => activarTab('equipo'));
   if (tabInfoBasica) tabInfoBasica.addEventListener('click', () => activarTab('info-basica'));
   if (tabReporte) tabReporte.addEventListener('click', () => activarTab('reporte'));
@@ -67,14 +73,14 @@ function initView(ctx) {
   const USAR_DATOS_DE_PRUEBA_HV = true;
   const HV_POR_PAGINA = 5;
   const hvDatosPrueba = [
-    { id: 1, nombre: 'Hoja de vida - Báscula 500 kg - 2026', fecha: '2026-03-14', observaciones: 'Actualizada tras calibración anual' },
-    { id: 2, nombre: 'Hoja de vida - Báscula 500 kg - 2023', fecha: '2023-11-02', observaciones: 'Versión anterior, formato antiguo' },
-    { id: 3, nombre: 'Hoja de vida - Balanza analítica', fecha: '2021-06-20', observaciones: '' },
-    { id: 4, nombre: 'Hoja de vida - Báscula 500 kg - 2020', fecha: '2020-01-09', observaciones: 'Primer registro del equipo con todos los datos técnicos del fabricante y las observaciones iniciales de puesta en servicio' },
-    { id: 5, nombre: 'Hoja de vida - Compresor de tornillo - 2019', fecha: '2019-08-27', observaciones: 'Documento digitalizado desde archivo físico' },
-    { id: 6, nombre: 'Hoja de vida - Compresor de tornillo - 2022', fecha: '2022-05-10', observaciones: 'Se agregó ficha de mantenimiento' },
-    { id: 7, nombre: 'Hoja de vida - Balanza analítica - 2024', fecha: '2024-09-03', observaciones: 'Cambio de responsable del equipo' },
-    { id: 8, nombre: 'Hoja de vida - Báscula 500 kg - 2025', fecha: '2025-07-21', observaciones: '' }
+    { id: 1, nombre: 'Batería principal', fecha: '2026-03-14', observaciones: 'Reemplazada por bajo rendimiento' },
+    { id: 2, nombre: 'Correa de transmisión', fecha: '2023-11-02', observaciones: 'Cambiada por desgaste visible' },
+    { id: 3, nombre: 'Sensor de peso', fecha: '2021-06-20', observaciones: '' },
+    { id: 4, nombre: 'Tarjeta electrónica de control', fecha: '2020-01-09', observaciones: 'Reparada tras falla de lectura, incluye repuesto original del fabricante y ajuste de calibración post-reparación' },
+    { id: 5, nombre: 'Rodamiento de plataforma', fecha: '2019-08-27', observaciones: 'Cambiado por ruido excesivo durante la operación' },
+    { id: 6, nombre: 'Celda de carga', fecha: '2022-05-10', observaciones: 'Reemplazada tras calibración fallida' },
+    { id: 7, nombre: 'Cable de alimentación', fecha: '2024-09-03', observaciones: 'Sustituido por daño en el aislante' },
+    { id: 8, nombre: 'Panel de control táctil', fecha: '2025-07-21', observaciones: '' }
   ];
   const hvDatos = USAR_DATOS_DE_PRUEBA_HV ? hvDatosPrueba : [];
   let hvPagina = 1;
@@ -151,9 +157,9 @@ function initView(ctx) {
 
     if (hvVacio && hvVacioTexto) {
       if (total === 0) {
-        if (hvDatos.length === 0) hvVacioTexto.textContent = 'Aún no hay hojas de vida registradas para este equipo.';
+        if (hvDatos.length === 0) hvVacioTexto.textContent = 'Aún no hay componentes registrados para este equipo.';
         else if (desde && hasta && desde > hasta) hvVacioTexto.textContent = 'La fecha «desde» no puede ser posterior a la fecha «hasta».';
-        else hvVacioTexto.textContent = 'Ningún documento coincide con los filtros aplicados.';
+        else hvVacioTexto.textContent = 'Ningún componente coincide con los filtros aplicados.';
         hvVacio.style.display = 'block';
       } else {
         hvVacio.style.display = 'none';
@@ -252,7 +258,7 @@ function initView(ctx) {
   function hvAbrirModal(registro) {
     if (!hvModal) return;
     hvEditandoId = registro ? registro.id : null;
-    if (hvModalTitulo) hvModalTitulo.textContent = registro ? 'Editar hoja de vida de equipo' : 'Nueva hoja de vida de equipo';
+    if (hvModalTitulo) hvModalTitulo.textContent = registro ? 'Editar componente reemplazado' : 'Nuevo componente reemplazado';
     if (hvFNombre) hvFNombre.value = registro ? registro.nombre : '';
     if (hvFFecha) hvFFecha.value = registro ? String(registro.fecha).slice(0, 10) : '';
     if (hvFObs) hvFObs.value = registro ? (registro.observaciones || '') : '';
@@ -281,7 +287,7 @@ function initView(ctx) {
       if (reg) { reg.nombre = nombre; reg.fecha = fecha; reg.observaciones = observaciones; }
       hvCerrarModal();
       hvPintar();
-      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Hoja de vida actualizada correctamente.' });
+      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Componente actualizado correctamente.' });
     } else {
       const nuevoId = hvDatos.reduce(function (m, d) { return Math.max(m, d.id); }, 0) + 1;
       hvDatos.push({ id: nuevoId, nombre: nombre, fecha: fecha, observaciones: observaciones });
@@ -291,7 +297,7 @@ function initView(ctx) {
       if (hvInputHasta) hvInputHasta.value = '';
       hvPagina = 1;
       hvPintar();
-      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Hoja de vida registrada correctamente.' });
+      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Componente registrado correctamente.' });
     }
   }
   if (hvBtnNueva) hvBtnNueva.addEventListener('click', function () { hvAbrirModal(null); });
@@ -313,8 +319,8 @@ function initView(ctx) {
       const reg = hvDatos.find(function (d) { return String(d.id) === bDel.getAttribute('data-id'); });
       if (!reg) return;
       const ok = await mostrarConfirmacion({
-        titulo: 'Eliminar hoja de vida',
-        mensaje: '¿Eliminar la hoja de vida "' + reg.nombre + '"? Esta acción no se puede deshacer desde aquí.',
+        titulo: 'Eliminar componente',
+        mensaje: '¿Eliminar el componente "' + reg.nombre + '"? Esta acción no se puede deshacer desde aquí.',
         textoConfirmar: 'Eliminar',
         textoCancelar: 'Cancelar',
         tipo: 'peligro'
@@ -323,7 +329,7 @@ function initView(ctx) {
       const i = hvDatos.findIndex(function (d) { return d.id === reg.id; });
       if (i !== -1) hvDatos.splice(i, 1);
       hvPintar();
-      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Hoja de vida eliminada correctamente.' });
+      await mostrarAlerta({ titulo: 'Éxito', mensaje: 'Componente eliminado correctamente.' });
     }
   });
   // --- fin formulario y borrado ---
